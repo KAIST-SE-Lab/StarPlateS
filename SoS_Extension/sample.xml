@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<addressbook>
+	<person>
+		<name>이XX</name>
+		<tel>010-1245-1234</tel>
+		<address>서울</address>
+	</person>
+	<person>
+		<name>김XX</name>
+		<tel>010-1245-1234</tel>
+		<address>경기</address>
+	</person>
+</addressbook>
