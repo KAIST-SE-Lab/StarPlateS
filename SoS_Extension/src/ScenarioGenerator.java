@@ -14,21 +14,38 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.nio.Buffer;
+import java.util.*;
 
 public class ScenarioGenerator {
 
     private ArrayList<String> vTypes_;
     private ArrayList<String> rTypes_;
+    private Integer laneNum_;
+    private HashMap<String, String> conditions_;
+    private ArrayList<String> plEvents_;
 
     public ScenarioGenerator() {
         vTypes_ = new ArrayList<>();
         rTypes_ = new ArrayList<>();
+        laneNum_ = 3;
+        conditions_ = new HashMap<>();
+        plEvents_ = new ArrayList<String>();
+
+        // Platoon Events assign
+        plEvents_.add("optSize");
+        plEvents_.add("pltMerge");
+        plEvents_.add("pltLeave");
+        plEvents_.add("pltSplit");
     }
 
     public void generateRandomScenario(int num) {
         extractPools();
         nodeAssign(num);
+
+        generateTrafficControl(150);
+
+        System.out.println(this.conditions_);
     }
 
     private void extractPools() {
@@ -74,9 +91,11 @@ public class ScenarioGenerator {
             bw.newLine();
             bw.newLine();
             bw.write("<addNode id=\"example_0\">\n");
-            bw.write("<vehicle_platoon id=\"veh\" type=\"TypeACC\" size=\"6\" route=\"route1\" departPos=\"100\" departLane=\"1\" platoonMaxSpeed=\"0\" pltMgmtProt=\"true\" optSize=\"4\" maxSize=\"10\" />");
+            bw.write(platoonInsert("veh"));
             bw.newLine();
-            bw.write("<vehicle_platoon id=\"veh1\" type=\"TypeCACC1\" size=\"10\" route=\"route1\" departPos=\"100\" departLane=\"2\" platoonMaxSpeed=\"30\" pltMgmtProt=\"true\" optSize=\"10\" maxSize=\"10\" />");
+            bw.write(platoonInsert("veh1"));
+            bw.newLine();
+            bw.write(vFlowInsert("flow1"));
             bw.write("\n</addNode>");
             bw.flush();
         } catch (IOException e) {
@@ -84,62 +103,188 @@ public class ScenarioGenerator {
         }finally {
             if(bw != null) try {bw.close(); } catch (IOException e) {}
         }
+    }
 
+    private String platoonInsert(String id) {
+        String ret = "<vehicle_platoon id=\"" + id +"\" ";
+        ret += "type=\"" + vTypes_.get(2) + "\" ";
+        ret += "size=\""+ 6 + "\" ";
 
-/*
+        String tmp = routeConditionChecker(id);
+        StringTokenizer st = new StringTokenizer(tmp, "_"); // return: route_lane
+
+        ret += "route=\"" + st.nextToken() + "\" ";
+        ret += "departPos=\"" + 100 + "\" ";
+        ret += "departLane=\"" + st.nextToken() + "\" ";
+        ret += "platoonMaxSpeed=\"" + 0 + "\" ";
+        ret += "pltMgmtProt=\"" + "true" + "\" ";
+        ret += "optSize=\"" + 4 + "\" ";
+        ret += "maxSize=\"" + 10 + "\" />";
+
+        String vehicles = "";
+        for(int i = 0; i < 6; i++) vehicles += i + " ";
+
+        updateConditions(id, "plin", Integer.toString(6));
+
+        return ret;
+    }
+
+    private String vFlowInsert(String id) {
+        String ret = "<vehicle_flow id=\"" + id +"\" ";
+
+        ret += "type=\"" + vTypes_.get(1) + "\" ";
+        ret += "color=\"" + "gold" + "\" ";
+        ret += "route=\"" + "route1" + "\" ";
+        ret += "begin=\"" + 5 + "\" ";
+        ret += "end=\"" + 200 + "\" ";
+        ret += "distribution=\"" + "deterministic" + "\" ";
+        ret += "period=\"" + 1 + "\"  />";
+        return ret;
+    }
+
+    private String routeConditionChecker(String id) {
+        long seed = System.currentTimeMillis();
+        Random r = new Random(seed);
+        String tmp;
+
+        do {
+            tmp = "";
+            tmp += rTypes_.get(r.nextInt(rTypes_.size()));
+            tmp += "_" + r.nextInt(laneNum_);
+        } while(conditions_.containsKey(tmp));
+
+        conditions_.put(tmp, id);
+
+        return tmp;
+    }
+
+    private void generateTrafficControl(int end) {
+        File outFile = new File("../examples/platoon_SoS/trafficControl.xml");
+
+        BufferedWriter bw = null;
         try {
-            File file = new File("../examples/platoon_SoS/addNode.xml");
-            DocumentBuilderFactory docBuildFact = DocumentBuilderFactory.newInstance();
-            DocumentBuilder docBuild = docBuildFact.newDocumentBuilder();
-            Document doc = docBuild.parse(file);
+            bw = new BufferedWriter(new FileWriter(outFile));
+            bw.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
+            bw.newLine();
+            bw.newLine();
+            bw.write("<trafficControl id=\"example_0\">\n");
 
-            //Element root = doc.getDocumentElement();
-            NodeList root = doc.getChildNodes();
+            for(int t = 5; t <= end; t+=10) {
+                // Change speed of all Platoons assigned as nodes for starting simulation
+                if(t == 5) {
+                    for (String key : conditions_.keySet()) {
+                        if (key.contains("veh")) {
+                            bw.newLine();
+                            bw.write("<speed id=\"" + key + "\" begin=\"" + t + "\" value=\"20\" />  ");
+                        }
+                    }
+                    continue;
+                }
 
-            for(int i = 0; i < num; i++) {
-                Element add = doc.createElement("addNode");
-                add.setAttribute("id", "add_"+ (i+5));
+                Random r = new Random();
 
-                Element v1 = doc.createElement("vehicle_platoon");
-                v1.setAttribute("id", "veh");
-                v1.setAttribute("type", vTypes_.get(0));
-                v1.setAttribute("size", "6");
-                v1.setAttribute("route", rTypes_.get(0));
-                v1.setAttribute("departPos", "100");
-                v1.setAttribute("departLane", "1");
-                v1.setAttribute("platoonMaxSpeed", "0");
-                v1.setAttribute("pltMgmtProt", "true");
-                v1.setAttribute("optSize", "4");
-                v1.setAttribute("maxSize", "10");
+                // Select random event and check availability
+                String selectedEvent = plEvents_.get(r.nextInt(plEvents_.size()));
+                System.out.println(selectedEvent);
+                if(!availabilityCheck(selectedEvent)) continue;
 
-                Element v2 = doc.createElement("vehicle_platoon");
-                v2.setAttribute("id", "veh");
-                v2.setAttribute("type", vTypes_.get(0));
-                v2.setAttribute("size", "6");
-                v2.setAttribute("route", rTypes_.get(0));
-                v2.setAttribute("departPos", "100");
-                v2.setAttribute("departLane", "1");
-                v2.setAttribute("platoonMaxSpeed", "0");
-                v2.setAttribute("pltMgmtProt", "true");
-                v2.setAttribute("optSize", "4");
-                v2.setAttribute("maxSize", "10");
-
-                add.appendChild(v1);
-                add.appendChild(v2);
+                assignEvent(bw, selectedEvent, t, r);
             }
 
-            TransformerFactory tf = TransformerFactory.newInstance();
-            Transformer t = tf.newTransformer();
-            t.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
+            bw.write("\n</trafficControl>");
+            bw.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }finally {
+            if(bw != null) try {bw.close(); } catch (IOException e) {}
+        }
+    }
 
-            DOMSource source = new DOMSource(doc);
-            StreamResult result = new StreamResult("../examples/platoon_SoS/addNode.xml");
-            t.transform(source, result);
+    private void updateConditions(String id, String event, String attr) {
+        switch (event) {
+            case "plin":
+                conditions_.put(id, attr);
+                break;
+        }
+    }
+
+    private boolean availabilityCheck(String event) {
+        boolean ret = false;
+        switch (event) {
+            case "optSize": {
+                return true;
+            }
+            case "pltMerge": {
+                int count = 0;
+                for (String key : conditions_.keySet()) {
+                    if (key.contains("veh.")) {
+                        count++;
+                    }
+                }
+                System.out.println("PLTMERGE: " + count);
+                if (count >= 2) return true;
+                else return false;
+            }
+            case "pltLeave":
+            case "pltSplit": {
+                for (String key : conditions_.keySet()) {
+                    if (key.contains("veh") && Integer.parseInt(conditions_.get(key)) > 1) {
+                        System.out.println("SPLIT");
+                        return true;
+                    }
+                }
+                return false;
+            }
+        }
+        return ret;
+    }
+
+    private void assignEvent(BufferedWriter bw, String event, int begin, Random r) {
+
+        try {
+            bw.newLine();
+
+            switch (event) {
+                case "optSize": {                                         // Optimal size of platoon: 2 ~ 6
+                    bw.write("<optSize begin=\"" + begin +"\" value=\"" + (r.nextInt(5) + 2) + "\" /> \n");
+                    break;
+                }
+                case "pltMerge": {
+                    ArrayList<String> vehs = new ArrayList<>();
+                    for(String key : conditions_.keySet()) {
+                        if(key.contains("veh.")) vehs.add(key);
+                    }
+                    String sV = vehs.get(r.nextInt(vehs.size()));
+                    bw.write("<pltMerge pltId=\"" + sV + "\" begin=\"" + begin + "\" />");
+                    break;
+                }
+                case "pltLeave": {
+                    ArrayList<String> vehs = new ArrayList<>();
+                    for(String key : conditions_.keySet()) {
+                        if(key.contains("veh")) vehs.add(key);
+                    }
+                    String sV = vehs.get(r.nextInt(vehs.size()));
+                    bw.write("<pltLeave pltId=\"" + sV  +
+                            "\" leaveIndex=\"" + r.nextInt(Integer.parseInt(conditions_.get(sV))) +
+                            "\" begin=\"" + begin + "\"/> \n");
+                    break;
+                }
+                case "pltSplit": {
+                    ArrayList<String> vehs = new ArrayList<>();
+                    for(String key : conditions_.keySet()) {
+                        if(key.contains("veh")) vehs.add(key);
+                    }
+                    String sV = vehs.get(r.nextInt(vehs.size()));
+                    sV += "." + r.nextInt(Integer.parseInt(conditions_.get(sV)));
+                    bw.write("<pltSplit splitVehId=\"" + sV + "\" begin=\"" + begin + "\" /> \n");
+                    break;
+                }
+            }
 
         } catch(Exception e) {
             System.out.println(e);
         }
-*/
+
     }
 
 }
