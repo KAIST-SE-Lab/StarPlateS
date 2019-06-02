@@ -37,6 +37,8 @@ public class ScenarioGenerator {
         plEvents_.add("pltMerge");
         plEvents_.add("pltLeave");
         plEvents_.add("pltSplit");
+
+        conditions_.put("leaves", "");
     }
 
     public void generateRandomScenario(int num) {
@@ -202,9 +204,118 @@ public class ScenarioGenerator {
 
     private void updateConditions(String id, String event, String attr) {
         switch (event) {
-            case "plin":
+            case "plin": { // attr: platoon size
                 conditions_.put(id, attr);
                 break;
+            }
+            case "optSize": { // attr: optimal size
+                for (String key : conditions_.keySet()) {
+                    if (key.contains("veh") && Integer.parseInt(conditions_.get(key)) > Integer.parseInt(attr)) {
+                        // update existing "veh"
+                        conditions_.replace(id, attr);
+                        int orgSize = Integer.parseInt(conditions_.get(id));
+
+                        if(key.contains("veh.")) {
+                            StringTokenizer st = new StringTokenizer(key, ".");
+                            String pre = st.nextToken();
+                            int num = Integer.parseInt(st.nextToken());
+
+                            conditions_.put(pre+"."+num+Integer.parseInt(attr), String.valueOf(orgSize - Integer.parseInt(attr)));
+                            st = null;
+                        } else {
+
+                            conditions_.put(id + "." + attr, String.valueOf(orgSize - Integer.parseInt(attr)));
+                        }
+                    }
+                    if (key.contains("veh1") && Integer.parseInt(conditions_.get(key)) > Integer.parseInt(attr)) {
+                        // update existing "veh1"
+                        conditions_.replace(id, attr);
+                        int orgSize = Integer.parseInt(conditions_.get(id));
+
+                        if(key.contains("veh1.")) {
+                            StringTokenizer st = new StringTokenizer(key, ".");
+                            String pre = st.nextToken();
+                            int num = Integer.parseInt(st.nextToken());
+
+                            conditions_.put(pre+"."+num+Integer.parseInt(attr), String.valueOf(orgSize - Integer.parseInt(attr)));
+                            st = null;
+                        } else {
+
+                            conditions_.put(id + "." + attr, String.valueOf(orgSize - Integer.parseInt(attr)));
+                        }
+                    }
+                }
+                break;
+            }
+            case "pltMerge": { // attr: none / id: assume that id should contain "."
+                String mergeTarget = "";
+                int mergeComp = -1;
+
+                StringTokenizer st = new StringTokenizer(id, ".");
+                String pre_id = st.nextToken();
+                int post_id = Integer.parseInt(st.nextToken());
+
+                // Finding the nearest, in front of  platoon id from the target
+                for(String key: conditions_.keySet()) {
+                    if(key.contains(pre_id) && !(key == id)) {
+                        String[] values = key.split(".");
+                        int post_key_id;
+
+                        if(values.length > 1) {
+                            post_key_id = Integer.parseInt(values[1]);
+                        } else {
+                            post_key_id = 0;
+                        }
+
+                        if(post_key_id < post_id && mergeComp < post_key_id) {
+                            mergeComp = post_key_id;
+                        }
+                    }
+                }
+
+                int orgSize = Integer.parseInt(conditions_.get(id));
+                if(mergeComp == 0) {
+                    mergeTarget = pre_id;
+                } else {
+                    mergeTarget = pre_id + "." + mergeComp;
+                }
+
+                conditions_.replace(mergeTarget, conditions_.get(mergeTarget) + orgSize);
+                conditions_.remove(id);
+
+                st = null;
+                break;
+            }
+            case "pltLeave": { // attr: Leave index
+                conditions_.replace(id, String.valueOf(Integer.parseInt(conditions_.get(id)) - 1));
+                String leaves = conditions_.get("leaves");
+
+                if(id.contains(".")) {
+                    String[] tmp = id.split(".");
+                    leaves += tmp[0] + "." + (Integer.parseInt(tmp[1]) + Integer.parseInt(attr)) + ",";
+                } else {
+                    leaves += id + "." + attr + ",";
+                }
+
+                conditions_.replace("leaves", leaves);
+                break;
+            }
+            case "pltSplit": { // attr: Split index
+                int orgSize = Integer.parseInt(conditions_.get(id));
+
+                int start_id = -1;
+                int split_id = Integer.parseInt(attr);
+
+                String[] ids = id.split(".");
+
+                if(ids.length > 1) start_id = Integer.parseInt(ids[1]);
+                else start_id = 0;
+
+                conditions_.replace(id, String.valueOf(split_id-start_id));
+                conditions_.put(ids[0]+attr, String.valueOf(orgSize - (split_id - start_id)));
+
+                break;
+            }
         }
     }
 
@@ -217,11 +328,10 @@ public class ScenarioGenerator {
             case "pltMerge": {
                 int count = 0;
                 for (String key : conditions_.keySet()) {
-                    if (key.contains("veh.")) {
+                    if (key.contains("veh.") || key.contains("veh1.")) {
                         count++;
                     }
                 }
-                System.out.println("PLTMERGE: " + count);
                 if (count >= 2) return true;
                 else return false;
             }
@@ -229,7 +339,6 @@ public class ScenarioGenerator {
             case "pltSplit": {
                 for (String key : conditions_.keySet()) {
                     if (key.contains("veh") && Integer.parseInt(conditions_.get(key)) > 1) {
-                        System.out.println("SPLIT");
                         return true;
                     }
                 }
@@ -261,22 +370,39 @@ public class ScenarioGenerator {
                 case "pltLeave": {
                     ArrayList<String> vehs = new ArrayList<>();
                     for(String key : conditions_.keySet()) {
-                        if(key.contains("veh")) vehs.add(key);
+                        if(key.contains("veh") && Integer.parseInt(conditions_.get(key)) > 1) vehs.add(key);
                     }
                     String sV = vehs.get(r.nextInt(vehs.size()));
+                    String[] values = sV.split(".");
+
+                    boolean t_f = true;
+                    int leaveIndex = 0;
+                    while(t_f) {
+                        leaveIndex = r.nextInt(Integer.parseInt(conditions_.get(sV)));
+                        String[] leaves = conditions_.get("leaves").split(",");
+
+                        t_f = false;
+                        for(String s : leaves) {
+                            if(s == sV + "." + leaveIndex) t_f = true;
+                        }
+                    }
+
                     bw.write("<pltLeave pltId=\"" + sV  +
-                            "\" leaveIndex=\"" + r.nextInt(Integer.parseInt(conditions_.get(sV))) +
+                            "\" leaveIndex=\"" + leaveIndex +
                             "\" begin=\"" + begin + "\"/> \n");
                     break;
                 }
                 case "pltSplit": {
                     ArrayList<String> vehs = new ArrayList<>();
                     for(String key : conditions_.keySet()) {
-                        if(key.contains("veh")) vehs.add(key);
+                        if(key.contains("veh") && Integer.parseInt(conditions_.get(key)) > 1) vehs.add(key);
                     }
                     String sV = vehs.get(r.nextInt(vehs.size()));
-                    sV += "." + r.nextInt(Integer.parseInt(conditions_.get(sV)));
-                    bw.write("<pltSplit splitVehId=\"" + sV + "\" begin=\"" + begin + "\" /> \n");
+                    //sV += "." + r.nextInt(Integer.parseInt(conditions_.get(sV)));
+                    //bw.write("<pltSplit splitVehId=\"" + sV + "\" begin=\"" + begin + "\" /> \n");
+                    bw.write("<pltSplit pltId=\"" + sV  + "\" splitIndex=\"" +
+                            r.nextInt(Integer.parseInt(conditions_.get(sV))) +
+                            "\" begin=\"" + begin + "\" />");
                     break;
                 }
             }
