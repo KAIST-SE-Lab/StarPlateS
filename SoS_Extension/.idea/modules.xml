@@ -2,7 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/SoS_Extension.iml" filepath="$PROJECT_DIR$/SoS_Extension.iml" />
+      <module fileurl="file://$PROJECT_DIR$/SoS_Extension1.iml" filepath="$PROJECT_DIR$/SoS_Extension1.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../examples/platoon_SoS/platoon_SoS.iml" filepath="$PROJECT_DIR$/../examples/platoon_SoS/platoon_SoS.iml" />
     </modules>
   </component>
 </project>

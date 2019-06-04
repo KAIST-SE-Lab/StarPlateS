@@ -1,0 +1,1 @@
+opp_run -r 0 -m -u Cmdenv -c Platooning -n ..:../../src -l ../../src/VENTOS_Public omnetpp.ini

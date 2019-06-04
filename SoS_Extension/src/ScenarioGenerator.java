@@ -39,14 +39,12 @@ public class ScenarioGenerator {
         plEvents_.add("pltLeave");
         plEvents_.add("pltSplit");
 
-        conditions_.put("leaves", "");
     }
 
     public void generateRandomScenario(int num) {
         extractPools();
-        nodeAssign(num);
 
-        generateTrafficControl(150);
+        generateTrafficControl(150, num);
     }
 
     private void extractPools() {
@@ -81,7 +79,7 @@ public class ScenarioGenerator {
         }
     }
 
-    private void nodeAssign(int num) {
+    private void nodeAssign() {
         //File inFile = new File("../examples/platoon_SoS/addNode.xml");
         File outFile = new File("../examples/platoon_SoS/addNode.xml");
 
@@ -139,7 +137,7 @@ public class ScenarioGenerator {
         ret += "begin=\"" + 5 + "\" ";
         ret += "end=\"" + 200 + "\" ";
         ret += "distribution=\"" + "deterministic" + "\" ";
-        ret += "period=\"" + 1 + "\"  />";
+        ret += "period=\"" + 5 + "\"  />";
         return ret;
     }
 
@@ -159,52 +157,63 @@ public class ScenarioGenerator {
         return tmp;
     }
 
-    private void generateTrafficControl(int end) {
+    private void generateTrafficControl(int end, int numScenario) {
         File outFile = new File("../examples/platoon_SoS/trafficControl.xml");
 
-        BufferedWriter bw = null;
-        try {
-            bw = new BufferedWriter(new FileWriter(outFile));
-            bw.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
-            bw.newLine();
-            bw.newLine();
-            bw.write("<trafficControl id=\"example_0\">\n");
+            BufferedWriter bw = null;
+            try {
+                bw = new BufferedWriter(new FileWriter(outFile));
+                bw.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
+                bw.newLine();
+                bw.newLine();
 
-            for(int t = 5; t <= end; t+=20) {
-                // Change speed of all Platoons assigned as nodes for starting simulation
-                if(t == 5) {
-                    for (String key : conditions_.keySet()) {
-                        if (key.contains("veh")) {
-                            bw.newLine();
-                            bw.write("<speed id=\"" + key + "\" begin=\"" + t + "\" value=\"20\" />  ");
+                for(int i = 0; i < numScenario; i++) {
+                    // Generate addNode.xml
+                    nodeAssign();
+                    conditions_.put("leaves", "");
+
+                    bw.write("<trafficControl id=\"example_" + i + "\">\n");
+
+                    for (int t = 5; t <= end; t += 30) {
+                        // Change speed of all Platoons assigned as nodes for starting simulation
+                        if (t == 5) {
+                            for (String key : conditions_.keySet()) {
+                                if (key.contains("veh")) {
+                                    bw.newLine();
+                                    bw.write("<speed id=\"" + key + "\" begin=\"" + t + "\" value=\"20\" />  ");
+                                }
+                            }
+                            continue;
                         }
+
+                        Random r = new Random();
+
+                        // Select random event and check availability
+                        String selectedEvent = plEvents_.get(r.nextInt(plEvents_.size()));
+
+                        if (!availabilityCheck(selectedEvent)) continue;
+                        System.out.println(selectedEvent);
+
+                        String ret = assignEvent(bw, selectedEvent, t, r);
+                        String[] rets = ret.split("/");
+                        System.out.println(ret);
+
+                        updateConditions(rets[0], selectedEvent, rets[1]);
+                        System.out.println(conditions_);
                     }
-                    continue;
+
+                    bw.write("\n</trafficControl>\n\n");
+                    conditions_.clear();
                 }
-
-                Random r = new Random();
-
-                // Select random event and check availability
-                String selectedEvent = plEvents_.get(r.nextInt(plEvents_.size()));
-
-                if(!availabilityCheck(selectedEvent)) continue;
-                System.out.println(selectedEvent);
-
-                String ret = assignEvent(bw, selectedEvent, t, r);
-                String[] rets = ret.split("/");
-                System.out.println(ret);
-
-                updateConditions(rets[0], selectedEvent, rets[1]);
-                System.out.println(conditions_);
+                bw.flush();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+                if (bw != null) try {
+                    bw.close();
+                } catch (IOException e) {
+                }
             }
-
-            bw.write("\n</trafficControl>");
-            bw.flush();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }finally {
-            if(bw != null) try {bw.close(); } catch (IOException e) {}
-        }
     }
 
     private void updateConditions(String id, String event, String attr) {
@@ -363,7 +372,7 @@ public class ScenarioGenerator {
                         if(key.contains("veh.") || key.contains("veh1.")) vehs.add(key);
                     }
                     sV = vehs.get(r.nextInt(vehs.size()));
-                    bw.write("<pltMerge pltId=\"" + sV + "\" begin=\"" + begin + "\" />");
+                    bw.write("<pltMerge pltId=\"" + sV + "\" begin=\"" + begin + "\" />\n");
                     return sV + "/ ";
                 }
                 case "pltLeave": {
@@ -401,7 +410,7 @@ public class ScenarioGenerator {
                     //sV += "." + r.nextInt(Integer.parseInt(conditions_.get(sV)));
                     //bw.write("<pltSplit splitVehId=\"" + sV + "\" begin=\"" + begin + "\" /> \n");
                     bw.write("<pltSplit pltId=\"" + sV  + "\" splitIndex=\"" +
-                            splitIndex + "\" begin=\"" + begin + "\" />");
+                            splitIndex + "\" begin=\"" + begin + "\" />\n");
 
                     return sV + "/" + splitIndex;
                 }
