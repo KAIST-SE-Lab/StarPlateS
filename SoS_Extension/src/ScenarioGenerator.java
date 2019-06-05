@@ -50,7 +50,7 @@ public class ScenarioGenerator {
     private void extractPools() {
 
         try {
-            File file = new File("../examples/platoon_SoS/sumocfg/4hello.rou.xml");
+            File file = new File("./examples/platoon_SoS/sumocfg/4hello.rou.xml");
             DocumentBuilderFactory docBuildFact = DocumentBuilderFactory.newInstance();
             DocumentBuilder docBuild = docBuildFact.newDocumentBuilder();
             Document doc = docBuild.parse(file);
@@ -81,7 +81,7 @@ public class ScenarioGenerator {
 
     private void nodeAssign() {
         //File inFile = new File("../examples/platoon_SoS/addNode.xml");
-        File outFile = new File("../examples/platoon_SoS/addNode.xml");
+        File outFile = new File("./examples/platoon_SoS/addNode.xml");
 
         BufferedWriter bw = null;
         try {
@@ -158,7 +158,7 @@ public class ScenarioGenerator {
     }
 
     private void generateTrafficControl(int end, int numScenario) {
-        File outFile = new File("../examples/platoon_SoS/trafficControl.xml");
+        File outFile = new File("./examples/platoon_SoS/trafficControl.xml");
 
             BufferedWriter bw = null;
             try {
@@ -391,7 +391,7 @@ public class ScenarioGenerator {
 
                         t_f = false;
                         for(String s : leaves) {
-                            if(s == sV + "." + leaveIndex) t_f = true;
+                            if(s.equals(sV + "." + leaveIndex)) t_f = true; // Same Leave Scenario generated
                         }
                     }
 
