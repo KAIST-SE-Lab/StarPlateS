@@ -3,13 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="75c4920a-6ed4-4558-840e-859c3671a5bd" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SoS_Extension/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/SoS_Extension/.idea/modules.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SoS_Extension/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/SoS_Extension/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SoS_Extension/SoS_Extension1.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SoS_Extension/src/Main.class" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/SoS_Extension/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/SoS_Extension/src/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SoS_Extension/src/ScenarioGenerator.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SoS_Extension/src/ScenarioGenerator.java" beforeDir="false" afterPath="$PROJECT_DIR$/SoS_Extension/src/ScenarioGenerator.java" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -22,21 +16,21 @@
     <option name="isMigrated" value="true" />
   </component>
   <component name="FileEditorManager">
-    <leaf>
-      <file pinned="false" current-in-tab="false">
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/SoS_Extension/src/Main.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="209">
-              <caret line="21" column="24" lean-forward="true" selection-start-line="21" selection-start-column="24" selection-end-line="21" selection-end-column="24" />
+            <state relative-caret-position="431">
+              <caret line="45" lean-forward="true" selection-start-line="45" selection-end-line="45" />
             </state>
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/SoS_Extension/src/ScenarioGenerator.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="450">
-              <caret line="393" column="108" selection-start-line="393" selection-start-column="108" selection-end-line="393" selection-end-column="108" />
+            <state relative-caret-position="188">
+              <caret line="361" lean-forward="true" selection-start-line="361" selection-end-line="361" />
             </state>
           </provider>
         </entry>
@@ -58,8 +52,8 @@
       <list>
         <option value="$PROJECT_DIR$/SoS_Extension/ScenarioGeneration/src/ScenarioGenerator.java" />
         <option value="$PROJECT_DIR$/SoS_Extension/src/ScenarioGeneration.java" />
-        <option value="$PROJECT_DIR$/SoS_Extension/src/Main.java" />
         <option value="$PROJECT_DIR$/SoS_Extension/src/ScenarioGenerator.java" />
+        <option value="$PROJECT_DIR$/SoS_Extension/src/Main.java" />
       </list>
     </option>
   </component>
@@ -79,10 +73,10 @@
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="308" />
-    <option name="y" value="114" />
+    <option name="x" value="199" />
+    <option name="y" value="111" />
     <option name="width" value="1433" />
-    <option name="height" value="1019" />
+    <option name="height" value="1020" />
   </component>
   <component name="ProjectLevelVcsManager">
     <ConfirmationsSetting value="1" id="Add" />
@@ -92,22 +86,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="ProjectPane">
-        <subPane>
-          <expand>
-            <path>
-              <item name="VENTOS_Public" type="b2602c69:ProjectViewProjectNode" />
-              <item name="SoS_Extension" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="VENTOS_Public" type="b2602c69:ProjectViewProjectNode" />
-              <item name="SoS_Extension" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-            </path>
-          </expand>
-          <select />
-        </subPane>
-      </pane>
       <pane id="Scope" />
       <pane id="PackagesPane">
         <subPane>
@@ -115,6 +93,17 @@
             <path>
               <item name="VENTOS_Public" type="58d84e3e:PackageViewProjectNode" />
               <item name="SoS_Extension" type="616d4139:PackageViewModuleNode" />
+            </path>
+          </expand>
+          <select />
+        </subPane>
+      </pane>
+      <pane id="ProjectPane">
+        <subPane>
+          <expand>
+            <path>
+              <item name="VENTOS_Public" type="b2602c69:ProjectViewProjectNode" />
+              <item name="SoS_Extension" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -161,17 +150,16 @@
     <configuration />
   </component>
   <component name="ToolWindowManager">
-    <frame x="65" y="-4" width="1855" height="1204" extended-state="6" />
-    <editor active="true" />
+    <frame x="199" y="111" width="1433" height="1020" extended-state="0" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.19789939" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.27469358" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Designer" order="2" />
       <window_info id="UI Designer" order="3" />
       <window_info id="Favorites" order="4" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.3914623" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.3827699" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -190,17 +178,17 @@
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/SoS_Extension/ScenarioGeneration/src/ScenarioGenerator.java" />
     <entry file="file://$PROJECT_DIR$/SoS_Extension/src/ScenarioGeneration.java" />
-    <entry file="file://$PROJECT_DIR$/SoS_Extension/src/Main.java">
+    <entry file="file://$PROJECT_DIR$/SoS_Extension/src/ScenarioGenerator.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="209">
-          <caret line="21" column="24" lean-forward="true" selection-start-line="21" selection-start-column="24" selection-end-line="21" selection-end-column="24" />
+        <state relative-caret-position="188">
+          <caret line="361" lean-forward="true" selection-start-line="361" selection-end-line="361" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/SoS_Extension/src/ScenarioGenerator.java">
+    <entry file="file://$PROJECT_DIR$/SoS_Extension/src/Main.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="450">
-          <caret line="393" column="108" selection-start-line="393" selection-start-column="108" selection-end-line="393" selection-end-column="108" />
+        <state relative-caret-position="431">
+          <caret line="45" lean-forward="true" selection-start-line="45" selection-end-line="45" />
         </state>
       </provider>
     </entry>

@@ -1,29 +1,67 @@
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.StringTokenizer;
 
 public class Main {
 
     public static void main(String[] args) {
-	// write your code here
-        ScenarioGenerator scenarioGenerator = new ScenarioGenerator();
+	    // Generate Random Scenario
+	    ScenarioGenerator scenarioGenerator = new ScenarioGenerator();
         scenarioGenerator.generateRandomScenario(2);
 
-        String s;
+        // Update Omnet.ini file for executing each scenario
+        File omnetConf = new File("./examples/platoon_SoS/omnetpp.ini");
+        for(int i = 0; i < 2; i++) {
+            try {
+                BufferedReader reader = new BufferedReader(new FileReader(omnetConf));
+
+                String line = reader.readLine();
+                System.out.println(line);
+
+                String content = "";
+                while (line != null) {
+                    if (line.contains("trafficControl")) {
+                        StringTokenizer st = new StringTokenizer(line, "=");
+                        String pre = st.nextToken();
+                        String post = st.nextToken();
+
+                        post = post.substring(0, post.length() - 2) + i +"\"";
+
+                        content += pre + "=" + post + "\n";
+                    } else {
+                        content += line + "\n";
+                    }
+                    line = reader.readLine();
+                }
+                reader.close();
+
+                FileWriter writer = new FileWriter(omnetConf);
+                writer.write(content);
+
+                writer.close();
+            } catch (Exception e) {
+                System.out.println(e);
+            }
 
 
-        Runtime rt = Runtime.getRuntime();
-        try {
-            Process p = rt.exec("opp_run -r 0 -m -u Cmdenv -c Platooning -n ..:../../src -l ../../src/VENTOS_Public omnetpp.ini", null, new File("./examples/platoon_SoS"));
-            BufferedReader br = new BufferedReader(
-                    new InputStreamReader(p.getInputStream()));
-            while ((s = br.readLine()) != null)
-                System.out.println("line: " + s);
-            p.waitFor();
-            System.out.println ("exit: " + p.exitValue());
-            p.destroy();
-        } catch(Exception e) {
-            System.out.println(e);
+            // Executing the simulator with specific trafficControl events.
+            String s;
+            Runtime rt = Runtime.getRuntime();
+            try {
+                Process p = rt.exec("opp_run -r 0 -m -u Cmdenv -c Platooning -n ..:../../src -l ../../src/VENTOS_Public omnetpp.ini", null, new File("./examples/platoon_SoS"));
+
+                // Logging the process result
+                BufferedReader br = new BufferedReader(
+                        new InputStreamReader(p.getInputStream()));
+                while ((s = br.readLine()) != null)
+                    System.out.println("line: " + s);
+                p.waitFor();
+                System.out.println("exit: " + p.exitValue());
+                p.destroy();
+            } catch (Exception e) {
+                System.out.println(e);
+            }
         }
     }
 }
