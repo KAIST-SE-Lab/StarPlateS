@@ -4,11 +4,11 @@
 
 <speed id="veh" begin="5" value="20" />  
 <speed id="veh1" begin="5" value="20" />  
-<pltLeave pltId="veh" leaveIndex="2" begin="45"/> 
+<optSize begin="45" value="8" /> 
 
-<pltSplit pltId="veh" splitIndex="1" begin="65" />
+<pltLeave pltId="veh1" leaveIndex="3" begin="65"/> 
 
-<pltLeave pltId="veh1" leaveIndex="3" begin="85"/> 
+<pltLeave pltId="veh" leaveIndex="2" begin="85"/> 
 
 </trafficControl>
 
@@ -16,13 +16,9 @@
 
 <speed id="veh" begin="5" value="20" />  
 <speed id="veh1" begin="5" value="20" />  
-<pltSplit pltId="veh" splitIndex="1" begin="25" />
+<optSize begin="45" value="4" /> 
 
-<optSize begin="45" value="8" /> 
-
-<pltLeave pltId="veh.1" leaveIndex="1" begin="65"/> 
-
-<optSize begin="85" value="4" /> 
+<pltMerge pltId="veh.4" begin="65" />
 
 </trafficControl>
 

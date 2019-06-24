@@ -8,11 +8,11 @@ public class Main {
     public static void main(String[] args) {
 	    // Generate Random Scenario
 	    ScenarioGenerator scenarioGenerator = new ScenarioGenerator();
-        scenarioGenerator.generateRandomScenario(2);
+        scenarioGenerator.generateRandomScenario(3);
 
         // Update Omnet.ini file for executing each scenario
         File omnetConf = new File("./examples/platoon_SoS/omnetpp.ini");
-        for(int i = 0; i < 2; i++) {
+        for(int i = 0; i < 3; i++) {
             try {
                 BufferedReader reader = new BufferedReader(new FileReader(omnetConf));
 
@@ -54,7 +54,7 @@ public class Main {
             }
 
 
-            for(int j = 0; j < 1; j++) {
+            for(int j = 0; j < 2; j++) {
                 // Executing the simulator with specific trafficControl events.
                 String s;
                 Runtime rt = Runtime.getRuntime();
@@ -76,6 +76,10 @@ public class Main {
                 File plnConfig = new File("./examples/platoon_SoS/results/000_plnConfig.txt");
                 File plnData = new File("./examples/platoon_SoS/results/000_plnData.txt");
                 File vehData = new File("./examples/platoon_SoS/results/000_vehicleData.txt");
+
+                System.out.println(plnConfig.renameTo(new File("./examples/platoon_SoS/results/" + i + "_" + j +"plnConfig.txt")));
+                plnData.renameTo(new File("./examples/platoon_SoS/results/" + i + "_" + j +"plnData.txt"));
+                vehData.renameTo(new File("./examples/platoon_SoS/results/" + i + "_" + j +"vehicleData.txt"));
             }
         }
     }
