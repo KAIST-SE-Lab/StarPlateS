@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <addNode id="example_0">
-<vehicle_platoon id="veh" type="TypeCACC1" size="6" route="route1" departPos="100" departLane="1" platoonMaxSpeed="0" pltMgmtProt="true" optSize="4" maxSize="10" />
-<vehicle_platoon id="veh1" type="TypeCACC1" size="6" route="route1" departPos="100" departLane="0" platoonMaxSpeed="0" pltMgmtProt="true" optSize="4" maxSize="10" />
-<vehicle_flow id="flow1" type="TypeManual,truck" typeDist="70,30" color="gold" route="route1" begin="0" end="200" distribution="deterministic" period="5" DSRCprob="0" />
+<vehicle_platoon id="veh" type="TypeCACC1" size="3" route="route1" departPos="100" departLane="1" platoonMaxSpeed="0" pltMgmtProt="true" optSize="4" maxSize="10" />
+<vehicle_platoon id="veh1" type="TypeCACC1" size="4" route="route1" departPos="100" departLane="0" platoonMaxSpeed="0" pltMgmtProt="true" optSize="4" maxSize="10" />
+<vehicle_flow id="flow1" type="TypeManual,truck" typeDist="70,30" color="gold" route="route1" begin="1" end="200" distribution="deterministic" period="5" DSRCprob="0" />
 </addNode>
 
 <addNode id="example_1">
-<vehicle_platoon id="veh" type="TypeCACC1" size="7" route="route1" departPos="100" departLane="2" platoonMaxSpeed="0" pltMgmtProt="true" optSize="4" maxSize="10" />
-<vehicle_platoon id="veh1" type="TypeCACC1" size="7" route="route1" departPos="100" departLane="1" platoonMaxSpeed="0" pltMgmtProt="true" optSize="4" maxSize="10" />
-<vehicle_flow id="flow1" type="TypeManual,truck" typeDist="70,30" color="gold" route="route1" begin="0" end="200" distribution="deterministic" period="5" DSRCprob="0" />
+<vehicle_platoon id="veh" type="TypeCACC1" size="3" route="route1" departPos="100" departLane="1" platoonMaxSpeed="0" pltMgmtProt="true" optSize="4" maxSize="10" />
+<vehicle_platoon id="veh1" type="TypeCACC1" size="6" route="route1" departPos="100" departLane="2" platoonMaxSpeed="0" pltMgmtProt="true" optSize="4" maxSize="10" />
+<vehicle_flow id="flow1" type="TypeManual,truck" typeDist="70,30" color="gold" route="route1" begin="1" end="200" distribution="deterministic" period="5" DSRCprob="0" />
 </addNode>
 

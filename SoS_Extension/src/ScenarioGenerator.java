@@ -113,7 +113,7 @@ public class ScenarioGenerator {
     }
 
     private String platoonInsert(String id) {
-        Random r = new Random(System.currentTimeMillis());
+        Random r = new Random();
         int size = r.nextInt(5) + 3;
 
         String ret = "<vehicle_platoon id=\"" + id +"\" ";
@@ -129,7 +129,14 @@ public class ScenarioGenerator {
         ret += "platoonMaxSpeed=\"" + 0 + "\" ";
         ret += "pltMgmtProt=\"" + "true" + "\" ";
         ret += "optSize=\"" + 4 + "\" ";
-        ret += "maxSize=\"" + 10 + "\" />";
+
+        if(r.nextInt(100) < 70)
+            ret += "maxSize=\"" + 10 + "\" />";
+        else {
+            ret += "maxSize=\"" + 10 + "\" >\n";
+            ret += "<member index=\"" + r.nextInt(size) +"\" type=\"" + vTypes_.get(4) + "\" />\n";
+            ret += "</vehicle_platoon>";
+        }
 
         updateConditions(id, "plin", Integer.toString(size));
 
@@ -143,7 +150,7 @@ public class ScenarioGenerator {
         ret += "typeDist=\"70,30\" ";
         ret += "color=\"" + "gold" + "\" ";
         ret += "route=\"" + "route1" + "\" ";
-        ret += "begin=\"" + 0 + "\" ";
+        ret += "begin=\"" + 1 + "\" ";
         ret += "end=\"" + 200 + "\" ";
         ret += "distribution=\"" + "deterministic" + "\" ";
         ret += "period=\"" + 5 + "\" ";
