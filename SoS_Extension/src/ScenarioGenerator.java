@@ -83,6 +83,8 @@ public class ScenarioGenerator {
         //File inFile = new File("../examples/platoon_SoS/addNode.xml");
         File outFile = new File("./examples/platoon_SoS/addNode.xml");
 
+        Random r = new Random(System.currentTimeMillis());
+
         BufferedWriter bw = null;
         try {
             bw = new BufferedWriter(new FileWriter(outFile, true));
@@ -93,6 +95,10 @@ public class ScenarioGenerator {
             bw.newLine();
             bw.write(vFlowInsert("flow1"));
 
+            if(r.nextInt(100) >= 99) { // 1% of accident
+                bw.write("<vehicle id=\"stopped\" type=\"" + vTypes_.get(0) + "\" route=\"" + 0 + "\" " +
+                        "departLane=\"" + r.nextInt(3) + "\" departPos=\"150\" status=\"stopped\" duration=\"50\"");
+            }
 
             bw.write("\n</addNode>");
             bw.newLine();
@@ -140,7 +146,8 @@ public class ScenarioGenerator {
         ret += "begin=\"" + 0 + "\" ";
         ret += "end=\"" + 200 + "\" ";
         ret += "distribution=\"" + "deterministic" + "\" ";
-        ret += "period=\"" + 5 + "\"  />";
+        ret += "period=\"" + 5 + "\" ";
+        ret += "DSRCprob=\"" + 0 + "\" />";
         return ret;
     }
 
