@@ -44,7 +44,7 @@ public class ScenarioGenerator {
     public void generateRandomScenario(int num) {
         extractPools();
 
-        generateTrafficControl(150, num);
+        generateTrafficControl(100, num);
     }
 
     private void extractPools() {
@@ -79,23 +79,25 @@ public class ScenarioGenerator {
         }
     }
 
-    private void nodeAssign() {
+    private void nodeAssign(int i) {
         //File inFile = new File("../examples/platoon_SoS/addNode.xml");
         File outFile = new File("./examples/platoon_SoS/addNode.xml");
 
         BufferedWriter bw = null;
         try {
-            bw = new BufferedWriter(new FileWriter(outFile));
-            bw.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
-            bw.newLine();
-            bw.newLine();
-            bw.write("<addNode id=\"example_0\">\n");
+            bw = new BufferedWriter(new FileWriter(outFile, true));
+            bw.write("<addNode id=\"example_" + i + "\">\n");
             bw.write(platoonInsert("veh"));
             bw.newLine();
             bw.write(platoonInsert("veh1"));
             bw.newLine();
             bw.write(vFlowInsert("flow1"));
+
+
             bw.write("\n</addNode>");
+            bw.newLine();
+            bw.newLine();
+
             bw.flush();
         } catch (IOException e) {
             e.printStackTrace();
@@ -105,9 +107,12 @@ public class ScenarioGenerator {
     }
 
     private String platoonInsert(String id) {
+        Random r = new Random(System.currentTimeMillis());
+        int size = r.nextInt(5) + 3;
+
         String ret = "<vehicle_platoon id=\"" + id +"\" ";
         ret += "type=\"" + vTypes_.get(2) + "\" ";
-        ret += "size=\""+ 6 + "\" ";
+        ret += "size=\""+ size + "\" ";
 
         String tmp = routeConditionChecker(id);
         StringTokenizer st = new StringTokenizer(tmp, "_"); // return: route_lane
@@ -120,10 +125,7 @@ public class ScenarioGenerator {
         ret += "optSize=\"" + 4 + "\" ";
         ret += "maxSize=\"" + 10 + "\" />";
 
-        String vehicles = "";
-        for(int i = 0; i < 6; i++) vehicles += i + " ";
-
-        updateConditions(id, "plin", Integer.toString(6));
+        updateConditions(id, "plin", Integer.toString(size));
 
         return ret;
     }
@@ -131,10 +133,11 @@ public class ScenarioGenerator {
     private String vFlowInsert(String id) {
         String ret = "<vehicle_flow id=\"" + id +"\" ";
 
-        ret += "type=\"" + vTypes_.get(1) + "\" ";
+        ret += "type=\"" + vTypes_.get(0) + "," + vTypes_.get(3) + "\" ";
+        ret += "typeDist=\"70,30\" ";
         ret += "color=\"" + "gold" + "\" ";
         ret += "route=\"" + "route1" + "\" ";
-        ret += "begin=\"" + 5 + "\" ";
+        ret += "begin=\"" + 0 + "\" ";
         ret += "end=\"" + 200 + "\" ";
         ret += "distribution=\"" + "deterministic" + "\" ";
         ret += "period=\"" + 5 + "\"  />";
@@ -169,12 +172,12 @@ public class ScenarioGenerator {
 
                 for(int i = 0; i < numScenario; i++) {
                     // Generate addNode.xml
-                    nodeAssign();
+                    nodeAssign(i);
                     conditions_.put("leaves", "");
 
                     bw.write("<trafficControl id=\"example_" + i + "\">\n");
 
-                    for (int t = 5; t <= end; t += 30) {
+                    for (int t = 5; t <= end; t += 20) {
                         // Change speed of all Platoons assigned as nodes for starting simulation
                         if (t == 5) {
                             for (String key : conditions_.keySet()) {
