@@ -1,20 +1,12 @@
 import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.transform.OutputKeys;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.nio.Buffer;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -95,10 +87,9 @@ public class ScenarioGenerator {
             bw.newLine();
             bw.write(vFlowInsert("flow1"));
 
-            if(r.nextInt(100) >= 99) { // 1% of accident
-                bw.write("<vehicle id=\"stopped\" type=\"" + vTypes_.get(0) + "\" route=\"" + 0 + "\" " +
-                        "departLane=\"" + r.nextInt(3) + "\" departPos=\"150\" status=\"stopped\" duration=\"50\"");
-            }
+            bw.write("\n<vehicle id=\"stopped\" type=\"" + vTypes_.get(0) + "\" route=\"route" + 1 + "\" " +
+                    "departLane=\"" + r.nextInt(3) + "\" departPos=\""+ (r.nextInt(500)+500) +"\" status=\"stopped\"" +
+                    " duration=\"50\"/>");
 
             bw.write("\n</addNode>");
             bw.newLine();
@@ -191,6 +182,9 @@ public class ScenarioGenerator {
 
                     bw.write("<trafficControl id=\"example_" + i + "\">\n");
 
+                    String ret;
+                    String[] rets;
+                    Random r = new Random();
                     for (int t = 5; t <= end; t += 20) {
                         // Change speed of all Platoons assigned as nodes for starting simulation
                         if (t == 5) {
@@ -200,19 +194,24 @@ public class ScenarioGenerator {
                                     bw.write("<speed id=\"" + key + "\" begin=\"" + t + "\" value=\"20\" />  ");
                                 }
                             }
+                            updateConditions(" ", "optSize", "4");
+                            System.out.println(conditions_);
                             continue;
                         }
 
-                        Random r = new Random();
+                        String selectedEvent;
 
                         // Select random event and check availability
-                        String selectedEvent = plEvents_.get(r.nextInt(plEvents_.size()));
+                        if(r.nextInt(100) < 80)
+                            selectedEvent = plEvents_.get(r.nextInt(plEvents_.size()));
+                        else
+                            selectedEvent = "speed";
 
                         if (!availabilityCheck(selectedEvent)) continue;
                         System.out.println(selectedEvent);
 
-                        String ret = assignEvent(bw, selectedEvent, t, r);
-                        String[] rets = ret.split("/");
+                        ret = assignEvent(bw, selectedEvent, t, r);
+                        rets = ret.split("/");
                         System.out.println(ret);
 
                         updateConditions(rets[0], selectedEvent, rets[1]);
@@ -337,12 +336,16 @@ public class ScenarioGenerator {
                 }
                 break;
             }
+            case "speed" : {
+                break;
+            }
         }
     }
 
     private boolean availabilityCheck(String event) {
         boolean ret = false;
         switch (event) {
+            case "speed":
             case "optSize": {
                 return true;
             }
@@ -379,7 +382,7 @@ public class ScenarioGenerator {
 
             switch (event) {
                 case "optSize": {                                         // Optimal size of platoon: 2 ~ 6
-                    int ret = (r.nextInt(5) + 4);
+                    int ret= (r.nextInt(5) + 4);
                     bw.write("<optSize begin=\"" + begin +"\" value=\"" + ret + "\" /> \n");
                     return " " + "/" + ret;
                 }
@@ -430,6 +433,16 @@ public class ScenarioGenerator {
                             splitIndex + "\" begin=\"" + begin + "\" />\n");
 
                     return sV + "/" + splitIndex;
+                }
+                case "speed": {
+                    ArrayList<String> vehs = new ArrayList<>();
+                    for(String key : conditions_.keySet()) {
+                        if(key.contains("veh") || key.contains("veh1")) vehs.add(key);
+                    }
+                    sV = vehs.get(r.nextInt(vehs.size()));
+
+                    bw.write("<speed id=\"" + sV + "\" begin=\"" + begin + "\" value=\""+
+                            (r.nextInt(31)+10)+"\" />  ");
                 }
             }
 

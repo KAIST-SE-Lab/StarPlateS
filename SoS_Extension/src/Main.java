@@ -1,27 +1,27 @@
 import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.nio.Buffer;
 import java.util.StringTokenizer;
+import java.util.Random;
 
 public class Main {
 
     public static void main(String[] args) {
 	    // Generate Random Scenario
 	    ScenarioGenerator scenarioGenerator = new ScenarioGenerator();
-        scenarioGenerator.generateRandomScenario(3);
+        scenarioGenerator.generateRandomScenario(2);
 
         // Update Omnet.ini file for executing each scenario
         File omnetConf = new File("./examples/platoon_SoS/omnetpp.ini");
-        for(int i = 0; i < 3; i++) {
+        for(int i = 0; i < 2; i++) {
             try {
                 BufferedReader reader = new BufferedReader(new FileReader(omnetConf));
 
                 String line = reader.readLine();
-                System.out.println(line);
+                //System.out.println(line);
 
                 String content = "";
                 while (line != null) {
-                    System.out.println("OMNETPP");
+                    //System.out.println("OMNETPP");
                     if(line.contains("addNode")) {
                         StringTokenizer st = new StringTokenizer(line, "=");
                         String pre = st.nextToken();
@@ -53,11 +53,45 @@ public class Main {
                 System.out.println(e);
             }
 
+            Random r = new Random();
+            int accidentThreshold = (int)(1000 * 0.01) + r.nextInt(10);
 
-            for(int j = 0; j < 2; j++) {
+            for(int j = 0; j < 1000; j++) {
                 // Executing the simulator with specific trafficControl events.
                 String s;
                 Runtime rt = Runtime.getRuntime();
+                System.out.println("RUNNING");
+
+                if(j == accidentThreshold) {
+                    System.out.println("CHANGED");
+                    File addNode = new File("./examples/platoon_SoS/addNode.xml");
+                    String content = "";
+                    try {
+                        BufferedReader br = new BufferedReader(new FileReader(addNode));
+
+                        String line = br.readLine();
+                        //System.out.println(line);
+
+                        while (line != null) {
+                            if(line.contains("stopped")) {
+                                System.out.println(line);
+                                content += "\n";
+                            }
+                            else content += line + "\n";
+                            line = br.readLine();
+                        }
+
+                        br.close();
+
+                        FileWriter writer = new FileWriter(addNode);
+                        writer.write(content);
+
+                        writer.close();
+                    } catch (Exception e) {
+                        System.out.println(e);
+                    }
+                }
+
                 try {
                     Process p = rt.exec("opp_run -m -u Cmdenv -c Platooning -n ..:../../src -l ../../src/VENTOS_Public omnetpp.ini", null, new File("./examples/platoon_SoS"));
 
