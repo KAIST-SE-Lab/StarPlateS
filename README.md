@@ -1,4 +1,3 @@
-# Platooning-Sandbox-for-SoS
-Platooning simulating environment for Systems of Systems verification and analysis
+# Statistical Verification Framework of Platooning SoS
 
 based on # VENTOS # project
