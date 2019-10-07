@@ -43,17 +43,17 @@ Then, replace the line starting with 'Exec' or add new command to the following 
 You don't also need to download the INET framework and OMNET++ programming examples. 
 
 6. Import VENTOS on the OMNET++
-Click "File"-> "Import" 
-Choose "General"-> "Existing Projects into Workspace" and click "Next" button
-Select *VENTOS_Public* folder as root directory and click "Finish"
-(Unselect the "Coply projects into workspace" if the VENTOS folder is already in your workspace.)
+- Click "File"-> "Import" 
+- Choose "General"-> "Existing Projects into Workspace" and click "Next" button
+- Select *VENTOS_Public* folder as root directory and click "Finish"
+ - (Unselect the "Coply projects into workspace" if the VENTOS folder is already in your workspace.)
 
 7. Run the VENTOS
-Click "Run Configurations" which is just next to the "Run" button
-Choose *OMNET++ Simulation* and generate new configuration
-Set "Working dir" to */VENTOS/examples/platoon_cacc*
-Choose *omnetpp.ini* in "ini file(s)" and *CACCVehicleStream1* in "Config name"
-Click "Apply" and "Run"
+- Click "Run Configurations" which is just next to the "Run" button
+- Choose *OMNET++ Simulation* and generate new configuration
+- Set "Working dir" to */VENTOS/examples/platoon_cacc*
+- Choose *omnetpp.ini* in "ini file(s)" and *CACCVehicleStream1* in "Config name"
+- Click "Apply" and "Run"
 
 ## Reference
 1. https://maniam.github.io/VENTOS/
