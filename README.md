@@ -33,7 +33,7 @@ If you got the message "finished!" with the following folders and file set at De
 4. Edit OMNET++ desktop shortcut
 To change the OMNET++ shortcut setting, open the shortcut file.
 <pre><code> cd ~/Desktop 
-gedit ./opensim-ide.desktop
+ gedit ./opensim-ide.desktop
 </code></pre>
 
 Then, replace the line starting with 'Exec' to the following line:
