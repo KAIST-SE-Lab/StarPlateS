@@ -62,8 +62,12 @@ You don't also need to download the INET framework and OMNET++ programming examp
 
 If it runs with SUMO gui, there would be no problem on installing the VENTOS framework. If there is any error, please check whether you thoroughly follow the above steps.
 
-### 1-2] Installing the StarPlateS framework
+### Installing the StarPlateS framework
+
+#### 1. Install Intellij IDE
+As you know there are various kinds of tools that make you convenient in developing code. We select the Intellij IDE as our default IDE, because 1) our framework is an wrap-up software of VENTOS using Java, 2) we use abstract verification module from SIMVA-SoS framework which is implemented in Java. We think that there is no problem on using other tools, such as Eclipse, Vim, etc. The following contents are documented based on using Intellij.
 
 
 ## Reference
 1. https://maniam.github.io/VENTOS/
+2. https://github.com/SESoS/SIMVA-SoS
