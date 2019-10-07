@@ -24,9 +24,7 @@ It may take 1~2 hour to check and install the essential libraries.
 <pre><code> cd VENTOS_Public
  ./runme
 </code></pre>
-
 There could be an error with downloading "omnetpp-5.4.1-src-linux-tgz" file. In that case, you can download the file at [OMNETT++5.4.1](https://omnetpp.org/download/old.html), and extract it at Desktop. After that, you can execute "runme" successfully. 
-
 If you get any other error messages when installing libraries, please refer the [VENTOS Issues](https://github.com/ManiAm/VENTOS_Public/issues) to solve the error. 
 
 ## Reference
