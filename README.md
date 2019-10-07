@@ -7,7 +7,7 @@ The framework is to effectively verify the existing Platooning management system
 The first step to use the StarPlateS is installing the VENTOS framework on your device. Because the VENTOS is optimized on the Ubuntu 16.04 64bit, MAC Sierra(10.12), Elcapitan(10.11), and Yosemite(10.10), we strongly recommend you to use one of the OS versions. 
 The following installation steps are based on the Ubuntu 16.04 64bit.
 
-### Installation of the VENTOS framework
+### Installing the VENTOS framework
 
 1. Download the git
 <pre><code> sudo apt-get install git </code></pre>
