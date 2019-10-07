@@ -20,7 +20,7 @@ I downloaded the repository at Desktop to follow the same configuration in the V
 
 3. Execute runme script in the VENTOS_Public folder.
 You should not execute the "runme" script as sudo/root. 
-It will take 1~2 hour to check and install the essential libraries. 
+It may take 1~2 hour to check and install the essential libraries. 
 <pre><code> cd VENTOS_Public
  ./runme
 </code></pre>
