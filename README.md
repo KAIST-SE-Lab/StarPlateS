@@ -9,7 +9,7 @@ The following installation steps are based on the Ubuntu 16.04 64bit.
 
 ### Installation of the VENTOS framework
 
-1. Download the git in
+1. Download the git
 <pre><code> sudo apt-get install git </code></pre>
 
 2. Clone the VENTOS_Public repository
