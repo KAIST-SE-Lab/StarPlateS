@@ -27,5 +27,33 @@ It may take 1~2 hour to check and install the essential libraries.
 There could be an error with downloading "omnetpp-5.4.1-src-linux-tgz" file. In that case, you can download the file at [OMNETT++5.4.1](https://omnetpp.org/download/old.html), and extract it at Desktop. After that, you can execute "runme" successfully. 
 If you get any other error messages when installing libraries, please refer the [VENTOS Issues](https://github.com/ManiAm/VENTOS_Public/issues) to solve the error. 
 
+![Alt text](VENTOS_Public_Install_Finish.PNG)
+If you got the message "finished!" with the following folders and file set at Desktop, the VENTOS installation is finished. 
+
+4. Edit OMNET++ desktop shortcut
+To change the OMNET++ shortcut setting, open the shortcut file.
+<pre><code> gedit ./opensim-ide.desktop
+</code></pre>
+
+Then, replace the line starting with 'Exec' or add new command to the following line:
+<pre><code> Exec=bash -i -c '~/Desktop/omnetpp-5.4.1/bin/omnetpp;$SHELL'
+</code></pre>
+
+5. Select Desktop as workspace
+You don't also need to download the INET framework and OMNET++ programming examples. 
+
+6. Import VENTOS on the OMNET++
+Click "File"-> "Import" 
+Choose "General"-> "Existing Projects into Workspace" and click "Next" button
+Select *VENTOS_Public* folder as root directory and click "Finish"
+(Unselect the "Coply projects into workspace" if the VENTOS folder is already in your workspace.)
+
+7. Run the VENTOS
+Click "Run Configurations" which is just next to the "Run" button
+Choose *OMNET++ Simulation* and generate new configuration
+Set "Working dir" to */VENTOS/examples/platoon_cacc*
+Choose *omnetpp.ini* in "ini file(s)" and *CACCVehicleStream1* in "Config name"
+Click "Apply" and "Run"
+
 ## Reference
 1. https://maniam.github.io/VENTOS/
