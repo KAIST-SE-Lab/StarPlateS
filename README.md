@@ -93,10 +93,12 @@ If you get SDK error in Intellij, please execute the following steps
 - Click "Project" in Project Settings and set your SDK to java 1.8
 
 #### 6. Run the StarPlateS 
-Click "File" -> "Open" -> *VENTOS_Public*
-Go to "Project Structure", click "Import Module", and add *SoS_Extension*
-Click "Add Configuration" and add "Application"
-Click "Run", then it will be executed.
+- Click "File" -> "Open" -> *VENTOS_Public*
+- Go to "Project Structure", click "Import Module", and add *SoS_Extension*
+- Click "Add Configuration" and add "Application" like the following figure
+
+
+- Click "Run", then it will be executed.
 
 You can check the execution logs at "VENTOS_Public/examples/platoon_SoS/results".
 
