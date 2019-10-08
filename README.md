@@ -83,7 +83,24 @@ When installing the VENTOS_Public, java 8 is installed, but it is not jdk, but j
 If you get the above message, jdk 1.8 is successfully installed in your Ubuntu.
 
 #### 5. Run Intellij with console
-When opening the Intellij IDE, please open it by console, not use shotcut icon on the menu. 
+When opening the Intellij IDE, please open it by console, not use shotcut icon on the menu. Please refer the following figure.
+
+![Alt text](run_ide.PNG)
+
+If you get SDK error in Intellij, please execute the following steps 
+- Click "File" -> "Project Structure" -> "SDKs" in Platform Settings
+- Add new JDK at */usr/lib/jvm/java-8-openjdk-amd64*, which is a common location of the jdk.
+- Click "Project" in Project Settings and set your SDK to java 1.8
+
+#### 6. Run the StarPlateS 
+Click "File" -> "Open" -> *VENTOS_Public*
+Go to "Project Structure", click "Import Module", and add *SoS_Extension*
+Click "Add Configuration" and add "Application"
+Click "Run", then it will be executed.
+
+You can check the execution logs at "VENTOS_Public/examples/platoon_SoS/results".
+
+If you get an "Invalid java release error", please change Project language level to 8, which is in "Project Structure" -> "Project".
 
 ## Reference
 1. https://maniam.github.io/VENTOS/
