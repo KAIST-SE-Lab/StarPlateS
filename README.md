@@ -97,6 +97,7 @@ If you get SDK error in Intellij, please execute the following steps
 - Go to "Project Structure", click "Import Module", and add *SoS_Extension*
 - Click "Add Configuration" and add "Application" like the following figure
 
+![Alt text](intellij_run_configuration.PNG)
 
 - Click "Run", then it will be executed.
 
