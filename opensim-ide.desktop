@@ -1,0 +1,1 @@
+Exec=bash -i -c 'home/abalon1210/Desktop/omnetpp-5.4.1/bin/omnetpp;$SHELL'
