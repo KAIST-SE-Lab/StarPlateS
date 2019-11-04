@@ -6,7 +6,7 @@ import java.util.Random;
 public class Main {
 
     public static void main(String[] args) {
-	    // Generate Random Scenario
+	    // Generate Random Scenario 
 	    ScenarioGenerator scenarioGenerator = new ScenarioGenerator();
         scenarioGenerator.generateRandomScenario(2);
 
