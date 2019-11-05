@@ -1,4 +1,5 @@
 import java.io.*;
+import java.io.FileOutputStream;
 import java.nio.Buffer;
 import java.util.StringTokenizer;
 import java.util.Random;
@@ -6,13 +7,13 @@ import java.util.Random;
 public class Main {
 
     public static void main(String[] args) {
-	    // Generate Random Scenario 
+	    // Generate Random Scenario
 	    ScenarioGenerator scenarioGenerator = new ScenarioGenerator();
-        scenarioGenerator.generateRandomScenario(2);
+        scenarioGenerator.generateRandomScenario(1);
 
         // Update Omnet.ini file for executing each scenario
         File omnetConf = new File("./examples/platoon_SoS/omnetpp.ini");
-        for(int i = 0; i < 2; i++) {
+        for(int i = 0; i < 1; i++) {
             try {
                 BufferedReader reader = new BufferedReader(new FileReader(omnetConf));
 
@@ -56,7 +57,7 @@ public class Main {
             Random r = new Random();
             int accidentThreshold = (int)(1000 * 0.01) + r.nextInt(10);
 
-            for(int j = 0; j < 1000; j++) {
+            for(int j = 0; j < 1; j++) {
                 // Executing the simulator with specific trafficControl events.
                 String s;
                 Runtime rt = Runtime.getRuntime();
@@ -93,13 +94,16 @@ public class Main {
                 }
 
                 try {
+                    System.setOut(new PrintStream(new FileOutputStream("./examples/platoon_SoS/results/consoleLog.txt")));
+                    System.out.println("####### Scenario: " + i + " #######");
                     Process p = rt.exec("opp_run -m -u Cmdenv -c Platooning -n ..:../../src -l ../../src/VENTOS_Public omnetpp.ini", null, new File("./examples/platoon_SoS"));
 
                     // Logging the process result
                     BufferedReader br = new BufferedReader(
                             new InputStreamReader(p.getInputStream()));
-                    while ((s = br.readLine()) != null)
+                    while ((s = br.readLine()) != null) {
                         System.out.println("line: " + s);
+                    }
                     p.waitFor();
                     System.out.println("exit: " + p.exitValue());
                     p.destroy();
