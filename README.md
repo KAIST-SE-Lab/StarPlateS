@@ -105,6 +105,19 @@ You can check the execution logs at "VENTOS_Public/examples/platoon_SoS/results"
 
 If you get an "Invalid java release error", please change Project language level to 8, which is in "Project Structure" -> "Project".
 
+#### 7. Git setting
+If you have any problem on repository confliciting between this and ManiAm/VENTOS_Public, please change your origin url to this repository. 
+
+In Intellij console, 
+- Check the current origin url
+<pre><code> git remote -v </code></pre>
+
+- Change the url to this repository
+<pre><code> git remote set-url origin https://github.com/abalon1210/StarPlateS.git </code></pre>
+
+- Check the current origin url again
+<pre><code> git remote -v </code></pre>
+
 ## Reference
 1. https://maniam.github.io/VENTOS/
 2. https://github.com/SESoS/SIMVA-SoS
