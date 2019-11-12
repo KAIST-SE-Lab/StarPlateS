@@ -118,6 +118,11 @@ In Intellij console,
 - Check the current origin url again
 <pre><code> git remote -v </code></pre>
 
+### Executing StarPlateS framework with localization module
+Prerequisites
+- Include GraphStream libraries, which are in the [SoS_Extension/lib] folder.
+
 ## Reference
 1. https://maniam.github.io/VENTOS/
 2. https://github.com/SESoS/SIMVA-SoS
+3. http://graphstream-project.org/
