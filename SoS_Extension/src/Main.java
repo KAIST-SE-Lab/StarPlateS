@@ -13,7 +13,7 @@ public class Main {
 
         // Update Omnet.ini file for executing each scenario
         File omnetConf = new File("./examples/platoon_SoS/omnetpp.ini");
-        for(int i = 1; i <= 1; i--) { // Number of scenarios, currently 50
+        for(int i = 1; i <= 1; i++) { // Number of scenarios, currently 50
 //            try {
 //                BufferedReader reader = new BufferedReader(new FileReader(omnetConf));
 //
