@@ -42,14 +42,13 @@ public class StructureModel {
             FileReader filereader = new FileReader(pltConfig);
             BufferedReader bufReader = new BufferedReader(filereader);
             String line="";
-//            PltNode prevPltNode;
+
             while(numEvent < 10 && (line = bufReader.readLine()) != null) { //TODO number of events
                 if ((line.contains("0.00")) || (line.contains(String.valueOf(10*numEvent + 5) + ".50"))) { // Initial Condition (0.00) and every .50 condition
                     StringTokenizer st = new StringTokenizer(line);
                     st.nextToken();
                     String timeStamp = st.nextToken();
                     if((timeStamp.equals("0.00")) || (timeStamp.equals(String.valueOf(10*numEvent + 5) + ".50"))) {
-                        System.out.println("numEvent: "+numEvent);
                         // Insert platooning service nodes and edges
                         id = st.nextToken();
                         node = "Plt_" + id;
