@@ -44,10 +44,12 @@ public class StructureModel {
             String line="";
 //            PltNode prevPltNode;
             while(numEvent < 10 && (line = bufReader.readLine()) != null) { //TODO number of events
-                if (line.contains("0.00")) { // Initial Condition
+                if ((line.contains("0.00")) || (line.contains(String.valueOf(10*numEvent + 5) + ".50"))) { // Initial Condition (0.00) and every .50 condition
                     StringTokenizer st = new StringTokenizer(line);
                     st.nextToken();
-                    if(st.nextToken().equals("0.00")) {
+                    String timeStamp = st.nextToken();
+                    if((timeStamp.equals("0.00")) || (timeStamp.equals(String.valueOf(10*numEvent + 5) + ".50"))) {
+                        System.out.println("numEvent: "+numEvent);
                         // Insert platooning service nodes and edges
                         id = st.nextToken();
                         node = "Plt_" + id;
@@ -55,12 +57,13 @@ public class StructureModel {
                         st.nextToken();
                         leader = "Plt_" + st.nextToken();
                         this.collaborationGraph.addEdge(node + "-" + leader, node, leader);
-//                        System.out.println(this.collaborationGraph.getEdgeCount());
+
                         // Insert Cruise-control service nodes and edges
                         cNode = "Crs_" + id;
                         this.collaborationGraph.addNode(cNode);
                         this.collaborationGraph.addEdge(cNode + "-" + node, node, cNode);
 
+                        // Connect Cruise-control service to Platooning service
                         String depth =st.nextToken();
                         PltNode curPltNode = new PltNode();
                         curPltNode.vehId=node;
@@ -79,53 +82,6 @@ public class StructureModel {
                         } else {
                             PltNode updateNode = searchPlt(prevPltNodes, leader);
                             this.collaborationGraph.addEdge(updateNode.cNode + "-" + node, node, updateNode.cNode);
-                            System.out.println("Follower curPltNode:"+node+" "+leader+" "+depth+" "+updateNode.cNode);
-                            updateNode.pltDepth=depth;
-                            updateNode.cNode=cNode;
-                        }
-//                        prevPltNode=curPltNode;
-                    }
-                } else if(line.contains(String.valueOf(10*numEvent + 5) + ".50")) { // Every 10 ticks, update the connections
-                                                                                    // between vehicles
-                    StringTokenizer st = new StringTokenizer(line);
-                    st.nextToken();
-                    if(st.nextToken().equals(String.valueOf(10*numEvent + 5) + ".50")) {
-                        // Insert platooning service nodes and edges
-                        id = st.nextToken();
-                        node = "Plt_" + id;
-                        this.collaborationGraph.addNode(node);
-                        st.nextToken();
-                        leader = "Plt_" + st.nextToken();
-                        this.collaborationGraph.addEdge(node + "-" + leader, node, leader);
-//                        System.out.println(node + " " + leader);
-
-                        cNode = "Crs_" + id;
-                        this.collaborationGraph.addNode(cNode);
-                        this.collaborationGraph.addEdge(cNode + "-" + node, node, cNode);
-
-                        String depth =st.nextToken();
-                        PltNode curPltNode = new PltNode();
-                        curPltNode.vehId=node;
-                        curPltNode.pltId=leader;
-                        curPltNode.pltDepth=depth;
-                        curPltNode.cNode=cNode;
-
-                        System.out.println(".5: "+ node+" "+leader+" "+depth+" "+cNode);
-
-                        if (depth.equals("0")) {
-                            if (searchPlt(prevPltNodes, leader)==null) {
-                                prevPltNodes.add(curPltNode);
-                                System.out.println("new Leader curPltNode:"+node+" "+leader+" "+depth+" "+cNode);
-                            } else {
-                                PltNode updateNode = searchPlt(prevPltNodes, leader);
-                                updateNode.pltDepth=depth;
-                                updateNode.cNode=cNode;
-                                System.out.println("old Leader curPltNode:"+node+" "+leader+" "+depth+" "+cNode);
-                            }
-                        } else {
-                            PltNode updateNode = searchPlt(prevPltNodes, leader);
-                            this.collaborationGraph.addEdge(updateNode.cNode + "-" + node, node, updateNode.cNode);
-                            System.out.println("Follower curPltNode:"+node+" "+leader+" "+depth+" "+updateNode.cNode);
                             updateNode.pltDepth=depth;
                             updateNode.cNode=cNode;
                         }
