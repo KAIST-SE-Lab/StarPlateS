@@ -23,6 +23,8 @@ public class Main {
         Graph overlappedG = new SingleGraph("CompleteStructureModel", false, false);
         ArrayList<NodeInfo> nodeInfos = new ArrayList<NodeInfo>();
         ArrayList<EdgeInfo> edgeInfos = new ArrayList<EdgeInfo>();
+        double totalPassed=0;
+        double totalFailed=0;
         for(int i = 1; i <= 1; i++) { // Number of scenarios, currently 50
 //            try {
 //                BufferedReader reader = new BufferedReader(new FileReader(omnetConf));
@@ -150,8 +152,26 @@ public class Main {
                         //tempNodeInfo.fail value
                     }
                 }
+                if (true) // simulation result pass
+                    totalPassed++;
+                else
+                    totalFailed++;
                 stm.drawGraph();
             }
+        }
+
+        for (EdgeInfo edgeInfo: edgeInfos) {
+            SuspisiousnessMeasure sm = new SuspisiousnessMeasure();
+            sm.totalFailed = totalFailed;
+            sm.totalPassed = totalPassed;
+            sm.faileds = edgeInfo.fail;
+            sm.passeds = edgeInfo.pass;
+
+            edgeInfo.tarantulaM = sm.tarantula();
+            edgeInfo.ochiaiM = sm.ochiai();
+            edgeInfo.op2M = sm.op2();
+            edgeInfo.barinelM = sm.barinel();
+            edgeInfo.dstarM = sm.dstar();
         }
     }
 
@@ -198,4 +218,9 @@ class EdgeInfo {
     String edge;
     int pass;
     int fail;
+    double tarantulaM;
+    double ochiaiM;
+    double op2M;
+    double barinelM;
+    double dstarM;
 }
