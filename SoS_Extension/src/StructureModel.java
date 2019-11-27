@@ -28,6 +28,7 @@ public class StructureModel {
         return null;
     }
 
+    public StructureModel (){}
     public StructureModel(String logAddress, int s_index, int r_index) {
         this.collaborationGraph = new SingleGraph("StructureModel" + s_index, false, false);
 

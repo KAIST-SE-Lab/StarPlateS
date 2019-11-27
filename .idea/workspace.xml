@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="75c4920a-6ed4-4558-840e-859c3671a5bd" name="Default Changelist" comment="">
+    <list default="true" id="75c4920a-6ed4-4558-840e-859c3671a5bd" name="Default Changelist" comment="Structure model based fault localization version 1 complete">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/SoS_Extension/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/SoS_Extension/src/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SoS_Extension/src/StructureModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/SoS_Extension/src/StructureModel.java" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -19,12 +20,24 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/SoS_Extension/src/Main.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1187">
-              <caret line="188" column="29" lean-forward="true" selection-start-line="188" selection-start-column="29" selection-end-line="188" selection-end-column="29" />
+            <state relative-caret-position="617">
+              <caret line="47" column="8" selection-start-line="47" selection-start-column="8" selection-end-line="47" selection-end-column="8" />
               <folding>
                 <element signature="imports" expanded="true" />
-                <element signature="e#855#865#0" expanded="true" />
-                <element signature="e#922#932#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/SoS_Extension/src/StructureModelBasedFaultLocalization.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="209">
+              <caret line="65" column="48" lean-forward="true" selection-start-line="65" selection-start-column="48" selection-end-line="65" selection-end-column="48" />
+              <folding>
+                <element signature="imports" expanded="true" />
+                <element signature="e#295#305#0" expanded="true" />
+                <element signature="e#358#368#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -33,8 +46,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/SoS_Extension/src/SuspisiousnessMeasure.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="152">
-              <caret line="8" column="20" selection-start-line="8" selection-start-column="20" selection-end-line="8" selection-end-column="20" />
+            <state relative-caret-position="95">
+              <caret line="5" column="19" lean-forward="true" selection-start-line="5" selection-start-column="19" selection-end-line="5" selection-end-column="19" />
               <folding>
                 <element signature="e#524#525#0" expanded="true" />
                 <element signature="e#558#559#0" expanded="true" />
@@ -48,8 +61,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/SoS_Extension/src/StructureModel.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1083">
-              <caret line="57" column="55" selection-start-line="57" selection-start-column="48" selection-end-line="57" selection-end-column="55" />
+            <state relative-caret-position="-223">
+              <caret line="58" column="58" lean-forward="true" selection-start-line="58" selection-start-column="58" selection-end-line="58" selection-end-column="58" />
               <folding>
                 <element signature="imports" expanded="true" />
                 <element signature="e#987#996#0" expanded="true" />
@@ -91,8 +104,9 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/SoS_Extension/src/StructureModel.java" />
         <option value="$PROJECT_DIR$/SoS_Extension/src/SuspisiousnessMeasure.java" />
+        <option value="$PROJECT_DIR$/SoS_Extension/src/StructureModel.java" />
+        <option value="$PROJECT_DIR$/SoS_Extension/src/StructureModelBasedFaultLocalization.java" />
         <option value="$PROJECT_DIR$/SoS_Extension/src/Main.java" />
       </list>
     </option>
@@ -137,6 +151,11 @@
             <path>
               <item name="VENTOS" type="b2602c69:ProjectViewProjectNode" />
               <item name="SoS_Extension" type="462c0819:PsiDirectoryNode" />
+              <item name="logs" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="VENTOS" type="b2602c69:ProjectViewProjectNode" />
+              <item name="SoS_Extension" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
@@ -152,7 +171,7 @@
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1574826759828" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1574840190221" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/SoS_Extension/lib/gs-algo-1.3.jar!/" />
     <property name="project.structure.last.edited" value="Libraries" />
     <property name="project.structure.proportion" value="0.15" />
@@ -176,6 +195,7 @@
       <output_file path="$PROJECT_DIR$/examples/platoon_SoS/results" />
       <option name="MAIN_CLASS_NAME" value="Main" />
       <module name="SoS_Extension" />
+      <option name="PROGRAM_PARAMETERS" value="-structure" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -203,7 +223,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1572857534638</updated>
-      <workItem from="1573626716239" duration="38923000" />
+      <workItem from="1573626716239" duration="49460000" />
     </task>
     <task id="LOCAL-00002" summary="Console log generation &amp; Emission log generation">
       <created>1572927168263</created>
@@ -261,11 +281,18 @@
       <option name="project" value="LOCAL" />
       <updated>1574757573930</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="temporary suspiciousness measurement">
+      <created>1574827702792</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1574827702792</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="38923000" />
+    <option name="totallyTimeSpent" value="49460000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-7" y="-7" width="2062" height="1126" extended-state="6" />
@@ -276,16 +303,16 @@
       <window_info id="Capture Tool" order="2" />
       <window_info id="Favorites" order="3" side_tool="true" />
       <window_info id="Image Layers" order="4" />
-      <window_info content_ui="combo" id="Project" order="5" weight="0.17282717" />
+      <window_info content_ui="combo" id="Project" order="5" weight="0.23726274" />
       <window_info id="Structure" order="6" side_tool="true" weight="0.25" />
       <window_info anchor="bottom" id="Docker" order="0" show_stripe_button="false" />
-      <window_info anchor="bottom" id="Version Control" order="1" weight="0.3081571" />
+      <window_info anchor="bottom" id="Version Control" order="1" weight="0.12890232" />
       <window_info anchor="bottom" id="Terminal" order="2" />
       <window_info anchor="bottom" id="Database Changes" order="3" />
       <window_info anchor="bottom" id="Event Log" order="4" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="5" />
       <window_info anchor="bottom" id="Find" order="6" />
-      <window_info anchor="bottom" id="Run" order="7" weight="0.057401814" />
+      <window_info anchor="bottom" id="Run" order="7" weight="0.28700906" />
       <window_info anchor="bottom" id="Debug" order="8" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="9" weight="0.25" />
       <window_info anchor="bottom" id="Messages" order="10" />
@@ -307,16 +334,16 @@
       <window_info id="Capture Tool" order="2" />
       <window_info id="Favorites" order="3" side_tool="true" />
       <window_info id="Image Layers" order="4" />
-      <window_info active="true" content_ui="combo" id="Project" order="5" visible="true" weight="0.17282717" />
+      <window_info content_ui="combo" id="Project" order="5" visible="true" weight="0.23726274" />
       <window_info id="Structure" order="6" side_tool="true" weight="0.25" />
       <window_info anchor="bottom" id="Docker" order="0" show_stripe_button="false" />
-      <window_info anchor="bottom" id="Version Control" order="1" weight="0.3081571" />
+      <window_info anchor="bottom" id="Version Control" order="1" weight="0.12890232" />
       <window_info anchor="bottom" id="Terminal" order="2" />
       <window_info anchor="bottom" id="Database Changes" order="3" />
       <window_info anchor="bottom" id="Event Log" order="4" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="5" />
       <window_info anchor="bottom" id="Find" order="6" />
-      <window_info anchor="bottom" id="Run" order="7" weight="0.057401814" />
+      <window_info active="true" anchor="bottom" id="Run" order="7" visible="true" weight="0.28700906" />
       <window_info anchor="bottom" id="Debug" order="8" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="9" weight="0.25" />
       <window_info anchor="bottom" id="Messages" order="10" />
@@ -402,24 +429,27 @@
     <MESSAGE value="connecting platooning service to native service" />
     <MESSAGE value="model generation refactoring" />
     <MESSAGE value="temporary structure model overlapping" />
-    <option name="LAST_COMMIT_MESSAGE" value="temporary structure model overlapping" />
+    <MESSAGE value="temporary suspiciousness measurement" />
+    <MESSAGE value="add StructureModelBasedFaultLocalization class" />
+    <option name="LAST_COMMIT_MESSAGE" value="add StructureModelBasedFaultLocalization class" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/SoS_Extension/src/StructureModel.java">
+    <entry file="file://$PROJECT_DIR$/SoS_Extension/src/StructureModelBasedFaultLocalization.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1083">
-          <caret line="57" column="55" selection-start-line="57" selection-start-column="48" selection-end-line="57" selection-end-column="55" />
+        <state relative-caret-position="209">
+          <caret line="65" column="48" lean-forward="true" selection-start-line="65" selection-start-column="48" selection-end-line="65" selection-end-column="48" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#987#996#0" expanded="true" />
+            <element signature="e#295#305#0" expanded="true" />
+            <element signature="e#358#368#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/SoS_Extension/src/SuspisiousnessMeasure.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="152">
-          <caret line="8" column="20" selection-start-line="8" selection-start-column="20" selection-end-line="8" selection-end-column="20" />
+        <state relative-caret-position="95">
+          <caret line="5" column="19" lean-forward="true" selection-start-line="5" selection-start-column="19" selection-end-line="5" selection-end-column="19" />
           <folding>
             <element signature="e#524#525#0" expanded="true" />
             <element signature="e#558#559#0" expanded="true" />
@@ -429,14 +459,23 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/SoS_Extension/src/Main.java">
+    <entry file="file://$PROJECT_DIR$/SoS_Extension/src/StructureModel.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1187">
-          <caret line="188" column="29" lean-forward="true" selection-start-line="188" selection-start-column="29" selection-end-line="188" selection-end-column="29" />
+        <state relative-caret-position="-223">
+          <caret line="58" column="58" lean-forward="true" selection-start-line="58" selection-start-column="58" selection-end-line="58" selection-end-column="58" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#855#865#0" expanded="true" />
-            <element signature="e#922#932#0" expanded="true" />
+            <element signature="e#987#996#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SoS_Extension/src/Main.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="617">
+          <caret line="47" column="8" selection-start-line="47" selection-start-column="8" selection-end-line="47" selection-end-column="8" />
+          <folding>
+            <element signature="imports" expanded="true" />
           </folding>
         </state>
       </provider>

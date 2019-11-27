@@ -14,18 +14,39 @@ import java.util.Random;
 public class Main {
 
     public static void main(String[] args) {
+        boolean isSMBFL = false;
+        boolean isBMBFL = false;
+        boolean isIMBFL = false;
+        if (args.length == 0) {
+            System.out.println("Usage: java main <switch> [<file>]");
+            System.out.println("Where: <switch> = -structure or -smbfl");
+            System.out.println("                  -behavior or -bmbfl");
+            System.out.println("                  -interplay or -imbfl");
+            System.out.println("                  -all");
+            System.exit(1);
+        }
+        if (args[0].equals("-structure") || args[0].equals("-smbfl"))
+            isSMBFL = true;
+        else if (args[0].equals("-behavior") || args[0].equals("-bmbfl"))
+            isBMBFL = true;
+        else if (args[0].equals("-interplay") || args[0].equals("-imbfl"))
+            isIMBFL = true;
+        else if (args[0].equals("-all")) {
+            isSMBFL = true;
+            isBMBFL = true;
+            isIMBFL = true;
+        }
 	    // Generate Random Scenario
 //	    ScenarioGenerator scenarioGenerator = new ScenarioGenerator();
 //        scenarioGenerator.generateRandomScenario(50);
 
         // Update Omnet.ini file for executing each scenario
         File omnetConf = new File("./examples/platoon_SoS/omnetpp.ini");
-        Graph overlappedG = new SingleGraph("CompleteStructureModel", false, false);
-        ArrayList<NodeInfo> nodeInfos = new ArrayList<NodeInfo>();
-        ArrayList<EdgeInfo> edgeInfos = new ArrayList<EdgeInfo>();
-        double totalPassed=0;
-        double totalFailed=0;
-        for(int i = 1; i <= 1; i++) { // Number of scenarios, currently 50
+        StructureModelBasedFaultLocalization smbfl = new StructureModelBasedFaultLocalization();;
+//        BehaviorModelBasedFaultLocalization bmfl TODO create new class
+//        InterplayModelBasedFautLocalization imfl TODO create new class
+        
+        for(int i = 1; i <= 3; i+=2) { // Number of scenarios, currently 50
 //            try {
 //                BufferedReader reader = new BufferedReader(new FileReader(omnetConf));
 //
@@ -122,105 +143,35 @@ public class Main {
 //                emissionData.renameTo(new File("./examples/platoon_SoS/results/" + i + "_" + j +"emissionData.txt"));
 //                vehData.renameTo(new File("./examples/platoon_SoS/results/" + i + "_" + j +"vehicleData.txt"));
 
-                StructureModel stm = new StructureModel("./logs/", i, j);
-                Graph currentG = stm.collaborationGraph;
-                for (Node node: currentG.getEachNode()) {
-                    if (!searchNode(node.getId(), overlappedG)) {
-                        overlappedG.addNode(node.getId());
-                        NodeInfo nodeInfo = new NodeInfo();
-                        nodeInfo.node = node.getId();
-                        // nodeIfo.pass value
-                        // nodeInfo.fail value
-                        nodeInfos.add(nodeInfo);
-                    } else {
-                        NodeInfo tempNodeIfo = searchNode(node.getId(), nodeInfos);
-                        //tempNodeInfo.pass value
-                        //tempNodeInfo.fail value
-                    }
-                }
-                for (Edge edge: currentG.getEachEdge()) {
-                    if (!searchEdge(edge.getId(), overlappedG)) {
-                        overlappedG.addEdge(edge.getId(), edge.getSourceNode().getId(), edge.getTargetNode().getId());
-                        EdgeInfo edgeInfo = new EdgeInfo();
-                        edgeInfo.edge = edge.getId();
-                        //edgeInfo.pass value
-                        //edgeInfo.fail value
-                        edgeInfos.add(edgeInfo);
-                    } else {
-                        EdgeInfo tempEdgeIfo = searchEdge(edge.getId(), edgeInfos);
-                        //tempNodeInfo.pass value
-                        //tempNodeInfo.fail value
-                    }
-                }
-                if (true) // simulation result pass
-                    totalPassed++;
-                else
-                    totalFailed++;
-                stm.drawGraph();
+//                boolean isTracePassed=false; //TODO get the simulation result.
+                // issue 1 insert fault vehicle?
+                if (isSMBFL)
+                    smbfl.structureModelOverlapping(false, i, j);
+                if (isBMBFL);
+//                    bmbfl.
+                if (isIMBFL);
+//                    imbfl.
+            }
+        }
+        if (isSMBFL) {
+            ArrayList<EdgeInfo> edgeInfos = smbfl.SMcalculateSuspiciousness();
+            StructureModel finalSM = new StructureModel();
+            finalSM.collaborationGraph = smbfl.overlappedG;
+            finalSM.drawGraph();
+            for (EdgeInfo edgeInfo: edgeInfos) {
+                System.out.println("name: "+edgeInfo.edge+",    pass: "+edgeInfo.pass+",    fail: "+edgeInfo.fail+",    tarantula: "+edgeInfo.tarantulaM+", ochiai: "+edgeInfo.ochiaiM + ", op2: "+edgeInfo.op2M + ",   barinel: "+edgeInfo.barinelM+", dstar: "+edgeInfo.dstarM);
+            }
+            for (NodeInfo nodeInfo: smbfl.nodeInfos) {
+                System.out.println("name: "+nodeInfo.node+",    pass: "+nodeInfo.pass+",    fail: "+nodeInfo.fail);
             }
         }
 
-        for (EdgeInfo edgeInfo: edgeInfos) {
-            SuspisiousnessMeasure sm = new SuspisiousnessMeasure();
-            sm.totalFailed = totalFailed;
-            sm.totalPassed = totalPassed;
-            sm.faileds = edgeInfo.fail;
-            sm.passeds = edgeInfo.pass;
+        if (isBMBFL) {
 
-            edgeInfo.tarantulaM = sm.tarantula();
-            edgeInfo.ochiaiM = sm.ochiai();
-            edgeInfo.op2M = sm.op2();
-            edgeInfo.barinelM = sm.barinel();
-            edgeInfo.dstarM = sm.dstar();
+        }
+
+        if (isIMBFL) {
+
         }
     }
-
-    static boolean searchNode(String nodeId, Graph overlappedG) {
-        for (Node node: overlappedG.getEachNode()) {
-            if (node.getId().equals(nodeId))
-                return true;
-        }
-        return false;
-    }
-
-    static NodeInfo searchNode (String node, ArrayList<NodeInfo> nodeInfos) {
-        for (NodeInfo tempN : nodeInfos) {
-            if (tempN.node.equals(node))
-                return tempN;
-        }
-        return null;
-    }
-
-    static boolean searchEdge (String edgeId, Graph overlappedG) {
-        for (Edge edge: overlappedG.getEachEdge()) {
-            if (edge.getId().equals(edgeId))
-                return true;
-        }
-        return false;
-    }
-
-    static EdgeInfo searchEdge (String edge, ArrayList<EdgeInfo> edgeInfos) {
-        for (EdgeInfo tempE: edgeInfos) {
-            if (tempE.edge.equals(edge))
-                return tempE;
-        }
-        return null;
-    }
-}
-
-class NodeInfo {
-    String node;
-    int pass;
-    int fail;
-}
-
-class EdgeInfo {
-    String edge;
-    int pass;
-    int fail;
-    double tarantulaM;
-    double ochiaiM;
-    double op2M;
-    double barinelM;
-    double dstarM;
 }
