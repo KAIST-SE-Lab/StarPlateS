@@ -120,7 +120,7 @@ In Intellij console,
 
 ### Executing StarPlateS framework with localization module
 Prerequisites
-- Include GraphStream libraries, which are in the [SoS_Extension/lib] folder.
+- Import GraphStream libraries, which are in the [SoS_Extension/lib] folder.
 
 ## Reference
 1. https://maniam.github.io/VENTOS/
