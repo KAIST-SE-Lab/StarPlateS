@@ -45,7 +45,7 @@ public class Main {
         StructureModelBasedFaultLocalization smbfl = new StructureModelBasedFaultLocalization();;
 //        BehaviorModelBasedFaultLocalization bmfl TODO create new class
 //        InterplayModelBasedFautLocalization imfl TODO create new class
-        
+
         for(int i = 1; i <= 3; i+=2) { // Number of scenarios, currently 50
 //            try {
 //                BufferedReader reader = new BufferedReader(new FileReader(omnetConf));
