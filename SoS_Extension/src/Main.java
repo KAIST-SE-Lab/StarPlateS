@@ -75,35 +75,6 @@ public class Main {
 //            } catch (Exception e) { // generated scenarios apply to VENTOS input files
 //                System.out.println(e);
 //            }
-        for(int i = 0; i < 1; i++) { // Number of scenarios, currently 50
-            try {
-                BufferedReader reader = new BufferedReader(new FileReader(omnetConf));
-
-                String line = reader.readLine();
-                //System.out.println(line);
-
-                String content = "";
-                while (line != null) {
-                    //System.out.println("OMNETPP");
-                    if(line.contains("addNode")) {
-
-                        content += "Network.addNode.id = \"example_" + i + "\"\n";
-                    } else if (line.contains("trafficControl")) {
-                        content += "Network.trafficControl.id = \"example_" + i + "\"\n";
-                    } else {
-                        content += line + "\n";
-                    }
-                    line = reader.readLine();
-                }
-                reader.close();
-
-                FileWriter writer = new FileWriter(omnetConf);
-                writer.write(content);
-
-                writer.close();
-            } catch (Exception e) { // generated scenarios apply to VENTOS input files
-                System.out.println(e);
-            }
 
             Random r = new Random();
             int accidentThreshold = (int)(1000 * 0.01) + r.nextInt(10);
