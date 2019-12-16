@@ -49,22 +49,14 @@ public class Main {
 //        InterplayModelBasedFautLocalization imfl TODO create new class
 
         SimulationExecutor simulationExecutor = new SimulationExecutor();
-        simulationExecutor.run(numScenario, numRepeat); // TODO add more configuration params, eventDuration, etc
-
-        // boolean isTracePassed=false; //TODO get the simulation result.
-        // issue 1 insert fault vehicle?
-        if (isSMBFL)
-            smbfl.structureModelOverlapping(false, 1, 0);
-        if (isBMBFL);
-//          bmbfl.
-        if (isIMBFL);
-//          imbfl.
+        simulationExecutor.run(numScenario, numRepeat, isSMBFL, isBMBFL, isIMBFL, smbfl); // TODO add more configuration params, eventDuration, etc
 
         if (isSMBFL) {
             ArrayList<EdgeInfo> edgeInfos = smbfl.SMcalculateSuspiciousness();
             StructureModel finalSM = new StructureModel();
             finalSM.collaborationGraph = smbfl.overlappedG;
-            finalSM.drawGraph();
+            //finalSM.drawGraph();
+            System.out.println(edgeInfos.size());
             for (EdgeInfo edgeInfo: edgeInfos) {
                 System.out.println("name: "+edgeInfo.edge+",    pass: "+edgeInfo.pass+",    fail: "+edgeInfo.fail+",    tarantula: "+edgeInfo.tarantulaM+", ochiai: "+edgeInfo.ochiaiM + ", op2: "+edgeInfo.op2M + ",   barinel: "+edgeInfo.barinelM+", dstar: "+edgeInfo.dstarM);
             }

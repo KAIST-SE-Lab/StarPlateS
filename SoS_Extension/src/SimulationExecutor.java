@@ -2,11 +2,14 @@ import java.io.*;
 import java.util.Random;
 
 public class SimulationExecutor {
-    public void run(int numScenario, int numRepeat) {
+    public void run(int numScenario, int numRepeat, Boolean isSMBFL, Boolean isBMBFL, Boolean isIMBFL,
+                    StructureModelBasedFaultLocalization smbfl) {
         // To update Omnet.ini file for executing each scenario
         File omnetConf = new File("./examples/platoon_SoS/omnetpp.ini");
 
-        for(int i = 1; i <= numScenario; i++) {
+        PrintStream origin = System.out;
+
+        for(int i = 0; i < numScenario; i++) {
             try {
                 BufferedReader reader = new BufferedReader(new FileReader(omnetConf));
 
@@ -98,10 +101,21 @@ public class SimulationExecutor {
                 File emissionData = new File("./examples/platoon_SoS/results/000_vehicleEmission.txt");
                 File vehData = new File("./examples/platoon_SoS/results/000_vehicleData.txt");
 
+                // boolean isTracePassed=false; //TODO #REFACTOR tag the simulation result
+                // issue 1 insert fault vehicle?
+                if (isSMBFL)
+                    smbfl.structureModelOverlapping(false, 1, 0);
+                if (isBMBFL);
+//                  bmbfl.
+                if (isIMBFL);
+//                  imbfl.
+
                 System.out.println(plnConfig.renameTo(new File("./examples/platoon_SoS/results/" + i + "_" + j +"plnConfig.txt")));
                 plnData.renameTo(new File("./examples/platoon_SoS/results/" + i + "_" + j +"plnData.txt"));
                 emissionData.renameTo(new File("./examples/platoon_SoS/results/" + i + "_" + j +"emissionData.txt"));
                 vehData.renameTo(new File("./examples/platoon_SoS/results/" + i + "_" + j +"vehicleData.txt"));
+
+                System.setOut(origin);
             }
         }
     }
