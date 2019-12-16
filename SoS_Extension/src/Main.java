@@ -72,6 +72,8 @@ public class Main {
         if (isIMBFL) {
             InterplayModel interplayModel = new InterplayModel(1, 0);
             interplayModel.printSequence();
+
+            //
         }
     }
 }
