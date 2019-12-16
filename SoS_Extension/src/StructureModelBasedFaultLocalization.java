@@ -19,7 +19,7 @@ public class StructureModelBasedFaultLocalization {
         else
             totalFailed++;
 
-        StructureModel stm = new StructureModel("./logs/", i, j);
+        StructureModel stm = new StructureModel(i, j);
         Graph currentG = stm.collaborationGraph;
         for (Node node: currentG.getEachNode()) {
             if (!searchNode(node.getId(), overlappedG)) {

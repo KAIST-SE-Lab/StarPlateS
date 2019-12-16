@@ -29,7 +29,7 @@ public class StructureModel {
     }
 
     public StructureModel (){}
-    public StructureModel(String logAddress, int s_index, int r_index) {
+    public StructureModel(int s_index, int r_index) {
         this.collaborationGraph = new SingleGraph("StructureModel" + s_index, false, false);
 
         String node = "";
