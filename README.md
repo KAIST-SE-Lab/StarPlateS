@@ -43,7 +43,7 @@ Then, replace the line starting with 'Exec' to the following line:
 <pre><code> Exec=bash -i -c '/home/yourid/Desktop/omnetpp-5.4.1/bin/omnetpp;$SHELL'
 </code></pre>
 
-#### 5. Select Desktop as workspace 
+#### 5. Run OMNeT++ 5.4.1 IDE and Select Desktop as workspace 
 
 You don't also need to download the INET framework and OMNET++ programming examples. 
 
