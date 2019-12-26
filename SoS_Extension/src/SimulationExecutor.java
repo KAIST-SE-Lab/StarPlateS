@@ -3,7 +3,7 @@ import java.util.Random;
 
 public class SimulationExecutor {
     public void run(int numScenario, int numRepeat, Boolean isSMBFL, Boolean isBMBFL, Boolean isIMBFL,
-                    StructureModelBasedFaultLocalization smbfl) {
+                    StructureModelBasedFaultLocalization smbfl, InterplayModelBasedFaultLocalization imbfl) {
         // To update Omnet.ini file for executing each scenario
         File omnetConf = new File("./examples/platoon_SoS/omnetpp.ini");
 
@@ -108,7 +108,7 @@ public class SimulationExecutor {
                 if (isBMBFL);
 //                  bmbfl.
                 if (isIMBFL);
-//                  imbfl.
+                    imbfl.addFailedLog(true, 1, 0);
 
                 System.out.println(plnConfig.renameTo(new File("./examples/platoon_SoS/results/" + i + "_" + j +"plnConfig.txt")));
                 plnData.renameTo(new File("./examples/platoon_SoS/results/" + i + "_" + j +"plnData.txt"));
