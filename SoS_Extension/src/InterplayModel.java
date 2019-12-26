@@ -12,7 +12,6 @@ class Message {
     String receiverPltId;
 }
 
-
 public class InterplayModel {
 
     ArrayList<Message> msgSequence;
@@ -74,5 +73,9 @@ public class InterplayModel {
             temp = msgSequence.get(i);
             System.out.println(temp.time + ": " + temp.commandSent + " from " + temp.senderPltId + " to " + temp.receiverId);
         }
+    }
+
+    public ArrayList<Message> getMsgSequence() {
+        return msgSequence;
     }
 }
