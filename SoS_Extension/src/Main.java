@@ -46,16 +46,16 @@ public class Main {
 
         StructureModelBasedFaultLocalization smbfl = new StructureModelBasedFaultLocalization();
 //        BehaviorModelBasedFaultLocalization bmfl TODO create new class
-//        InterplayModelBasedFautLocalization imfl TODO create new class
+        InterplayModelBasedFaultLocalization imbfl = new InterplayModelBasedFaultLocalization();
 
         SimulationExecutor simulationExecutor = new SimulationExecutor();
-        simulationExecutor.run(numScenario, numRepeat, isSMBFL, isBMBFL, isIMBFL, smbfl); // TODO add more configuration params, eventDuration, etc
+        simulationExecutor.run(numScenario, numRepeat, isSMBFL, isBMBFL, isIMBFL, smbfl, imbfl); // TODO add more configuration params, eventDuration, etc
 
         if (isSMBFL) {
             ArrayList<EdgeInfo> edgeInfos = smbfl.SMcalculateSuspiciousness();
             StructureModel finalSM = new StructureModel();
             finalSM.collaborationGraph = smbfl.overlappedG;
-            //finalSM.drawGraph();
+            finalSM.drawGraph();
             System.out.println(edgeInfos.size());
             for (EdgeInfo edgeInfo: edgeInfos) {
                 System.out.println("name: "+edgeInfo.edge+",    pass: "+edgeInfo.pass+",    fail: "+edgeInfo.fail+",    tarantula: "+edgeInfo.tarantulaM+", ochiai: "+edgeInfo.ochiaiM + ", op2: "+edgeInfo.op2M + ",   barinel: "+edgeInfo.barinelM+", dstar: "+edgeInfo.dstarM);
@@ -70,10 +70,7 @@ public class Main {
         }
 
         if (isIMBFL) {
-            InterplayModel interplayModel = new InterplayModel(1, 0);
-            interplayModel.printSequence();
-
-            //
+            imbfl.printSuspSequences();
         }
     }
 }
