@@ -64,12 +64,6 @@ If it runs with SUMO gui, there would be no problem on installing the VENTOS fra
 
 ### Installing the StarPlateS framework
 
-#### 1. Clone the github
-<pre><code> git clone https://github.com/abalon1210/StarPlateS </code></pre>
-
-#### 2. Copy and paste the StarPlateS files into VENTOS_Public
-Copy all files of the StarPlateS and paste them into VENTOS_Public folders with merging and replacing option.
-
 #### 1. Install Intellij IDE
 As you know there are various kinds of tools that make you convenient in developing code. We select the Intellij IDE as our default IDE, because 1) our framework is an wrap-up software of VENTOS using Java, 2) we use abstract verification module from SIMVA-SoS framework which is implemented in Java. We think that there is no problem on using other tools, such as Eclipse, Vim, etc.
 
