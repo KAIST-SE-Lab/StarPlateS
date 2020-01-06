@@ -17,6 +17,7 @@ public class InterplayModelBasedFaultLocalization {
         //interplayModel.printSequence();
 
         if(suspSequences.size() == 0) {
+            System.out.println(s_index);
             suspSequences.add(interplayModel.getMsgSequence());
             suspCounter.add(1);
             return;
@@ -24,13 +25,13 @@ public class InterplayModelBasedFaultLocalization {
 
         for(int i = 0; i < suspSequences.size(); i++) {
             temp = DP_LCS(suspSequences.get(i), interplayModel.getMsgSequence());
-            if(temp.size() == 0) {
-//                if(i == suspSequences.size() - 1)  {
+
+            if(i == suspSequences.size() - 1)  { // Always add the incoming lcs at the end of the suspSequences
                 suspSequences.add(interplayModel.getMsgSequence());
                 suspCounter.add(1);
                 break;
-//                }
-            } else {
+            }
+            if(temp != null && temp.size() != 0) {
                 suspSequences.set(i, (ArrayList<Message>)temp.clone());
                 suspCounter.set(i, suspCounter.get(i) + 1);
             }
@@ -89,7 +90,6 @@ public class InterplayModelBasedFaultLocalization {
                 if(time_i < 25.0 || time_j < 25.0) continue;
                 else ret.add(ret_i.get(i));
             }
-
             return ret;
         } else { // No shorter LCS exists
             return lcs;
