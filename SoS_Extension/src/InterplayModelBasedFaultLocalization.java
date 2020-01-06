@@ -17,7 +17,6 @@ public class InterplayModelBasedFaultLocalization {
         //interplayModel.printSequence();
 
         if(suspSequences.size() == 0) {
-            System.out.println(s_index);
             suspSequences.add(interplayModel.getMsgSequence());
             suspCounter.add(1);
             return;
@@ -108,6 +107,7 @@ public class InterplayModelBasedFaultLocalization {
     public void printSuspSequences() {
         Message temp;
         for(int i = 0; i <suspSequences.size(); i++) {
+            if(suspCounter.get(i) < 2) continue;
             System.out.println("LCS_" + i + ": counted " + suspCounter.get(i) + " times");
 
             for(int j = 0; j < suspSequences.get(i).size(); j++) {
