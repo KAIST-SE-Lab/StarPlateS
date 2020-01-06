@@ -52,7 +52,8 @@ public class Main {
         simulationExecutor.run(numScenario, numRepeat, isSMBFL, isBMBFL, isIMBFL, smbfl, imbfl); // TODO add more configuration params, eventDuration, etc
 
         Verifier verifier = new Verifier();
-        verifier.verifyLog(3,0,"operationTime", 5);
+//        verifier.verifyLog(3,0,"operationTime", 5);
+        verifier.verifyLog(7,0,"operationSuccessRate", 80);
         
         if (isSMBFL) {
             ArrayList<EdgeInfo> edgeInfos = smbfl.SMcalculateSuspiciousness();
