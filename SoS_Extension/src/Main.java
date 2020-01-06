@@ -41,8 +41,8 @@ public class Main {
         int numRepeat = 1;
 
 	    // Generate Random Scenario
-//	    ScenarioGenerator scenarioGenerator = new ScenarioGenerator();
-//        scenarioGenerator.generateRandomScenario(50);
+	    ScenarioGenerator scenarioGenerator = new ScenarioGenerator();
+        scenarioGenerator.generateRandomScenario(50);
 
         StructureModelBasedFaultLocalization smbfl = new StructureModelBasedFaultLocalization();
 //        BehaviorModelBasedFaultLocalization bmfl TODO create new class
@@ -51,6 +51,9 @@ public class Main {
         SimulationExecutor simulationExecutor = new SimulationExecutor();
         simulationExecutor.run(numScenario, numRepeat, isSMBFL, isBMBFL, isIMBFL, smbfl, imbfl); // TODO add more configuration params, eventDuration, etc
 
+        Verifier verifier = new Verifier();
+        verifier.verifyLog(3,0,"operationTime", 5);
+        
         if (isSMBFL) {
             ArrayList<EdgeInfo> edgeInfos = smbfl.SMcalculateSuspiciousness();
             StructureModel finalSM = new StructureModel();
