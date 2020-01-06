@@ -40,6 +40,8 @@ public class InterplayModelBasedFaultLocalization {
     private ArrayList<Message> DP_LCS(ArrayList<Message> lcs, ArrayList<Message> trace) {
 //        System.out.println(lcs.size() + " " + trace.size());
         int[][] LCS = new int[lcs.size()+1][trace.size()+1];
+        ArrayList<Message> ret_i = new ArrayList<>();
+        ArrayList<Message> ret_j = new ArrayList<>();
         ArrayList<Message> ret = new ArrayList<>();
 
         // Generate LCS Table between two inputs
@@ -71,18 +73,23 @@ public class InterplayModelBasedFaultLocalization {
 
                     if(LCS[i][j] > current) {
                         current++;
-                        ret.add(lcs.get(i-1));
+                        ret_i.add(lcs.get(i-1));
+                        ret_j.add(trace.get(j-1));
                     }
 
                 }
             }
             // To remove commonly happened events in the beginning of the simulations
             // E.g. Split operation of platoons with size larger than the opt_size
-            float time = -1;
-            for(int i = ret.size()-1; i >= 0; i--) {
-                time = Float.valueOf(ret.get(i).time);
-                if(time < 25.0) ret.remove(i);
+            float time_i = -1;
+            float time_j = -1;
+            for(int i = ret_i.size()-1, j = ret_j.size()-1; i >= 0 && j >= 0; i--, j--) {
+                time_i = Float.valueOf(ret_i.get(i).time);
+                time_j = Float.valueOf(ret_j.get(j).time);
+                if(time_i < 25.0 || time_j < 25.0) continue;
+                else ret.add(ret_i.get(i));
             }
+
             return ret;
         } else { // No shorter LCS exists
             return lcs;
