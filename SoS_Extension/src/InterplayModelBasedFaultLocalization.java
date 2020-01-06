@@ -14,6 +14,7 @@ public class InterplayModelBasedFaultLocalization {
         if(isTracePassed) return; //TODO How to use Succeeded Test Cases
 
         InterplayModel interplayModel = new InterplayModel(s_index, r_index);
+        //interplayModel.printSequence();
 
         if(suspSequences.size() == 0) {
             suspSequences.add(interplayModel.getMsgSequence());
@@ -23,12 +24,12 @@ public class InterplayModelBasedFaultLocalization {
 
         for(int i = 0; i < suspSequences.size(); i++) {
             temp = DP_LCS(suspSequences.get(i), interplayModel.getMsgSequence());
-            if(temp == null) {
-                if(i == suspSequences.size() - 1)  {
-                    suspSequences.add(interplayModel.getMsgSequence());
-                    suspCounter.add(1);
-                }
-                else continue;
+            if(temp.size() == 0) {
+//                if(i == suspSequences.size() - 1)  {
+                suspSequences.add(interplayModel.getMsgSequence());
+                suspCounter.add(1);
+                break;
+//                }
             } else {
                 suspSequences.set(i, (ArrayList<Message>)temp.clone());
                 suspCounter.set(i, suspCounter.get(i) + 1);
@@ -37,20 +38,22 @@ public class InterplayModelBasedFaultLocalization {
     }
 
     private ArrayList<Message> DP_LCS(ArrayList<Message> lcs, ArrayList<Message> trace) {
+//        System.out.println(lcs.size() + " " + trace.size());
         int[][] LCS = new int[lcs.size()+1][trace.size()+1];
         ArrayList<Message> ret = new ArrayList<>();
 
         // Generate LCS Table between two inputs
         for(int i = 0; i <= lcs.size(); i++) {
-            for(int j = 0; j <= trace.size(); i++) {
+            for(int j = 0; j <= trace.size(); j++) {
                 // For the convenience of the calculation, assign i=0 or j=0 as 0
                 if(i == 0 || j == 0) {
                     LCS[i][j] = 0;
                     continue;
                 }
-
+//                System.out.println(lcs.get(i-1).commandSent);
+//                System.out.println(compareMessage(lcs.get(i-1), trace.get(j-1)));
                 // Same message case
-                if(compareMessage(lcs.get(i), trace.get(j))) {
+                if(compareMessage(lcs.get(i-1), trace.get(j-1))) {
                     LCS[i][j] = LCS[i-1][j-1] + 1;
                 } else { // Different message case
                     LCS[i][j] = Math.max(LCS[i][j-1], LCS[i-1][j]);
@@ -68,10 +71,17 @@ public class InterplayModelBasedFaultLocalization {
 
                     if(LCS[i][j] > current) {
                         current++;
-                        ret.add(lcs.get(i));
+                        ret.add(lcs.get(i-1));
                     }
 
                 }
+            }
+            // To remove commonly happened events in the beginning of the simulations
+            // E.g. Split operation of platoons with size larger than the opt_size
+            float time = -1;
+            for(int i = ret.size()-1; i >= 0; i--) {
+                time = Float.valueOf(ret.get(i).time);
+                if(time < 25.0) ret.remove(i);
             }
             return ret;
         } else { // No shorter LCS exists
