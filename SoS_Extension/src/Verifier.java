@@ -2,30 +2,46 @@ import java.io.*;
 import java.util.*;
 
 public class Verifier {
-    public Boolean verifyLog(int s_index, int r_index, String property, int threshold) {
+    public Boolean verifyLog(String txtdir, String nof, String property, int threshold) {
         boolean ret = false;
         
         switch(property) {
             case "operationTime":
-                ret = operationTimeVerification(s_index, r_index, threshold);
+                ret = operationTimeVerification(txtdir, nof, threshold);
                 break;
                 
             case "operationSuccessRate":
-                ret = operationSuccessRateVerification(s_index, r_index, threshold);
-                System.out.println(ret);
+                ret = operationSuccessRateVerification(txtdir, nof, threshold);
+//                File file = new File(System.getProperty("user.dir") + "/StarPlateS/SoS_Extension/Verification_Results.txt");
+                File file = new File(System.getProperty("user.dir") + "/StarPlateS/SoS_Extension/Verification_Results" + nof + "_" + threshold + ".csv");
+                FileWriter writer = null;
+                try {
+                    writer = new FileWriter(file, true);
+//                    writer.write("operationSuccessRate for " + txtdir.replace(System.getProperty("user.dir") + "/StarPlateS/SoS_Extension/", "") + " is " + Boolean.toString(ret) + "\n");
+                    writer.write(txtdir.replace(System.getProperty("user.dir") + "/StarPlateS/SoS_Extension/", "") + "," + Boolean.toString(ret) + "\n");
+                    writer.flush();
+                } catch(IOException e) {
+                    e.printStackTrace();
+                } finally {
+                    try {
+                        if(writer != null) writer.close();
+                    } catch(IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+//                System.out.println(ret);
                 break;
         }
         
         return ret;
     }
     
-    private Boolean operationTimeVerification(int s_index, int r_index, int threshold) {
+    private Boolean operationTimeVerification(String txtdir, String nof, int threshold) {
         boolean ret = true;
     
         BufferedReader reader = null;
         try {
-            reader = new BufferedReader(new FileReader(new File(".\\SoS_Extension\\logs\\"
-                + s_index + "_" + r_index + "plnData.txt")));
+            reader = new BufferedReader(new FileReader(new File(txtdir)));
         
             String line;
             String startEnd;
@@ -44,11 +60,11 @@ public class Verifier {
                     
                     time = Float.valueOf(temp);
                     vehId = st.nextToken();
-                    st.nextToken();
-                    st.nextToken();
-                    st.nextToken();
-                    st.nextToken();
-                    st.nextToken();
+                    st.nextToken();//fromState
+                    st.nextToken();//toState
+                    st.nextToken();//commandSent
+                    st.nextToken();//rcvId
+                    st.nextToken();//senderId
                     rcvPltId = st.nextToken();
                     startEnd = st.nextToken();
                     
@@ -95,7 +111,7 @@ public class Verifier {
         return ret;
     }
     
-    private Boolean operationSuccessRateVerification(int s_index, int r_index, int threshold) {
+    private Boolean operationSuccessRateVerification(String txtdir, String nof, int threshold) {
         boolean ret = true;
         ArrayList<Message> messages = new ArrayList<>();
         int addCount = 0;
@@ -103,8 +119,7 @@ public class Verifier {
     
         BufferedReader reader = null;
         try {
-            reader = new BufferedReader(new FileReader(new File(".\\SoS_Extension\\logs\\"
-                + s_index + "_" + r_index + "plnData.txt")));
+            reader = new BufferedReader(new FileReader(new File(txtdir)));
         
             String line;
             String command1;
@@ -188,10 +203,11 @@ public class Verifier {
                 }
 
             for(int i = 0; i <messages.size(); i++) {
-                System.out.println(messages.get(i).commandSent);
+//                System.out.println(messages.get(i).commandSent);
             }
-            if(delCount < addCount * 0.8) ret = false;
-            
+//            System.out.println(delCount/addCount);
+            if(delCount < addCount * threshold/100) ret = false;
+
             reader.close();
         
         } catch (FileNotFoundException e) {
