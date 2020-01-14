@@ -8,8 +8,26 @@ public class Verifier {
         switch(property) {
             case "operationTime":
                 ret = operationTimeVerification(txtdir, nof, threshold);
+                File file2 = new File(System.getProperty("user.dir") + "/StarPlateS/SoS_Extension/Verification_Results" + nof + "time_" + threshold + ".csv");
+                System.out.println(System.getProperty("user.dir") + "/StarPlateS/SoS_Extension/Verification_Results" + nof + "time_" + threshold + ".csv");
+                FileWriter writer2 = null;
+                try {
+                    writer2 = new FileWriter(file2, true);
+//                    writer.write("operationSuccessRate for " + txtdir.replace(System.getProperty("user.dir") + "/StarPlateS/SoS_Extension/", "") + " is " + Boolean.toString(ret) + "\n");
+                    writer2.write(txtdir.replace(System.getProperty("user.dir") + "/StarPlateS/SoS_Extension/", "") + "," + Boolean.toString(ret) + "\n");
+                    writer2.flush();
+                } catch(IOException e) {
+                    e.printStackTrace();
+                } finally {
+                    try {
+                        if(writer2 != null) writer2.close();
+                    } catch(IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+//                System.out.println(ret);
                 break;
-                
+
             case "operationSuccessRate":
                 ret = operationSuccessRateVerification(txtdir, nof, threshold);
 //                File file = new File(System.getProperty("user.dir") + "/StarPlateS/SoS_Extension/Verification_Results.txt");

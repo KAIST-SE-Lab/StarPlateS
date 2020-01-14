@@ -44,6 +44,7 @@ public class Main {
 //        verifier.verifyLog(3,0,"operationTime", 5);
         String[] nofs = {"1", "2", "3", "4", "5", "tau1", "tau2", "tau3"};
         int[] thresholds = {10, 50, 70, 80, 100, 150, 300, 500, 1000, 5000, 10000};
+        int[] thresholds2 = {5, 10, 15};
         String base = System.getProperty("user.dir");
         int matchingtxts = 0;
         for (String nof : nofs) {
@@ -62,6 +63,10 @@ public class Main {
 //                        for (int thshold : thresholds){
                         for(int thshold = 5; thshold <= 100; thshold += 5){
                             verifier.verifyLog(txtdir, nof, "operationSuccessRate", thshold);
+                        }
+                        for (int thshold2 : thresholds2){
+//                            System.out.println("opreation Time" + thshold2);
+                            verifier.verifyLog(txtdir, nof, "operationTime", thshold2);
                         }
                     }
                 }
