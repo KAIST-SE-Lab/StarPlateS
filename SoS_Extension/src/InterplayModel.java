@@ -15,11 +15,13 @@ class Message {
 public class InterplayModel {
 
     ArrayList<Message> msgSequence;
+    String id;
 
     public InterplayModel(int s_index, int r_index) {
 
         msgSequence = new ArrayList<>();
-
+        id = s_index + "_" + r_index;
+        
         try {
             File pltConfig = new File("./SoS_Extension/logs/" + s_index + "_" + r_index + "plnData.txt");
             FileReader filereader = new FileReader(pltConfig);
@@ -78,4 +80,5 @@ public class InterplayModel {
     public ArrayList<Message> getMsgSequence() {
         return msgSequence;
     }
+    public String getId() {return id; }
 }

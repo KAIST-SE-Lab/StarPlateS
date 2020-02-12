@@ -1,16 +1,20 @@
+
 import java.util.ArrayList;
+import java.util.Random;
+import java.util.StringTokenizer;
 
 public class InterplayModelBasedFaultLocalization {
     ArrayList<ArrayList<Message>> suspSequences;
-    ArrayList<Integer> suspCounter;
+    ArrayList<ArrayList<String>> suspIMs;
 
     public InterplayModelBasedFaultLocalization() {
         suspSequences = new ArrayList<>();
-        suspCounter = new ArrayList<>();
+        suspIMs = new ArrayList<>();
     }
 
     public void addFailedLog(boolean isTracePassed, int s_index, int r_index) {
         ArrayList<Message> temp = null;
+        Random random = new Random();
         if(isTracePassed) return; //TODO How to use Succeeded Test Cases
 
         InterplayModel interplayModel = new InterplayModel(s_index, r_index);
@@ -18,21 +22,51 @@ public class InterplayModelBasedFaultLocalization {
 
         if(suspSequences.size() == 0) {
             suspSequences.add(interplayModel.getMsgSequence());
-            suspCounter.add(1);
+            ArrayList<String> tempString = new ArrayList<>();
+            tempString.add(interplayModel.getId());
+            suspIMs.add((ArrayList)tempString.clone());
             return;
         }
 
         for(int i = 0; i < suspSequences.size(); i++) {
             temp = DP_LCS(suspSequences.get(i), interplayModel.getMsgSequence());
 
-            if(i == suspSequences.size() - 1)  { // Always add the incoming lcs at the end of the suspSequences
-                suspSequences.add(interplayModel.getMsgSequence());
-                suspCounter.add(1);
-                break;
-            }
-            if(temp != null && temp.size() != 0) {
+//            if(i == suspSequences.size() - 1)  {
+//                suspSequences.add(interplayModel.getMsgSequence());
+//                suspIMs.add(1);
+//                break;
+//            }
+            // Matched
+            if(temp != null && temp.size() >= 10) { // 10 is the smallest size of interaction sequences in the platooning VENTOS
                 suspSequences.set(i, (ArrayList<Message>)temp.clone());
-                suspCounter.set(i, suspCounter.get(i) + 1);
+//                suspIMs.set(i, suspIMs.get(i) + 1);
+                suspIMs.get(i).add(interplayModel.getId());
+            } else { // Not matched
+                suspSequences.add(interplayModel.getMsgSequence());
+                ArrayList<String> tempString = new ArrayList<>();
+                tempString.add(interplayModel.getId());
+                suspIMs.add((ArrayList)tempString.clone());
+            }
+            
+            // Random Addition of LCSs into the knowledge
+            if(random.nextFloat() < 0.2) {
+                for(ArrayList<String> tempString : suspIMs) {
+                    for(String id: tempString) {
+                        StringTokenizer st = new StringTokenizer(id, "_");
+                        int ts_index = Integer.valueOf(st.nextToken());
+                        int tr_index = Integer.valueOf(st.nextToken());
+    
+                        InterplayModel tm = new InterplayModel(ts_index, tr_index);
+                        temp = DP_LCS(tm.getMsgSequence(), interplayModel.getMsgSequence());
+                        if(temp != null && temp.size() >= 10) {
+                            suspSequences.add(temp);
+                            ArrayList<String> tempString2 = new ArrayList<>();
+                            tempString2.add(interplayModel.getId());
+                            tempString2.add(tm.getId());
+                            suspIMs.add((ArrayList)tempString2.clone());
+                        }
+                    }
+                }
             }
         }
     }
@@ -107,8 +141,8 @@ public class InterplayModelBasedFaultLocalization {
     public void printSuspSequences() {
         Message temp;
         for(int i = 0; i <suspSequences.size(); i++) {
-            if(suspCounter.get(i) < 2) continue;
-            System.out.println("LCS_" + i + ": counted " + suspCounter.get(i) + " times");
+//            if(suspCounter.get(i) < 2) continue;
+//            System.out.println("LCS_" + i + ": counted " + suspCounter.get(i) + " times");
 
             for(int j = 0; j < suspSequences.get(i).size(); j++) {
                 temp = suspSequences.get(i).get(j);
