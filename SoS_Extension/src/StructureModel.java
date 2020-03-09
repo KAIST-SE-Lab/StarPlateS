@@ -39,7 +39,7 @@ public class StructureModel {
         int numEvent = 1;
         ArrayList<PltNode> prevPltNodes = new ArrayList<PltNode>();
         try {
-            File pltConfig = new File("./SoS_Extension/logs/" + s_index + "_" + r_index + "plnConfig.txt");
+            File pltConfig = new File("/home/abalon1210/Desktop/VENTOS_Public/examples/platoon_SoS/results/" + s_index + "_" + r_index + "plnConfig.txt");
             FileReader filereader = new FileReader(pltConfig);
             BufferedReader bufReader = new BufferedReader(filereader);
             String line="";
