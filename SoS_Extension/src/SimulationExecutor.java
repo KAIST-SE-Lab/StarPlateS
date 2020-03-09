@@ -9,16 +9,14 @@ public class SimulationExecutor {
 
         PrintStream origin = System.out;
 
-        for(int i = 0; i < numScenario; i++) {
+        for(int i = 0; i < numScenario; i++) { // TODO i = k for executing scenarios from k
             try {
                 BufferedReader reader = new BufferedReader(new FileReader(omnetConf));
 
                 String line = reader.readLine();
-                //System.out.println(line);
 
                 String content = "";
                 while (line != null) {
-                    //System.out.println("OMNETPP");
                     if(line.contains("addNode")) {
 
                         content += "Network.addNode.id = \"example_" + i + "\"\n";
