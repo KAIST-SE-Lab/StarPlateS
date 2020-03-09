@@ -7,54 +7,55 @@ public class Verifier {
         
         switch(property) {
             case "operationTime":
-                ret = operationTimeVerification(txtdir, nof, threshold);
-                File file2 = new File(System.getProperty("user.dir") + "/StarPlateS/SoS_Extension/Verification_Results" + nof + "time_" + threshold + ".csv");
-                System.out.println(System.getProperty("user.dir") + "/StarPlateS/SoS_Extension/Verification_Results" + nof + "time_" + threshold + ".csv");
-                FileWriter writer2 = null;
-                try {
-                    writer2 = new FileWriter(file2, true);
-//                    writer.write("operationSuccessRate for " + txtdir.replace(System.getProperty("user.dir") + "/StarPlateS/SoS_Extension/", "") + " is " + Boolean.toString(ret) + "\n");
-                    writer2.write(txtdir.replace(System.getProperty("user.dir") + "/StarPlateS/SoS_Extension/", "") + "," + Boolean.toString(ret) + "\n");
-                    writer2.flush();
-                } catch(IOException e) {
-                    e.printStackTrace();
-                } finally {
-                    try {
-                        if(writer2 != null) writer2.close();
-                    } catch(IOException e) {
-                        e.printStackTrace();
-                    }
-                }
+                ret = operationTimeVerification(txtdir, threshold);
+
+                // CSV generation for tendency analysis of the verification property success rate
+//                File file2 = new File(System.getProperty("user.dir") + "/examples/platoon_SoS/results/" + "time_" + threshold + ".csv");
+//                System.out.println(System.getProperty("user.dir") + "/examples/platoon_SoS/results/"+ "time_" + threshold + ".csv");
+//                FileWriter writer2 = null;
+//                try {
+//                    writer2 = new FileWriter(file2, true);
+////                    writer.write("operationSuccessRate for " + txtdir.replace(System.getProperty("user.dir") + "/StarPlateS/SoS_Extension/", "") + " is " + Boolean.toString(ret) + "\n");
+//                    writer2.write(txtdir.replace(System.getProperty("user.dir") + "/examples/platoon_SoS/results/", "") + "," + Boolean.toString(ret) + "\n");
+//                    writer2.flush();
+//                } catch(IOException e) {
+//                    e.printStackTrace();
+//                } finally {
+//                    try {
+//                        if(writer2 != null) writer2.close();
+//                    } catch(IOException e) {
+//                        e.printStackTrace();
+//                    }
+//                }
 //                System.out.println(ret);
                 break;
 
             case "operationSuccessRate":
                 ret = operationSuccessRateVerification(txtdir, nof, threshold);
-//                File file = new File(System.getProperty("user.dir") + "/StarPlateS/SoS_Extension/Verification_Results.txt");
-                File file = new File(System.getProperty("user.dir") + "/StarPlateS/SoS_Extension/Verification_Results" + nof + "_" + threshold + ".csv");
-                FileWriter writer = null;
-                try {
-                    writer = new FileWriter(file, true);
-//                    writer.write("operationSuccessRate for " + txtdir.replace(System.getProperty("user.dir") + "/StarPlateS/SoS_Extension/", "") + " is " + Boolean.toString(ret) + "\n");
-                    writer.write(txtdir.replace(System.getProperty("user.dir") + "/StarPlateS/SoS_Extension/", "") + "," + Boolean.toString(ret) + "\n");
-                    writer.flush();
-                } catch(IOException e) {
-                    e.printStackTrace();
-                } finally {
-                    try {
-                        if(writer != null) writer.close();
-                    } catch(IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-//                System.out.println(ret);
+
+                // CSV generation for tendency analysis of the verification property success rate
+//                File file = new File(System.getProperty("user.dir") + "/StarPlateS/SoS_Extension/Verification_Results" + nof + "_" + threshold + ".csv");
+//                FileWriter writer = null;
+//                try {
+//                    writer = new FileWriter(file, true);
+//                    writer.write(txtdir.replace(System.getProperty("user.dir") + "/StarPlateS/SoS_Extension/", "") + "," + Boolean.toString(ret) + "\n");
+//                    writer.flush();
+//                } catch(IOException e) {
+//                    e.printStackTrace();
+//                } finally {
+//                    try {
+//                        if(writer != null) writer.close();
+//                    } catch(IOException e) {
+//                        e.printStackTrace();
+//                    }
+//                }
                 break;
         }
         
         return ret;
     }
     
-    private Boolean operationTimeVerification(String txtdir, String nof, int threshold) {
+    private Boolean operationTimeVerification(String txtdir, int threshold) {
         boolean ret = true;
     
         BufferedReader reader = null;
@@ -110,6 +111,7 @@ public class Verifier {
                                         else ret = true;
                                         messages.remove(i);
                                     }
+                                    //ret = true; // For analyzing specific operation  
                                     break;
                             }
                             
