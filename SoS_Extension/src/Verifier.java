@@ -111,7 +111,7 @@ public class Verifier {
                                         else ret = true;
                                         messages.remove(i);
                                     }
-                                    //ret = true; // For analyzing specific operation  
+                                    //ret = true; // For analyzing specific operation
                                     break;
                             }
                             
