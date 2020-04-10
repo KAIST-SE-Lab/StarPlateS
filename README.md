@@ -64,16 +64,10 @@ If it runs with SUMO gui, there would be no problem on installing the VENTOS fra
 
 ### Installing the StarPlateS framework
 
-#### 1. Clone the github
-<pre><code> git clone https://github.com/abalon1210/StarPlateS </code></pre>
-
-#### 2. Copy and paste the StarPlateS files into VENTOS_Public
-Copy all files of the StarPlateS and paste them into VENTOS_Public folders with merging and replacing option.
-
-#### 3. Install Intellij IDE
+#### 1. Install Intellij IDE
 As you know there are various kinds of tools that make you convenient in developing code. We select the Intellij IDE as our default IDE, because 1) our framework is an wrap-up software of VENTOS using Java, 2) we use abstract verification module from SIMVA-SoS framework which is implemented in Java. We think that there is no problem on using other tools, such as Eclipse, Vim, etc.
 
-#### 4. Install Java jdk
+#### 2. Install Java jdk
 When installing the VENTOS_Public, java 8 is installed, but it is not jdk, but jre. To use StarPlateS, you need to download Java jdk 8. 
 <pre><code> sudo apt-get install openjdk-8-jdk 
  javac -version
@@ -82,13 +76,29 @@ When installing the VENTOS_Public, java 8 is installed, but it is not jdk, but j
 ![Alt text](java_jdk_install.PNG)
 If you get the above message, jdk 1.8 is successfully installed in your Ubuntu.
 
-#### 5. Run Intellij with console
+#### 3. Run Intellij with console
 When opening the Intellij IDE, please open it by console, not use shotcut icon on the menu. Please refer the following figure.
 
 ![Alt text](run_ide.PNG) If you get SDK error in Intellij, please execute the following steps 
 - Click "File" -> "Project Structure" -> "SDKs" in Platform Settings
 - Add new JDK at */usr/lib/jvm/java-8-openjdk-amd64*, which is a common location of the jdk.
 - Click "Project" in Project Settings and set your SDK to java 1.8
+
+#### 4. Change git remote setting
+If you have any problem on repository confliciting between this and ManiAm/VENTOS_Public, please change your origin url to this repository. 
+
+In Intellij console, 
+- Check the current origin url
+<pre><code> git remote -v </code></pre>
+
+- Change the url to this repository
+<pre><code> git remote set-url origin https://github.com/abalon1210/StarPlateS.git </code></pre>
+
+- Check the current origin url again
+<pre><code> git remote -v </code></pre>
+
+#### 5. Pull branches
+Pull the latest code from github
 
 #### 6. Run the StarPlateS 
 - Click "File" -> "Open" -> *VENTOS_Public*
@@ -103,18 +113,6 @@ You can check the execution logs at "VENTOS_Public/examples/platoon_SoS/results"
 
 If you get an "Invalid java release error", please change Project language level to 8, which is in "Project Structure" -> "Project".
 
-#### 7. Git setting
-If you have any problem on repository confliciting between this and ManiAm/VENTOS_Public, please change your origin url to this repository. 
-
-In Intellij console, 
-- Check the current origin url
-<pre><code> git remote -v </code></pre>
-
-- Change the url to this repository
-<pre><code> git remote set-url origin https://github.com/abalon1210/StarPlateS.git </code></pre>
-
-- Check the current origin url again
-<pre><code> git remote -v </code></pre>
 
 ### Executing StarPlateS framework with localization module
 Prerequisites

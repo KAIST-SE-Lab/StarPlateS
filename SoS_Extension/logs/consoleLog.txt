@@ -1,0 +1,167 @@
+####### Scenario: 49 #######
+line: OMNeT++ Discrete Event Simulation  (C) 1992-2018 Andras Varga, OpenSim Ltd.
+line: Version: 5.4.1, build: 180629-5e28390, edition: Academic Public License -- NOT FOR COMMERCIAL USE
+line: See the license for distribution terms and warranty disclaimer
+line: 
+line: Setting up Cmdenv...
+line: 
+line: Loading NED files from ..:  2
+line: Loading NED files from ../../src:  22
+line: 
+line: Preparing for running configuration Platooning, run #0...
+line: Assigned runID=Platooning-0-20191111-23:10:28-4214
+line: Setting up network "VENTOS.examples.Network"...
+line: Initializing...
+line: Loading configuration... done.
+line: ***Starting server on port 49111 ***
+line: Loading net-file from '/home/abalon1210/Desktop/VENTOS_Public/examples/platoon_SoS/sumocfg/3hello.net.xml'... done (1ms).
+line: Loading additional-files from '/home/abalon1210/Desktop/VENTOS_Public/examples/platoon_SoS/sumocfg/5hello.loopDetector.xml'... done (1ms).
+line: Loading done.
+line: Simulation started with time: 0.00
+line: 
+line: Running simulation...
+line: ** Event #0   t=0   Elapsed: 2.1e-05s (0m 00s)   ev/sec=0
+line: ** Event #1032705   t=100   Elapsed: 55.1039s (0m 55s)   ev/sec=18741.1
+line: 
+line: <!> Simulation stopped with endSimulation() -- in module (VENTOS::TraCI_Start) Network.TraCI (id=2), at t=100s, event #1032705
+line: 
+line: Calling finish() at end of Run #0...
+line: [INFO]	NicEntry: disconnecting nic #22 and #16
+line: [INFO]	NicEntry: disconnecting nic #16 and #22
+line: [INFO]	NicEntry: disconnecting nic #28 and #16
+line: [INFO]	NicEntry: disconnecting nic #16 and #28
+line: [INFO]	NicEntry: disconnecting nic #34 and #16
+line: [INFO]	NicEntry: disconnecting nic #16 and #34
+line: [INFO]	NicEntry: disconnecting nic #58 and #16
+line: [INFO]	NicEntry: disconnecting nic #16 and #58
+line: [INFO]	NicEntry: disconnecting nic #64 and #16
+line: [INFO]	NicEntry: disconnecting nic #16 and #64
+line: [INFO]	NicEntry: disconnecting nic #70 and #16
+line: [INFO]	NicEntry: disconnecting nic #16 and #70
+line: [INFO]	NicEntry: disconnecting nic #76 and #16
+line: [INFO]	NicEntry: disconnecting nic #16 and #76
+line: [INFO]	NicEntry: disconnecting nic #82 and #16
+line: [INFO]	NicEntry: disconnecting nic #16 and #82
+line: [INFO]	NicEntry: disconnecting nic #46 and #22
+line: [INFO]	NicEntry: disconnecting nic #22 and #46
+line: [INFO]	NicEntry: disconnecting nic #52 and #22
+line: [INFO]	NicEntry: disconnecting nic #22 and #52
+line: [INFO]	NicEntry: disconnecting nic #28 and #22
+line: [INFO]	NicEntry: disconnecting nic #22 and #28
+line: [INFO]	NicEntry: disconnecting nic #34 and #22
+line: [INFO]	NicEntry: disconnecting nic #22 and #34
+line: [INFO]	NicEntry: disconnecting nic #40 and #22
+line: [INFO]	NicEntry: disconnecting nic #22 and #40
+line: [INFO]	NicEntry: disconnecting nic #58 and #22
+line: [INFO]	NicEntry: disconnecting nic #22 and #58
+line: [INFO]	NicEntry: disconnecting nic #64 and #22
+line: [INFO]	NicEntry: disconnecting nic #22 and #64
+line: [INFO]	NicEntry: disconnecting nic #70 and #22
+line: [INFO]	NicEntry: disconnecting nic #22 and #70
+line: [INFO]	NicEntry: disconnecting nic #76 and #22
+line: [INFO]	NicEntry: disconnecting nic #22 and #76
+line: [INFO]	NicEntry: disconnecting nic #82 and #22
+line: [INFO]	NicEntry: disconnecting nic #22 and #82
+line: [INFO]	NicEntry: disconnecting nic #46 and #28
+line: [INFO]	NicEntry: disconnecting nic #28 and #46
+line: [INFO]	NicEntry: disconnecting nic #52 and #28
+line: [INFO]	NicEntry: disconnecting nic #28 and #52
+line: [INFO]	NicEntry: disconnecting nic #34 and #28
+line: [INFO]	NicEntry: disconnecting nic #28 and #34
+line: [INFO]	NicEntry: disconnecting nic #40 and #28
+line: [INFO]	NicEntry: disconnecting nic #28 and #40
+line: [INFO]	NicEntry: disconnecting nic #58 and #28
+line: [INFO]	NicEntry: disconnecting nic #28 and #58
+line: [INFO]	NicEntry: disconnecting nic #64 and #28
+line: [INFO]	NicEntry: disconnecting nic #28 and #64
+line: [INFO]	NicEntry: disconnecting nic #70 and #28
+line: [INFO]	NicEntry: disconnecting nic #28 and #70
+line: [INFO]	NicEntry: disconnecting nic #76 and #28
+line: [INFO]	NicEntry: disconnecting nic #28 and #76
+line: [INFO]	NicEntry: disconnecting nic #82 and #28
+line: [INFO]	NicEntry: disconnecting nic #28 and #82
+line: [INFO]	NicEntry: disconnecting nic #46 and #34
+line: [INFO]	NicEntry: disconnecting nic #34 and #46
+line: [INFO]	NicEntry: disconnecting nic #52 and #34
+line: [INFO]	NicEntry: disconnecting nic #34 and #52
+line: [INFO]	NicEntry: disconnecting nic #40 and #34
+line: [INFO]	NicEntry: disconnecting nic #34 and #40
+line: [INFO]	NicEntry: disconnecting nic #58 and #34
+line: [INFO]	NicEntry: disconnecting nic #34 and #58
+line: [INFO]	NicEntry: disconnecting nic #64 and #34
+line: [INFO]	NicEntry: disconnecting nic #34 and #64
+line: [INFO]	NicEntry: disconnecting nic #70 and #34
+line: [INFO]	NicEntry: disconnecting nic #34 and #70
+line: [INFO]	NicEntry: disconnecting nic #76 and #34
+line: [INFO]	NicEntry: disconnecting nic #34 and #76
+line: [INFO]	NicEntry: disconnecting nic #82 and #34
+line: [INFO]	NicEntry: disconnecting nic #34 and #82
+line: [INFO]	NicEntry: disconnecting nic #46 and #40
+line: [INFO]	NicEntry: disconnecting nic #40 and #46
+line: [INFO]	NicEntry: disconnecting nic #52 and #40
+line: [INFO]	NicEntry: disconnecting nic #40 and #52
+line: [INFO]	NicEntry: disconnecting nic #58 and #40
+line: [INFO]	NicEntry: disconnecting nic #40 and #58
+line: [INFO]	NicEntry: disconnecting nic #64 and #40
+line: [INFO]	NicEntry: disconnecting nic #40 and #64
+line: [INFO]	NicEntry: disconnecting nic #70 and #40
+line: [INFO]	NicEntry: disconnecting nic #40 and #70
+line: [INFO]	NicEntry: disconnecting nic #76 and #40
+line: [INFO]	NicEntry: disconnecting nic #40 and #76
+line: [INFO]	NicEntry: disconnecting nic #82 and #40
+line: [INFO]	NicEntry: disconnecting nic #40 and #82
+line: [INFO]	NicEntry: disconnecting nic #52 and #46
+line: [INFO]	NicEntry: disconnecting nic #46 and #52
+line: [INFO]	NicEntry: disconnecting nic #58 and #46
+line: [INFO]	NicEntry: disconnecting nic #46 and #58
+line: [INFO]	NicEntry: disconnecting nic #64 and #46
+line: [INFO]	NicEntry: disconnecting nic #46 and #64
+line: [INFO]	NicEntry: disconnecting nic #70 and #46
+line: [INFO]	NicEntry: disconnecting nic #46 and #70
+line: [INFO]	NicEntry: disconnecting nic #76 and #46
+line: [INFO]	NicEntry: disconnecting nic #46 and #76
+line: [INFO]	NicEntry: disconnecting nic #82 and #46
+line: [INFO]	NicEntry: disconnecting nic #46 and #82
+line: [INFO]	NicEntry: disconnecting nic #64 and #52
+line: [INFO]	NicEntry: disconnecting nic #52 and #64
+line: [INFO]	NicEntry: disconnecting nic #70 and #52
+line: [INFO]	NicEntry: disconnecting nic #52 and #70
+line: [INFO]	NicEntry: disconnecting nic #76 and #52
+line: [INFO]	NicEntry: disconnecting nic #52 and #76
+line: [INFO]	NicEntry: disconnecting nic #82 and #52
+line: [INFO]	NicEntry: disconnecting nic #52 and #82
+line: [INFO]	NicEntry: disconnecting nic #64 and #58
+line: [INFO]	NicEntry: disconnecting nic #58 and #64
+line: [INFO]	NicEntry: disconnecting nic #70 and #58
+line: [INFO]	NicEntry: disconnecting nic #58 and #70
+line: [INFO]	NicEntry: disconnecting nic #76 and #58
+line: [INFO]	NicEntry: disconnecting nic #58 and #76
+line: [INFO]	NicEntry: disconnecting nic #82 and #58
+line: [INFO]	NicEntry: disconnecting nic #58 and #82
+line: [INFO]	NicEntry: disconnecting nic #70 and #64
+line: [INFO]	NicEntry: disconnecting nic #64 and #70
+line: [INFO]	NicEntry: disconnecting nic #76 and #64
+line: [INFO]	NicEntry: disconnecting nic #64 and #76
+line: [INFO]	NicEntry: disconnecting nic #82 and #64
+line: [INFO]	NicEntry: disconnecting nic #64 and #82
+line: [INFO]	NicEntry: disconnecting nic #76 and #70
+line: [INFO]	NicEntry: disconnecting nic #70 and #76
+line: [INFO]	NicEntry: disconnecting nic #82 and #70
+line: [INFO]	NicEntry: disconnecting nic #70 and #82
+line: [INFO]	NicEntry: disconnecting nic #82 and #76
+line: [INFO]	NicEntry: disconnecting nic #76 and #82
+line: Simulation ended at time: 100.10
+line: Reason: TraCI requested termination.
+line: Performance: 
+line:  Duration: 55406ms
+line:  Real time factor: 1.80666
+line:  UPS: 403.061040
+line: Vehicles: 
+line:  Inserted: 32
+line:  Running: 32
+line:  Waiting: 0
+line: 
+line: 
+line: End.
+exit: 0
+true

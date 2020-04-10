@@ -1,118 +1,146 @@
-import java.io.*;
-import java.io.FileOutputStream;
-import java.nio.Buffer;
-import java.util.StringTokenizer;
-import java.util.Random;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.ArrayList;
 
 public class Main {
 
     public static void main(String[] args) {
-	    // Generate Random Scenario
-	    ScenarioGenerator scenarioGenerator = new ScenarioGenerator();
-        scenarioGenerator.generateRandomScenario(50);
+        boolean isSMBFL = false;
+        boolean isBMBFL = false;
+        boolean isIMBFL = false;
+        boolean withSim = true;
 
-        // Update Omnet.ini file for executing each scenario
-        File omnetConf = new File("./examples/platoon_SoS/omnetpp.ini");
-        for(int i = 0; i < 50; i++) { // Number of scenarios
-            try {
-                BufferedReader reader = new BufferedReader(new FileReader(omnetConf));
+        if (args.length == 0) {
+            System.out.println("Usage: java main <switch> <withSim> [<file>]");
+            System.out.println("Where: <switch> = -structure or -smbfl");
+            System.out.println("                  -behavior or -bmbfl");
+            System.out.println("                  -interplay or -imbfl");
+            System.out.println("                  -all");
+            System.out.println("       <withSim> = -simon (default)");
+            System.out.println("                   -simoff");
+            System.exit(1);
+        }
 
-                String line = reader.readLine();
-                //System.out.println(line);
+        if (args[0].equals("-structure") || args[0].equals("-smbfl"))
+            isSMBFL = true;
+        else if (args[0].equals("-behavior") || args[0].equals("-bmbfl"))
+            isBMBFL = true;
+        else if (args[0].equals("-interplay") || args[0].equals("-imbfl"))
+            isIMBFL = true;
+        else if (args[0].equals("-all")) {
+            isSMBFL = true;
+            isBMBFL = true;
+            isIMBFL = true;
+        }
 
-                String content = "";
-                while (line != null) {
-                    //System.out.println("OMNETPP");
-                    if(line.contains("addNode")) {
+        if(args[1].equals("-simoff")) {
+            withSim = false;
+        }
 
-                        content += "Network.addNode.id = \"example_" + i + "\"\n";
-                    } else if (line.contains("trafficControl")) {
-                        content += "Network.trafficControl.id = \"example_" + i + "\"\n";
-                    } else {
-                        content += line + "\n";
-                    }
-                    line = reader.readLine();
-                }
-                reader.close();
+        int numScenario = 150;                                          // TODO The number of scenarios generated
+        int numRepeat = 1;                                              // TODO The number of repetition of the same scenario for statistical model checking
 
-                FileWriter writer = new FileWriter(omnetConf);
-                writer.write(content);
+        StructureModelBasedFaultLocalization smbfl = new StructureModelBasedFaultLocalization();
+//        BehaviorModelBasedFaultLocalization bmfl                      // TODO create new class
+        InterplayModelBasedFaultLocalization imbfl = new InterplayModelBasedFaultLocalization();
 
-                writer.close();
-            } catch (Exception e) { // generated scenarios apply to VENTOS input files
-                System.out.println(e);
-            }
+        if(withSim) {
+            // Generate Random Scenario with Scenario Generation Module
+            ScenarioGenerator scenarioGenerator = new ScenarioGenerator();
+            scenarioGenerator.generateRandomScenario(numScenario);      // TODO Call the scenario generation module with the number of scenarios
 
-//            Random r = new Random();
-//            int accidentThreshold = (int)(1000 * 0.01) + r.nextInt(10);
+            SimulationExecutor simulationExecutor = new SimulationExecutor();
+            simulationExecutor.run(numScenario, numRepeat, isSMBFL, isBMBFL, isIMBFL, smbfl, imbfl); // TODO add more configuration params, eventDuration, etc
+        }
 
-            for(int j = 0; j < 1; j++) { // Number of execution of same scenarios & configurations
-                String s;
-                Runtime rt = Runtime.getRuntime();
-                System.out.println("RUNNING");
-
-//                if(j == accidentThreshold) {
-//                    System.out.println("CHANGED");
-//                    File addNode = new File("./examples/platoon_SoS/addNode.xml");
-//                    String content = "";
-//                    try {
-//                        BufferedReader br = new BufferedReader(new FileReader(addNode));
-//
-//                        String line = br.readLine();
-//                        //System.out.println(line);
-//
-//                        while (line != null) {
-//                            if(line.contains("stopped")) {
-//                                System.out.println(line);
-//                                content += "\n";
-//                            }
-//                            else content += line + "\n";
-//                            line = br.readLine();
+        Verifier verifier = new Verifier();
+        int[] thresholds = {80};                                        // TODO Threshold value for the Verirfication Property 1
+        int[] thresholds2 = {4};                                        // TODO Threshold value for the VP2
+        String base = System.getProperty("user.dir");
+        System.out.println(System.getProperty("user.dir"));
+        int matchingtxts = 0;
+        String nof= "1";
+        //for (String nof : nofs) {
+            String currentdir = base + "/examples/platoon_SoS/results/";
+            System.out.print("Current Working Directory : " + currentdir +"\n");
+            File f = new File(currentdir);
+            Boolean results = null;
+            matchingtxts = 0;
+            if(f.exists()){
+                int numoffiles = f.listFiles().length + 300;
+                System.out.println("and it has " + numoffiles + " files.");
+                for (int i = 0; i < numoffiles; i++){
+                    String txtdir = currentdir + Integer.toString(i) + "_0plnData.txt";
+                    File temptxt = new File(txtdir);
+                    if(temptxt.exists()){
+                        matchingtxts++;
+//                        for (int thshold : thresholds){
+//                        for(int thshold = 5; thshold <= 100; thshold += 5){
+//                            verifier.verifyLog(txtdir, nof, "operationSuccessRate", thshold);
 //                        }
-//
-//                        br.close();
-//
-//                        FileWriter writer = new FileWriter(addNode);
-//                        writer.write(content);
-//
-//                        writer.close();
-//                    } catch (Exception e) {
-//                        System.out.println(e);
-//                    }
-//                }
-
-                try { // Execute a process and loggin the console output
-                    System.setOut(new PrintStream(new FileOutputStream("./examples/platoon_SoS/results/consoleLog.txt")));
-                    System.out.println("####### Scenario: " + i + " #######");
-                    Process p = rt.exec("opp_run -m -u Cmdenv -c Platooning -n ..:../../src -l ../../src/VENTOS_Public omnetpp.ini", null, new File("./examples/platoon_SoS"));
-
-                    // Logging the process result
-                    BufferedReader br = new BufferedReader(
-                            new InputStreamReader(p.getInputStream()));
-                    while ((s = br.readLine()) != null) {
-                        System.out.println("line: " + s);
+                        for (int thshold2 : thresholds2){
+//                           System.out.println("opreation Time" + thshold2);
+                            results = verifier.verifyLog(txtdir, nof, "operationTime", thshold2);
+                            smbfl.structureModelOverlapping(results, i, 0);
+                        }
                     }
-                    p.waitFor();
-                    System.out.println("exit: " + p.exitValue());
-                    p.destroy();
-                } catch (Exception e) {
-                    System.out.println(e);
                 }
+            } else {
+                System.out.println("There is no such directory");
+            }
+            System.out.println("There were " + matchingtxts + " platooning text files");
+        //}
+//
+        if (isSMBFL) {                                                  // Structure Model-based Fault Localization
+            ArrayList<EdgeInfo> edgeInfos = smbfl.SMcalculateSuspiciousness();
+            StructureModel finalSM = new StructureModel();
+            finalSM.collaborationGraph = smbfl.overlappedG;
+//            finalSM.drawGraph();
+            System.out.println(edgeInfos.size());
+            File file2 = new File(System.getProperty("user.dir") + "/examples/platoon_SoS/results/SBFL_result.csv");
+            FileWriter writer2 = null;
 
-                // Logging the data of platooning & vehicle emission
-                File plnConfig = new File("./examples/platoon_SoS/results/000_plnConfig.txt");
-                File plnData = new File("./examples/platoon_SoS/results/000_plnData.txt");
-                File emissionData = new File("./examples/platoon_SoS/results/000_vehicleEmission.txt");
-                File vehData = new File("./examples/platoon_SoS/results/000_vehicleData.txt");
-
-                System.out.println(plnConfig.renameTo(new File("./examples/platoon_SoS/results/" + i + "_" + j +"plnConfig.txt")));
-                plnData.renameTo(new File("./examples/platoon_SoS/results/" + i + "_" + j +"plnData.txt"));
-                emissionData.renameTo(new File("./examples/platoon_SoS/results/" + i + "_" + j +"emissionData.txt"));
-                vehData.renameTo(new File("./examples/platoon_SoS/results/" + i + "_" + j +"vehicleData.txt"));
-
-//                StructureModel stm = new StructureModel("./examples/platoon_SoS/results/", i, j);
-//                stm.drawGraph();
+            for (EdgeInfo edgeInfo: edgeInfos) {
+                System.out.println("name: "+edgeInfo.edge+",    pass: "+edgeInfo.pass+",    fail: "+edgeInfo.fail+",    tarantula: "+edgeInfo.tarantulaM+", ochiai: "+edgeInfo.ochiaiM + ", op2: "+edgeInfo.op2M + ",   barinel: "+edgeInfo.barinelM+", dstar: "+edgeInfo.dstarM);
+                try {
+                    writer2 = new FileWriter(file2, true);
+                    writer2.write(edgeInfo.edge+ "," + edgeInfo.pass+ "," + edgeInfo.fail + "," + edgeInfo.tarantulaM + "," + edgeInfo.ochiaiM+ "," + edgeInfo.op2M+ "," + edgeInfo.barinelM+ "," + edgeInfo.dstarM+"\n");
+                    writer2.flush();
+                } catch(IOException e) {
+                    e.printStackTrace();
+                } finally {
+                    try {
+                        if(writer2 != null) writer2.close();
+                    } catch(IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+            for (NodeInfo nodeInfo: smbfl.nodeInfos) {
+                System.out.println("name: "+nodeInfo.node+",    pass: "+nodeInfo.pass+",    fail: "+nodeInfo.fail);
+                try {
+                    writer2 = new FileWriter(file2, true);
+                    writer2.write(nodeInfo.node+ "," + nodeInfo.pass+ "," + nodeInfo.fail +"\n");
+                    writer2.flush();
+                } catch(IOException e) {
+                    e.printStackTrace();
+                } finally {
+                    try {
+                        if(writer2 != null) writer2.close();
+                    } catch(IOException e) {
+                        e.printStackTrace();
+                    }
+                }
             }
         }
+//
+//        if (isBMBFL) {
+//
+//        }
+//
+//        if (isIMBFL) {                                                 // Interaction Model-based Fault Localization
+//            imbfl.printSuspSequences();
+//        }
     }
 }
