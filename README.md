@@ -43,7 +43,7 @@ Then, replace the line starting with 'Exec' to the following line:
 <pre><code> Exec=bash -i -c '/home/yourid/Desktop/omnetpp-5.4.1/bin/omnetpp;$SHELL'
 </code></pre>
 
-#### 5. Select Desktop as workspace 
+#### 5. Run OMNeT++ 5.4.1 IDE and Select Desktop as workspace 
 
 You don't also need to download the INET framework and OMNET++ programming examples. 
 
@@ -79,9 +79,7 @@ If you get the above message, jdk 1.8 is successfully installed in your Ubuntu.
 #### 3. Run Intellij with console
 When opening the Intellij IDE, please open it by console, not use shotcut icon on the menu. Please refer the following figure.
 
-![Alt text](run_ide.PNG)
-
-If you get SDK error in Intellij, please execute the following steps 
+![Alt text](run_ide.PNG) If you get SDK error in Intellij, please execute the following steps 
 - Click "File" -> "Project Structure" -> "SDKs" in Platform Settings
 - Add new JDK at */usr/lib/jvm/java-8-openjdk-amd64*, which is a common location of the jdk.
 - Click "Project" in Project Settings and set your SDK to java 1.8
@@ -118,7 +116,7 @@ If you get an "Invalid java release error", please change Project language level
 
 ### Executing StarPlateS framework with localization module
 Prerequisites
-- Include GraphStream libraries, which are in the [SoS_Extension/lib] folder.
+- Import GraphStream libraries, which are in the [SoS_Extension/lib] folder.
 
 ## Reference
 1. https://maniam.github.io/VENTOS/
