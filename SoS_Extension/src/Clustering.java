@@ -1,6 +1,56 @@
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class Clustering {
+
+    private ArrayList<ArrayList<InterplayModel>> cluster;
+    private ArrayList<ArrayList<Message>> centroidLCS;
+
+    public Clustering() {
+        cluster = new ArrayList<>();
+        centroidLCS = new ArrayList<>();
+    }
+
+    public void addTrace(InterplayModel im_trace, float simThreshold) {
+        ArrayList<Integer> updatedCluster = new ArrayList<>(Collections.nCopies(cluster.size(), 0));
+        ArrayList<Message> generatedLCS;
+        Boolean update = false;
+
+        // Given IM이 어떤 Cluster에 속하는지를 확인하는 과정: IM은 Failed tag를 가진다는 것을 가정함 / 여러 클러스터에 중복으로 할당 가능
+        for(int i = 0; i < cluster.size(); i++) {
+            if(cluster.get(i).size() > 1) {                                                                             // Cluster에 2개 이상의 IM이 존재할때 Cluster의 LCS가 존재하는것을
+                if(similarityChecker(centroidLCS.get(i), im_trace.getMsgSequence()) >= simThreshold) {                  // 가정하기 때문에 LCS와 given IM간의 Similarity를 비교함
+                    cluster.get(i).add(im_trace);
+                    updatedCluster.set(i,1);
+                }
+            } else {
+                generatedLCS = LCSExtractor(cluster.get(i).get(0).getMsgSequence(), im_trace.getMsgSequence());         // Cluster에 1개의 IM만 존재할때는 해당 IM 과의 LCS가 존재하는지
+                if(generatedLCS.size() > 0) {                                                                           // 여부를 이용하여 해당 Cluster에 포함가능한지를 확인함
+                    cluster.get(i).add(im_trace);
+                    updatedCluster.set(i,1);
+                }
+            }
+        }
+
+        // Updated cluster에 대해 Representative LCS (Centroid)를 업데이트하는 과정
+        for(int i = 0; i < cluster.size(); i++) {
+            if(updatedCluster.get(i) == 1) {
+                int j = 1;
+                generatedLCS = (ArrayList) cluster.get(i).get(0).getMsgSequence().clone();
+                while(j <= cluster.get(i).size()-1) {
+                    generatedLCS = LCSExtractor(generatedLCS, cluster.get(i).get(j).getMsgSequence());
+                }
+                centroidLCS.set(i, generatedLCS);
+                update = true;
+            }
+        }
+
+    }
+
+    public void printCluster() {
+
+    }
 
     private ArrayList<Message> LCSExtractor(ArrayList<Message> data_point, ArrayList<Message> input_trace) {
         int[][] LCS = new int[data_point.size()+1][input_trace.size()+1];
