@@ -15,7 +15,6 @@ public class Clustering {
     public void addTrace(InterplayModel im_trace, float simThreshold) {
         ArrayList<Integer> updatedCluster = new ArrayList<>(Collections.nCopies(cluster.size(), 0));
         ArrayList<Message> generatedLCS;
-        Boolean update = false;
 
         // Given IM이 어떤 Cluster에 속하는지를 확인하는 과정: IM은 Failed tag를 가진다는 것을 가정함 / 여러 클러스터에 중복으로 할당 가능
         for(int i = 0; i < cluster.size(); i++) {
@@ -40,12 +39,11 @@ public class Clustering {
                 generatedLCS = (ArrayList) cluster.get(i).get(0).getMsgSequence().clone();
                 while(j <= cluster.get(i).size()-1) {
                     generatedLCS = LCSExtractor(generatedLCS, cluster.get(i).get(j).getMsgSequence());
+                    j++;
                 }
                 centroidLCS.set(i, generatedLCS);
-                update = true;
             }
         }
-
     }
 
     public void printCluster() {
@@ -69,7 +67,7 @@ public class Clustering {
 //                System.out.println(data_point.get(i-1).commandSent);
 //                System.out.println(compareMessage(data_point.get(i-1), input_trace.get(j-1)));
                 // Same message case
-                if(compareMessage(data_point.get(i-1), input_trace.get(j-1))) {
+                if(compareMessage(data_point.get(i-1), input_trace.get(j-1))) {                                         // TODO Delay Comparison?
                     LCS[i][j] = LCS[i-1][j-1] + 1;
                 } else { // Different message case
                     LCS[i][j] = Math.max(LCS[i][j-1], LCS[i-1][j]);
@@ -150,7 +148,7 @@ public class Clustering {
         float lcs_delay = lcs.get(id_lcs).time - lcs.get(id_lcs-1).time;
         float trace_delay = input_trace.get(id_trace).time - input_trace.get(prev_id_trace).time;
 
-        if(Math.abs(lcs_delay - trace_delay) <= 0.1) return true;
+        if(Math.abs(lcs_delay - trace_delay) <= 0.1) return true; // TODO Message Delay Similarity Threshold 0.1
         else return false;
     }
 }
