@@ -107,8 +107,7 @@ You can check the execution logs at "VENTOS_Public/examples/platoon_SoS/results"
 
 If you get an "Invalid java release error", please change Project language level to 8, which is in "Project Structure" -> "Project".
 If you get an "Untracked file error", please execute the following codes.
-<pre><code>
-git add -A 
+<pre><code>git add -A 
 git stash
 git pull </code></pre>
 
