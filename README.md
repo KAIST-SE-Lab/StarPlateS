@@ -84,7 +84,16 @@ When opening the Intellij IDE, please open it by console, not use shotcut icon o
 - Add new JDK at */usr/lib/jvm/java-8-openjdk-amd64*, which is a common location of the jdk.
 - Click "Project" in Project Settings and set your SDK to java 1.8
 
-#### 4. Change git remote setting
+#### 4. Run the StarPlateS 
+- Click "File" -> "Open" -> *VENTOS_Public*
+- Go to "Project Structure", click "Import Module", and add *SoS_Extension*
+- Click "Add Configuration" and add "Application" like the following figure
+
+![Alt text](Intellij_run_configuration.PNG)
+
+- Click "Run", then it will be executed.
+
+#### 5. Change git remote setting
 If you have any problem on repository confliciting between this and ManiAm/VENTOS_Public, please change your origin url to this repository. 
 
 In Intellij console, 
@@ -97,17 +106,8 @@ In Intellij console,
 - Check the current origin url again
 <pre><code> git remote -v </code></pre>
 
-#### 5. Pull branches
+#### 6. Pull branches
 Pull the latest code from github
-
-#### 6. Run the StarPlateS 
-- Click "File" -> "Open" -> *VENTOS_Public*
-- Go to "Project Structure", click "Import Module", and add *SoS_Extension*
-- Click "Add Configuration" and add "Application" like the following figure
-
-![Alt text](Intellij_run_configuration.PNG)
-
-- Click "Run", then it will be executed.
 
 You can check the execution logs at "VENTOS_Public/examples/platoon_SoS/results".
 
