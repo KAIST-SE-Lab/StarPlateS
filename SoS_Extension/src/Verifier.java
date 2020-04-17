@@ -2,7 +2,7 @@ import java.io.*;
 import java.util.*;
 
 public class Verifier {
-    public Boolean verifyLog(String txtdir, String nof, String property, int threshold) {
+    public Boolean verifyLog(String txtdir, String property, int threshold) {
         boolean ret = false;
         
         switch(property) {
@@ -31,7 +31,7 @@ public class Verifier {
                 break;
 
             case "operationSuccessRate":
-                ret = operationSuccessRateVerification(txtdir, nof, threshold);
+                ret = operationSuccessRateVerification(txtdir, threshold);
 
                 // CSV generation for tendency analysis of the verification property success rate
 //                File file = new File(System.getProperty("user.dir") + "/StarPlateS/SoS_Extension/Verification_Results" + nof + "_" + threshold + ".csv");
@@ -131,7 +131,7 @@ public class Verifier {
         return ret;
     }
     
-    private Boolean operationSuccessRateVerification(String txtdir, String nof, int threshold) {
+    private Boolean operationSuccessRateVerification(String txtdir, int threshold) {
         boolean ret = true;
         ArrayList<Message> messages = new ArrayList<>();
         int addCount = 0;
