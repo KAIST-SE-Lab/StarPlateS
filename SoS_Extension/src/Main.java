@@ -9,6 +9,7 @@ public class Main {
         boolean isSMBFL = false;
         boolean isBMBFL = false;
         boolean isIMBFL = false;
+        boolean isClustering = false;
         boolean withSim = true;
 
         if (args.length == 0) {
@@ -16,6 +17,7 @@ public class Main {
             System.out.println("Where: <switch> = -structure or -smbfl");
             System.out.println("                  -behavior or -bmbfl");
             System.out.println("                  -interplay or -imbfl");
+            System.out.println("                  -clustering or -cl");
             System.out.println("                  -all");
             System.out.println("       <withSim> = -simon (default)");
             System.out.println("                   -simoff");
@@ -28,10 +30,13 @@ public class Main {
             isBMBFL = true;
         else if (args[0].equals("-interplay") || args[0].equals("-imbfl"))
             isIMBFL = true;
+        else if (args[0].equals("-clustering") || args[0].equals("-cl"))
+            isClustering = true;
         else if (args[0].equals("-all")) {
             isSMBFL = true;
             isBMBFL = true;
             isIMBFL = true;
+            isClustering = true;
         }
 
         if(args[1].equals("-simoff")) {
@@ -54,42 +59,44 @@ public class Main {
             simulationExecutor.run(numScenario, numRepeat, isSMBFL, isBMBFL, isIMBFL, smbfl, imbfl); // TODO add more configuration params, eventDuration, etc
         }
 
+        Clustering clustering = new Clustering();
         Verifier verifier = new Verifier();
         int[] thresholds = {80};                                        // TODO Threshold value for the Verirfication Property 1
         int[] thresholds2 = {4};                                        // TODO Threshold value for the VP2
         String base = System.getProperty("user.dir");
         System.out.println(System.getProperty("user.dir"));
         int matchingtxts = 0;
-        String nof= "1";
-        //for (String nof : nofs) {
-            String currentdir = base + "/examples/platoon_SoS/results/";
-            System.out.print("Current Working Directory : " + currentdir +"\n");
-            File f = new File(currentdir);
-            Boolean results = null;
-            matchingtxts = 0;
-            if(f.exists()){
-                int numoffiles = f.listFiles().length + 300;
-                System.out.println("and it has " + numoffiles + " files.");
-                for (int i = 0; i < numoffiles; i++){
-                    String txtdir = currentdir + Integer.toString(i) + "_0plnData.txt";
-                    File temptxt = new File(txtdir);
-                    if(temptxt.exists()){
-                        matchingtxts++;
-//                        for (int thshold : thresholds){
-//                        for(int thshold = 5; thshold <= 100; thshold += 5){
-//                            verifier.verifyLog(txtdir, nof, "operationSuccessRate", thshold);
-//                        }
-                        for (int thshold2 : thresholds2){
-//                           System.out.println("opreation Time" + thshold2);
-                            results = verifier.verifyLog(txtdir, nof, "operationTime", thshold2);
-                            smbfl.structureModelOverlapping(results, i, 0);
+        String currentdir = base + "/SoS_Extension/logs/";
+        System.out.print("Current Working Directory : " + currentdir +"\n");
+        File f = new File(currentdir);
+        Boolean result;
+        matchingtxts = 0;
+        if(f.exists()){
+            int numoffiles = f.listFiles().length + 300;
+            System.out.println("and it has " + numoffiles + " files.");
+            for (int i = 0; i < numoffiles; i++){
+                String txtdir = currentdir + Integer.toString(i) + "_0plnData.txt";
+                File temptxt = new File(txtdir);
+                if(temptxt.exists()){
+                    matchingtxts++;
+                    for (int thshold : thresholds){
+                        result = verifier.verifyLog(txtdir,"operationSuccessRate", thshold);
+                        if(!result) {
+                            InterplayModel interplayModel = new InterplayModel(i, 0);                        // TODO r_index = 0 로 설정해놓음
+                            clustering.addTrace(interplayModel, 1);                                     // TODO Similarity Threshold = 100%
                         }
                     }
+//                        for (int thshold2 : thresholds2){
+////                           System.out.println("opreation Time" + thshold2);
+//                            result = verifier.verifyLog(txtdir, nof, "operationTime", thshold2);
+//                            smbfl.structureModelOverlapping(results, i, 0);
+//                        }
                 }
-            } else {
-                System.out.println("There is no such directory");
             }
-            System.out.println("There were " + matchingtxts + " platooning text files");
+        } else {
+            System.out.println("There is no such directory");
+        }
+        System.out.println("There were " + matchingtxts + " platooning text files");
         //}
 //
         if (isSMBFL) {                                                  // Structure Model-based Fault Localization
@@ -139,8 +146,12 @@ public class Main {
 //
 //        }
 //
-//        if (isIMBFL) {                                                 // Interaction Model-based Fault Localization
-//            imbfl.printSuspSequences();
-//        }
+        if (isIMBFL) {                                                 // Interaction Model-based Fault Localization
+            imbfl.printSuspSequences();
+        }
+
+        if(isClustering) {
+            clustering.printCluster();
+        }
     }
 }
