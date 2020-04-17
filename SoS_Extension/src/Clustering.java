@@ -12,14 +12,14 @@ public class Clustering {
         centroidLCS = new ArrayList<>();
     }
 
-    public void addTrace(InterplayModel im_trace, float simThreshold) {
+    public void addTrace(InterplayModel im_trace, float simlrThreshold) {                                                 // simThreshold: Similarity Threshold
         ArrayList<Integer> updatedCluster = new ArrayList<>(Collections.nCopies(cluster.size(), 0));
         ArrayList<Message> generatedLCS;
 
         // Given IM이 어떤 Cluster에 속하는지를 확인하는 과정: IM은 Failed tag를 가진다는 것을 가정함 / 여러 클러스터에 중복으로 할당 가능
         for(int i = 0; i < cluster.size(); i++) {
             if(cluster.get(i).size() > 1) {                                                                             // Cluster에 2개 이상의 IM이 존재할때 Cluster의 LCS가 존재하는것을
-                if(similarityChecker(centroidLCS.get(i), im_trace.getMsgSequence()) >= simThreshold) {                  // 가정하기 때문에 LCS와 given IM간의 Similarity를 비교함
+                if(similarityChecker(centroidLCS.get(i), im_trace.getMsgSequence()) >= simlrThreshold) {                  // 가정하기 때문에 LCS와 given IM간의 Similarity를 비교함
                     cluster.get(i).add(im_trace);
                     updatedCluster.set(i,1);
                 }
