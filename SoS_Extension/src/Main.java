@@ -10,6 +10,7 @@ public class Main {
         boolean isBMBFL = false;
         boolean isIMBFL = false;
         boolean withSim = true;
+        boolean onlySim = false;
 
         if (args.length == 0) {
             System.out.println("Usage: java main <switch> <withSim> [<file>]");
@@ -19,6 +20,7 @@ public class Main {
             System.out.println("                  -all");
             System.out.println("       <withSim> = -simon (default)");
             System.out.println("                   -simoff");
+            System.out.println("                   -onlysim");
             System.exit(1);
         }
 
@@ -36,6 +38,8 @@ public class Main {
 
         if(args[1].equals("-simoff")) {
             withSim = false;
+        } else if(args[1].equals("-onlysim")) {
+            onlySim = true;
         }
 
         int numScenario = 150;                                          // TODO The number of scenarios generated
@@ -54,32 +58,33 @@ public class Main {
             simulationExecutor.run(numScenario, numRepeat, isSMBFL, isBMBFL, isIMBFL, smbfl, imbfl); // TODO add more configuration params, eventDuration, etc
         }
 
-        Verifier verifier = new Verifier();
-        int[] thresholds = {80};                                        // TODO Threshold value for the Verirfication Property 1
-        int[] thresholds2 = {4};                                        // TODO Threshold value for the VP2
-        String base = System.getProperty("user.dir");
-        System.out.println(System.getProperty("user.dir"));
-        int matchingtxts = 0;
-        String nof= "1";
-        //for (String nof : nofs) {
+        if(!onlySim) {
+            Verifier verifier = new Verifier();
+            int[] thresholds = {80};                                        // TODO Threshold value for the Verirfication Property 1
+            int[] thresholds2 = {4};                                        // TODO Threshold value for the VP2
+            String base = System.getProperty("user.dir");
+            System.out.println(System.getProperty("user.dir"));
+            int matchingtxts = 0;
+            String nof = "1";
+            //for (String nof : nofs) {
             String currentdir = base + "/examples/platoon_SoS/results/";
-            System.out.print("Current Working Directory : " + currentdir +"\n");
+            System.out.print("Current Working Directory : " + currentdir + "\n");
             File f = new File(currentdir);
             Boolean results = null;
             matchingtxts = 0;
-            if(f.exists()){
+            if (f.exists()) {
                 int numoffiles = f.listFiles().length + 300;
                 System.out.println("and it has " + numoffiles + " files.");
-                for (int i = 0; i < numoffiles; i++){
+                for (int i = 0; i < numoffiles; i++) {
                     String txtdir = currentdir + Integer.toString(i) + "_0plnData.txt";
                     File temptxt = new File(txtdir);
-                    if(temptxt.exists()){
+                    if (temptxt.exists()) {
                         matchingtxts++;
 //                        for (int thshold : thresholds){
 //                        for(int thshold = 5; thshold <= 100; thshold += 5){
 //                            verifier.verifyLog(txtdir, nof, "operationSuccessRate", thshold);
 //                        }
-                        for (int thshold2 : thresholds2){
+                        for (int thshold2 : thresholds2) {
 //                           System.out.println("opreation Time" + thshold2);
                             results = verifier.verifyLog(txtdir, nof, "operationTime", thshold2);
                             smbfl.structureModelOverlapping(results, i, 0);
@@ -90,50 +95,50 @@ public class Main {
                 System.out.println("There is no such directory");
             }
             System.out.println("There were " + matchingtxts + " platooning text files");
-        //}
+            //}
 //
-        if (isSMBFL) {                                                  // Structure Model-based Fault Localization
-            ArrayList<EdgeInfo> edgeInfos = smbfl.SMcalculateSuspiciousness();
-            StructureModel finalSM = new StructureModel();
-            finalSM.collaborationGraph = smbfl.overlappedG;
+            if (isSMBFL) {                                                  // Structure Model-based Fault Localization
+                ArrayList<EdgeInfo> edgeInfos = smbfl.SMcalculateSuspiciousness();
+                StructureModel finalSM = new StructureModel();
+                finalSM.collaborationGraph = smbfl.overlappedG;
 //            finalSM.drawGraph();
-            System.out.println(edgeInfos.size());
-            File file2 = new File(System.getProperty("user.dir") + "/examples/platoon_SoS/results/SBFL_result.csv");
-            FileWriter writer2 = null;
+                System.out.println(edgeInfos.size());
+                File file2 = new File(System.getProperty("user.dir") + "/examples/platoon_SoS/results/SBFL_result.csv");
+                FileWriter writer2 = null;
 
-            for (EdgeInfo edgeInfo: edgeInfos) {
-                System.out.println("name: "+edgeInfo.edge+",    pass: "+edgeInfo.pass+",    fail: "+edgeInfo.fail+",    tarantula: "+edgeInfo.tarantulaM+", ochiai: "+edgeInfo.ochiaiM + ", op2: "+edgeInfo.op2M + ",   barinel: "+edgeInfo.barinelM+", dstar: "+edgeInfo.dstarM);
-                try {
-                    writer2 = new FileWriter(file2, true);
-                    writer2.write(edgeInfo.edge+ "," + edgeInfo.pass+ "," + edgeInfo.fail + "," + edgeInfo.tarantulaM + "," + edgeInfo.ochiaiM+ "," + edgeInfo.op2M+ "," + edgeInfo.barinelM+ "," + edgeInfo.dstarM+"\n");
-                    writer2.flush();
-                } catch(IOException e) {
-                    e.printStackTrace();
-                } finally {
+                for (EdgeInfo edgeInfo : edgeInfos) {
+                    System.out.println("name: " + edgeInfo.edge + ",    pass: " + edgeInfo.pass + ",    fail: " + edgeInfo.fail + ",    tarantula: " + edgeInfo.tarantulaM + ", ochiai: " + edgeInfo.ochiaiM + ", op2: " + edgeInfo.op2M + ",   barinel: " + edgeInfo.barinelM + ", dstar: " + edgeInfo.dstarM);
                     try {
-                        if(writer2 != null) writer2.close();
-                    } catch(IOException e) {
+                        writer2 = new FileWriter(file2, true);
+                        writer2.write(edgeInfo.edge + "," + edgeInfo.pass + "," + edgeInfo.fail + "," + edgeInfo.tarantulaM + "," + edgeInfo.ochiaiM + "," + edgeInfo.op2M + "," + edgeInfo.barinelM + "," + edgeInfo.dstarM + "\n");
+                        writer2.flush();
+                    } catch (IOException e) {
                         e.printStackTrace();
+                    } finally {
+                        try {
+                            if (writer2 != null) writer2.close();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+                for (NodeInfo nodeInfo : smbfl.nodeInfos) {
+                    System.out.println("name: " + nodeInfo.node + ",    pass: " + nodeInfo.pass + ",    fail: " + nodeInfo.fail);
+                    try {
+                        writer2 = new FileWriter(file2, true);
+                        writer2.write(nodeInfo.node + "," + nodeInfo.pass + "," + nodeInfo.fail + "\n");
+                        writer2.flush();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    } finally {
+                        try {
+                            if (writer2 != null) writer2.close();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
             }
-            for (NodeInfo nodeInfo: smbfl.nodeInfos) {
-                System.out.println("name: "+nodeInfo.node+",    pass: "+nodeInfo.pass+",    fail: "+nodeInfo.fail);
-                try {
-                    writer2 = new FileWriter(file2, true);
-                    writer2.write(nodeInfo.node+ "," + nodeInfo.pass+ "," + nodeInfo.fail +"\n");
-                    writer2.flush();
-                } catch(IOException e) {
-                    e.printStackTrace();
-                } finally {
-                    try {
-                        if(writer2 != null) writer2.close();
-                    } catch(IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        }
 //
 //        if (isBMBFL) {
 //
@@ -142,5 +147,6 @@ public class Main {
 //        if (isIMBFL) {                                                 // Interaction Model-based Fault Localization
 //            imbfl.printSuspSequences();
 //        }
+        }
     }
 }

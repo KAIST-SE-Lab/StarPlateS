@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/SoS_Extension/SoS_Extension.iml" filepath="$PROJECT_DIR$/SoS_Extension/SoS_Extension.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/VENTOS_Public.iml" filepath="$PROJECT_DIR$/.idea/VENTOS_Public.iml" />
     </modules>
   </component>
 </project>

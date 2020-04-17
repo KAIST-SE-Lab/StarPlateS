@@ -1,490 +1,136 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="BranchesTreeState">
+    <expand>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="LOCAL_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="GROUP_NODE:origin" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+    </expand>
+    <select />
+  </component>
   <component name="ChangeListManager">
-    <list default="true" id="75c4920a-6ed4-4558-840e-859c3671a5bd" name="Default Changelist" comment="">
+    <list default="true" id="f68f5609-9eed-4cd0-954c-f480721c486b" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/lib.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SoS_Extension/SoS_Extension.iml" beforeDir="false" afterPath="$PROJECT_DIR$/SoS_Extension/SoS_Extension.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/SoS_Extension/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/SoS_Extension/src/Main.java" afterDir="false" />
     </list>
-    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="DefaultGradleProjectSettings">
-    <option name="isMigrated" value="true" />
-  </component>
-  <component name="FileEditorManager">
-    <leaf>
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/SoS_Extension/src/Main.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="893">
-              <caret line="47" selection-start-line="47" selection-end-line="47" />
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/SoS_Extension/src/StructureModelBasedFaultLocalization.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="209">
-              <caret line="65" column="48" lean-forward="true" selection-start-line="65" selection-start-column="48" selection-end-line="65" selection-end-column="48" />
-              <folding>
-                <element signature="imports" expanded="true" />
-                <element signature="e#295#305#0" expanded="true" />
-                <element signature="e#358#368#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/SoS_Extension/src/SuspisiousnessMeasure.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="95">
-              <caret line="5" column="19" lean-forward="true" selection-start-line="5" selection-start-column="19" selection-end-line="5" selection-end-column="19" />
-              <folding>
-                <element signature="e#524#525#0" expanded="true" />
-                <element signature="e#558#559#0" expanded="true" />
-                <element signature="e#611#612#0" expanded="true" />
-                <element signature="e#643#644#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/SoS_Extension/src/StructureModel.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-223">
-              <caret line="58" column="58" lean-forward="true" selection-start-line="58" selection-start-column="58" selection-end-line="58" selection-end-column="58" />
-              <folding>
-                <element signature="imports" expanded="true" />
-                <element signature="e#987#996#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-    </leaf>
-  </component>
-  <component name="FileTemplateManagerImpl">
-    <option name="RECENT_TEMPLATES">
-      <list>
-        <option value="Class" />
-      </list>
-    </option>
-  </component>
-  <component name="FindInProjectRecents">
-    <findStrings>
-      <find>nodeAssign</find>
-      <find>flow</find>
-      <find>time</find>
-      <find>System.out</find>
-      <find>System</find>
-      <find>addEdge</find>
-    </findStrings>
+  <component name="EndpointsView">
+    <option name="showDetails" value="false" />
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
-    <option name="RECENT_BRANCH_BY_REPOSITORY">
-      <map>
-        <entry key="$PROJECT_DIR$" value="master" />
-      </map>
-    </option>
   </component>
   <component name="GithubDefaultAccount">
-    <option name="defaultAccountId" value="cb102729-0935-4718-9978-5042f2a09fc2" />
+    <option name="defaultAccountId" value="ef6b310e-8d84-435a-8d27-de2c77c15175" />
   </component>
-  <component name="IdeDocumentHistory">
-    <option name="CHANGED_PATHS">
-      <list>
-        <option value="$PROJECT_DIR$/SoS_Extension/src/SuspisiousnessMeasure.java" />
-        <option value="$PROJECT_DIR$/SoS_Extension/src/StructureModel.java" />
-        <option value="$PROJECT_DIR$/SoS_Extension/src/StructureModelBasedFaultLocalization.java" />
-        <option value="$PROJECT_DIR$/SoS_Extension/src/Main.java" />
-      </list>
-    </option>
-  </component>
-  <component name="MavenImportPreferences">
-    <option name="importingSettings">
-      <MavenImportingSettings>
-        <option name="vmOptionsForImporter" value="-Xmx768m" />
-      </MavenImportingSettings>
-    </option>
-  </component>
-  <component name="ProjectConfigurationFiles">
-    <option name="files">
-      <list>
-        <option value="$PROJECT_DIR$/.idea/vcs.xml" />
-        <option value="$PROJECT_DIR$/SoS_Extension/SoS_Extension.iml" />
-      </list>
-    </option>
-  </component>
-  <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="-10" />
-    <option name="y" value="-10" />
-    <option name="width" value="1940" />
-    <option name="height" value="1220" />
-  </component>
-  <component name="ProjectId" id="1T91WRJUMVP5z3bEF8bj7sViv42" />
-  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
-    <ConfirmationsSetting value="1" id="Add" />
-  </component>
-  <component name="ProjectView">
-    <navigator proportions="" version="1">
-      <foldersAlwaysOnTop value="true" />
-    </navigator>
-    <panes>
-      <pane id="ProjectPane">
-        <subPane>
-          <expand>
-            <path>
-              <item name="VENTOS" type="b2602c69:ProjectViewProjectNode" />
-              <item name="SoS_Extension" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="VENTOS" type="b2602c69:ProjectViewProjectNode" />
-              <item name="SoS_Extension" type="462c0819:PsiDirectoryNode" />
-              <item name="logs" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="VENTOS" type="b2602c69:ProjectViewProjectNode" />
-              <item name="SoS_Extension" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-            </path>
-          </expand>
-          <select />
-        </subPane>
-      </pane>
-      <pane id="PackagesPane" />
-      <pane id="Scope" />
-    </panes>
+  <component name="ProjectId" id="1ae7qdR2qPyUlKBx3qemWzbtg5O" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent">
-    <property name="ASKED_SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1574841286560" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/SoS_Extension/lib/gs-algo-1.3.jar!/" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/SoS_Extension/lib" />
     <property name="project.structure.last.edited" value="Libraries" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.2" />
-    <property name="settings.editor.selected.configurable" value="settings.github" />
-  </component>
-  <component name="RunDashboard">
-    <option name="ruleStates">
-      <list>
-        <RuleState>
-          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
-        </RuleState>
-        <RuleState>
-          <option name="name" value="StatusDashboardGroupingRule" />
-        </RuleState>
-      </list>
-    </option>
-  </component>
-  <component name="RunManager">
-    <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <output_file path="$PROJECT_DIR$/examples/platoon_SoS/results" />
-      <option name="MAIN_CLASS_NAME" value="Main" />
-      <module name="SoS_Extension" />
-      <option name="PROGRAM_PARAMETERS" value="-structure" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <recent_temporary>
-      <list>
-        <item itemvalue="Application.Main" />
-      </list>
-    </recent_temporary>
+    <property name="settings.editor.selected.configurable" value="org.jetbrains.plugins.github.ui.GithubSettingsConfigurable" />
   </component>
   <component name="SvnConfiguration">
     <configuration />
   </component>
   <component name="TaskManager">
-    <task id="LOCAL-00001" summary="Commit Test">
-      <created>1572850037586</created>
-      <option name="number" value="00001" />
-      <option name="presentableId" value="LOCAL-00001" />
-      <option name="project" value="LOCAL" />
-      <updated>1572850037586</updated>
-    </task>
     <task active="true" id="Default" summary="Default task">
-      <changelist id="75c4920a-6ed4-4558-840e-859c3671a5bd" name="Default Changelist" comment="" />
-      <created>1572857534638</created>
+      <changelist id="f68f5609-9eed-4cd0-954c-f480721c486b" name="Default Changelist" comment="" />
+      <created>1587084397507</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1572857534638</updated>
-      <workItem from="1573626716239" duration="50072000" />
+      <updated>1587084397507</updated>
+      <workItem from="1587084401399" duration="2080000" />
     </task>
-    <task id="LOCAL-00002" summary="Console log generation &amp; Emission log generation">
-      <created>1572927168263</created>
-      <option name="number" value="00002" />
-      <option name="presentableId" value="LOCAL-00002" />
-      <option name="project" value="LOCAL" />
-      <updated>1572927168263</updated>
-    </task>
-    <task id="LOCAL-00003" summary="Structure Model Parser Implementation&#10;- Structure Model Generation&#10;- Structure Model Drawer">
-      <created>1572939116344</created>
-      <option name="number" value="00003" />
-      <option name="presentableId" value="LOCAL-00003" />
-      <option name="project" value="LOCAL" />
-      <updated>1572939116344</updated>
-    </task>
-    <task id="LOCAL-00004" summary="Change the log file's settings">
-      <created>1573626825453</created>
-      <option name="number" value="00004" />
-      <option name="presentableId" value="LOCAL-00004" />
-      <option name="project" value="LOCAL" />
-      <updated>1573626825453</updated>
-    </task>
-    <task id="LOCAL-00005" summary="test">
-      <created>1573626948066</created>
-      <option name="number" value="00005" />
-      <option name="presentableId" value="LOCAL-00005" />
-      <option name="project" value="LOCAL" />
-      <updated>1573626948066</updated>
-    </task>
-    <task id="LOCAL-00006" summary="test2">
-      <created>1573627730103</created>
-      <option name="number" value="00006" />
-      <option name="presentableId" value="LOCAL-00006" />
-      <option name="project" value="LOCAL" />
-      <updated>1573627730103</updated>
-    </task>
-    <task id="LOCAL-00007" summary="connecting platooning service to native service">
-      <created>1574324112167</created>
-      <option name="number" value="00007" />
-      <option name="presentableId" value="LOCAL-00007" />
-      <option name="project" value="LOCAL" />
-      <updated>1574324112167</updated>
-    </task>
-    <task id="LOCAL-00008" summary="model generation refactoring">
-      <created>1574738235308</created>
-      <option name="number" value="00008" />
-      <option name="presentableId" value="LOCAL-00008" />
-      <option name="project" value="LOCAL" />
-      <updated>1574738235308</updated>
-    </task>
-    <task id="LOCAL-00009" summary="temporary structure model overlapping">
-      <created>1574757573930</created>
-      <option name="number" value="00009" />
-      <option name="presentableId" value="LOCAL-00009" />
-      <option name="project" value="LOCAL" />
-      <updated>1574757573930</updated>
-    </task>
-    <task id="LOCAL-00010" summary="temporary suspiciousness measurement">
-      <created>1574827702792</created>
-      <option name="number" value="00010" />
-      <option name="presentableId" value="LOCAL-00010" />
-      <option name="project" value="LOCAL" />
-      <updated>1574827702792</updated>
-    </task>
-    <task id="LOCAL-00011" summary="Structure model based fault localization version 1 complete">
-      <created>1574840663056</created>
-      <option name="number" value="00011" />
-      <option name="presentableId" value="LOCAL-00011" />
-      <option name="project" value="LOCAL" />
-      <updated>1574840663056</updated>
-    </task>
-    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
-  <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="50072000" />
-  </component>
-  <component name="ToolWindowManager">
-    <frame x="-7" y="-7" width="2062" height="1126" extended-state="6" />
-    <layout>
-      <window_info id="Designer" order="0" />
-      <window_info id="UI Designer" order="1" />
-      <window_info id="Capture Tool" order="2" />
-      <window_info id="Favorites" order="3" side_tool="true" />
-      <window_info id="Image Layers" order="4" />
-      <window_info content_ui="combo" id="Project" order="5" weight="0.23726274" />
-      <window_info id="Structure" order="6" side_tool="true" weight="0.25" />
-      <window_info anchor="bottom" id="Docker" order="0" show_stripe_button="false" />
-      <window_info anchor="bottom" id="Version Control" order="1" weight="0.12890232" />
-      <window_info anchor="bottom" id="Terminal" order="2" />
-      <window_info anchor="bottom" id="Database Changes" order="3" />
-      <window_info anchor="bottom" id="Event Log" order="4" side_tool="true" />
-      <window_info anchor="bottom" id="Message" order="5" />
-      <window_info anchor="bottom" id="Find" order="6" />
-      <window_info anchor="bottom" id="Run" order="7" weight="0.28700906" />
-      <window_info anchor="bottom" id="Debug" order="8" weight="0.4" />
-      <window_info anchor="bottom" id="Cvs" order="9" weight="0.25" />
-      <window_info anchor="bottom" id="Messages" order="10" />
-      <window_info anchor="bottom" id="Inspection" order="11" weight="0.4" />
-      <window_info anchor="bottom" id="TODO" order="12" />
-      <window_info anchor="right" id="Theme Preview" order="0" />
-      <window_info anchor="right" id="Database" order="1" />
-      <window_info anchor="right" id="Capture Analysis" order="2" />
-      <window_info anchor="right" id="Palette&#9;" order="3" />
-      <window_info anchor="right" id="Maven" order="4" />
-      <window_info anchor="right" id="Palette" order="5" />
-      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="6" type="SLIDING" weight="0.4" />
-      <window_info anchor="right" id="Ant Build" order="7" weight="0.25" />
-      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="8" weight="0.25" />
-    </layout>
-    <layout-to-restore>
-      <window_info id="Designer" order="0" />
-      <window_info id="UI Designer" order="1" />
-      <window_info id="Capture Tool" order="2" />
-      <window_info id="Favorites" order="3" side_tool="true" />
-      <window_info id="Image Layers" order="4" />
-      <window_info content_ui="combo" id="Project" order="5" visible="true" weight="0.23726274" />
-      <window_info id="Structure" order="6" side_tool="true" weight="0.25" />
-      <window_info anchor="bottom" id="Docker" order="0" show_stripe_button="false" />
-      <window_info anchor="bottom" id="Version Control" order="1" weight="0.12890232" />
-      <window_info anchor="bottom" id="Terminal" order="2" />
-      <window_info anchor="bottom" id="Database Changes" order="3" />
-      <window_info anchor="bottom" id="Event Log" order="4" side_tool="true" />
-      <window_info anchor="bottom" id="Message" order="5" />
-      <window_info anchor="bottom" id="Find" order="6" />
-      <window_info active="true" anchor="bottom" id="Run" order="7" visible="true" weight="0.28700906" />
-      <window_info anchor="bottom" id="Debug" order="8" weight="0.4" />
-      <window_info anchor="bottom" id="Cvs" order="9" weight="0.25" />
-      <window_info anchor="bottom" id="Messages" order="10" />
-      <window_info anchor="bottom" id="Inspection" order="11" weight="0.4" />
-      <window_info anchor="bottom" id="TODO" order="12" />
-      <window_info anchor="right" id="Theme Preview" order="0" />
-      <window_info anchor="right" id="Database" order="1" />
-      <window_info anchor="right" id="Capture Analysis" order="2" />
-      <window_info anchor="right" id="Palette&#9;" order="3" />
-      <window_info anchor="right" id="Maven" order="4" />
-      <window_info anchor="right" id="Palette" order="5" />
-      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="6" type="SLIDING" weight="0.4" />
-      <window_info anchor="right" id="Ant Build" order="7" weight="0.25" />
-      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="8" weight="0.25" />
-    </layout-to-restore>
-  </component>
   <component name="TypeScriptGeneratedFilesManager">
-    <option name="version" value="1" />
-  </component>
-  <component name="Vcs.Log.History.Properties">
-    <option name="COLUMN_WIDTH">
-      <map>
-        <entry key="2" value="115" />
-        <entry key="3" value="163" />
-      </map>
-    </option>
-    <option name="COLUMN_ORDER">
-      <list>
-        <option value="0" />
-        <option value="2" />
-        <option value="3" />
-        <option value="1" />
-      </list>
-    </option>
+    <option name="version" value="2" />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
     <option name="TAB_STATES">
       <map>
         <entry key="MAIN">
           <value>
-            <State>
-              <option name="RECENTLY_FILTERED_USER_GROUPS">
-                <collection />
-              </option>
-              <option name="RECENTLY_FILTERED_BRANCH_GROUPS">
-                <collection />
-              </option>
-              <option name="COLUMN_ORDER">
-                <list>
-                  <option value="0" />
-                  <option value="1" />
-                  <option value="2" />
-                  <option value="3" />
-                </list>
-              </option>
-            </State>
-          </value>
-        </entry>
-      </map>
-    </option>
-    <option name="RECENT_FILTERS">
-      <map>
-        <entry key="Branch">
-          <value>
-            <list />
-          </value>
-        </entry>
-        <entry key="User">
-          <value>
-            <list />
+            <State />
           </value>
         </entry>
       </map>
     </option>
   </component>
-  <component name="VcsManagerConfiguration">
-    <MESSAGE value="Commit Test" />
-    <MESSAGE value="Console log generation &amp; Emission log generation" />
-    <MESSAGE value="Structure Model Parser Implementation&#10;- Structure Model Generation&#10;- Structure Model Drawer" />
-    <MESSAGE value="Change the log file's settings" />
-    <MESSAGE value="test" />
-    <MESSAGE value="test2" />
-    <MESSAGE value="connecting platooning service to native service" />
-    <MESSAGE value="model generation refactoring" />
-    <MESSAGE value="temporary structure model overlapping" />
-    <MESSAGE value="temporary suspiciousness measurement" />
-    <MESSAGE value="add StructureModelBasedFaultLocalization class" />
-    <MESSAGE value="Structure model based fault localization version 1 complete" />
-    <option name="LAST_COMMIT_MESSAGE" value="Structure model based fault localization version 1 complete" />
-  </component>
-  <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/SoS_Extension/src/StructureModelBasedFaultLocalization.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="209">
-          <caret line="65" column="48" lean-forward="true" selection-start-line="65" selection-start-column="48" selection-end-line="65" selection-end-column="48" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#295#305#0" expanded="true" />
-            <element signature="e#358#368#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/SoS_Extension/src/SuspisiousnessMeasure.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="95">
-          <caret line="5" column="19" lean-forward="true" selection-start-line="5" selection-start-column="19" selection-end-line="5" selection-end-column="19" />
-          <folding>
-            <element signature="e#524#525#0" expanded="true" />
-            <element signature="e#558#559#0" expanded="true" />
-            <element signature="e#611#612#0" expanded="true" />
-            <element signature="e#643#644#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/SoS_Extension/src/StructureModel.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-223">
-          <caret line="58" column="58" lean-forward="true" selection-start-line="58" selection-start-column="58" selection-end-line="58" selection-end-column="58" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#987#996#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/SoS_Extension/src/Main.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="893">
-          <caret line="47" selection-start-line="47" selection-end-line="47" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
+  <component name="WindowStateProjectService">
+    <state x="762" y="405" key="#Notifications" timestamp="1587084330009">
+      <screen x="65" y="24" width="1653" height="1024" />
+    </state>
+    <state x="762" y="405" key="#Notifications/65.24.1653.1024@65.24.1653.1024" timestamp="1587084330009" />
+    <state x="676" y="295" key="FileChooserDialogImpl" timestamp="1587084946412">
+      <screen x="65" y="24" width="1653" height="1024" />
+    </state>
+    <state x="676" y="295" key="FileChooserDialogImpl/65.24.1653.1024@65.24.1653.1024" timestamp="1587084946412" />
+    <state x="752" y="437" key="Github.ShareDialog" timestamp="1587083789323">
+      <screen x="65" y="24" width="1653" height="1024" />
+    </state>
+    <state x="752" y="437" key="Github.ShareDialog/65.24.1653.1024@65.24.1653.1024" timestamp="1587083789323" />
+    <state x="484" y="341" key="NewModule_or_Project.wizard" timestamp="1587084800558">
+      <screen x="65" y="24" width="1653" height="1024" />
+    </state>
+    <state x="484" y="341" key="NewModule_or_Project.wizard/65.24.1653.1024@65.24.1653.1024" timestamp="1587084800558" />
+    <state x="458" y="114" key="SettingsEditor" timestamp="1587084951090">
+      <screen x="65" y="24" width="1653" height="1024" />
+    </state>
+    <state x="458" y="114" key="SettingsEditor/65.24.1653.1024@65.24.1653.1024" timestamp="1587084951090" />
+    <state x="488" y="273" key="Vcs.Push.Dialog.v2" timestamp="1587084320923">
+      <screen x="65" y="24" width="1653" height="1024" />
+    </state>
+    <state x="488" y="273" key="Vcs.Push.Dialog.v2/65.24.1653.1024@65.24.1653.1024" timestamp="1587084320923" />
+    <state x="288" y="124" width="1200" height="824" key="com.intellij.history.integration.ui.views.FileHistoryDialog" timestamp="1587083736779">
+      <screen x="65" y="24" width="1653" height="1024" />
+    </state>
+    <state x="288" y="124" width="1200" height="824" key="com.intellij.history.integration.ui.views.FileHistoryDialog/65.24.1653.1024@65.24.1653.1024" timestamp="1587083736779" />
+    <state x="559" y="325" width="660" height="421" key="git4idea.merge.GitPullDialog" timestamp="1587084756035">
+      <screen x="65" y="24" width="1653" height="1024" />
+    </state>
+    <state x="559" y="325" width="660" height="421" key="git4idea.merge.GitPullDialog/65.24.1653.1024@65.24.1653.1024" timestamp="1587084756035" />
+    <state x="648" y="437" key="git4idea.remote.GitConfigureRemotesDialog" timestamp="1587083815617">
+      <screen x="65" y="24" width="1653" height="1024" />
+    </state>
+    <state x="648" y="437" key="git4idea.remote.GitConfigureRemotesDialog/65.24.1653.1024@65.24.1653.1024" timestamp="1587083815617" />
+    <state x="661" y="437" key="git4idea.ui.GitStashDialog" timestamp="1587084513298">
+      <screen x="65" y="24" width="1653" height="1024" />
+    </state>
+    <state x="661" y="437" key="git4idea.ui.GitStashDialog/65.24.1653.1024@65.24.1653.1024" timestamp="1587084513298" />
+    <state x="629" y="221" key="svn.repositoryBrowser" timestamp="1587083761280">
+      <screen x="65" y="24" width="1653" height="1024" />
+    </state>
+    <state x="629" y="221" key="svn.repositoryBrowser/65.24.1653.1024@65.24.1653.1024" timestamp="1587083761280" />
   </component>
 </project>
