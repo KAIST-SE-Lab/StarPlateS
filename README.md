@@ -98,7 +98,7 @@ In Intellij console,
 - Check the current origin url again
 <pre><code> git remote -v </code></pre>
 
-Or, You can add the following url https://github.com/abalon1210/StarPlateS.git in the "VCS" -> "Git" -> "Remotes"
+Or, You can add the following url "https://github.com/abalon1210/StarPlateS.git" in the "VCS" -> "Git" -> "Remotes"
 
 #### 5. Pull branches
 Pull the latest code from github
