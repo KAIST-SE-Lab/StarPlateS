@@ -15,8 +15,10 @@ public class Clustering {
     public void addTrace(InterplayModel im_trace, float simlrThreshold) {                                               // simThreshold: Similarity Threshold
         ArrayList<Integer> updatedCluster = new ArrayList<>(Collections.nCopies(cluster.size(), 0));
         ArrayList<Message> generatedLCS;
+        Boolean assignFlag = false;
 
         if (cluster.size() == 0) {
+            cluster.add(new ArrayList<>());
             cluster.get(0).add(im_trace);
             return;
         }
@@ -27,14 +29,21 @@ public class Clustering {
                 if(similarityChecker(centroidLCS.get(i), im_trace.getMsgSequence()) >= simlrThreshold) {                // 가정하기 때문에 LCS와 given IM간의 Similarity를 비교함
                     cluster.get(i).add(im_trace);
                     updatedCluster.set(i,1);
+                    assignFlag = true;
                 }
             } else {
                 generatedLCS = LCSExtractor(cluster.get(i).get(0).getMsgSequence(), im_trace.getMsgSequence());         // Cluster에 1개의 IM만 존재할때는 해당 IM 과의 LCS가 존재하는지
-                if(generatedLCS.size() > 0) {                                                                           // 여부를 이용하여 해당 Cluster에 포함가능한지를 확인함
+                if(generatedLCS.size() > 10) {                                                                           // 여부를 이용하여 해당 Cluster에 포함가능한지를 확인함
                     cluster.get(i).add(im_trace);
                     updatedCluster.set(i,1);
+                    assignFlag = true;
                 }
             }
+        }
+
+        if(!assignFlag) {
+            cluster.add(new ArrayList<>());
+            cluster.get(cluster.size()-1).add(im_trace);
         }
 
         // Updated cluster에 대해 Representative LCS (Centroid)를 업데이트하는 과정
