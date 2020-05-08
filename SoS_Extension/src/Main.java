@@ -83,7 +83,7 @@ public class Main {
                         result = verifier.verifyLog(txtdir,"operationSuccessRate", thshold);
                         if(!result) {
                             InterplayModel interplayModel = new InterplayModel(i, 0);                        // TODO r_index = 0 로 설정해놓음
-                            clustering.addTrace(interplayModel, 1);                                     // TODO Similarity Threshold = 100%
+                            //clustering.addTrace(interplayModel, 1);                                     // TODO Similarity Threshold = 100%
                         }
                     }
 //                        for (int thshold2 : thresholds2){
