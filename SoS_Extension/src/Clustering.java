@@ -155,19 +155,21 @@ public class Clustering {
 
         for(int i = 0; i < lcs.size(); i++) {
             if (matched == 0) {
-                for(Message m : input_trace) {
-                    if(compareMessage(lcs.get(i), m) == true) {
+                for(int j = 0; j < input_trace.size(); j++) {
+                    if(compareMessage(lcs.get(i), input_trace.get(j)) == true) {
                         matched += 1;
-                        prevMatchedId = input_trace.indexOf(m);
+                        prevMatchedId = j;
+                        break;
                     }
                 }
                 total += 1;
             } else {
-                for(Message m : input_trace) {
-                    if(compareMessage(lcs.get(i), m) == true
-                            && calMessageDelay(lcs, input_trace, i, input_trace.indexOf(m), prevMatchedId) == true) {
+                for(int j = prevMatchedId + 1; j <input_trace.size(); j++) {
+                    if(compareMessage(lcs.get(i), input_trace.get(j)) == true
+                            && calMessageDelay(lcs, input_trace, i, j, prevMatchedId) == true) {
                         matched += 1;
-                        prevMatchedId = input_trace.indexOf(m);
+                        prevMatchedId = j;
+                        break;
                     }
                 }
                 total += 1;
@@ -178,8 +180,8 @@ public class Clustering {
     }
 
     private boolean calMessageDelay(ArrayList<Message> lcs, ArrayList<Message> input_trace, int id_lcs, int id_trace, int prev_id_trace) {
-        float lcs_delay = lcs.get(id_lcs).time - lcs.get(id_lcs-1).time;
-        float trace_delay = input_trace.get(id_trace).time - input_trace.get(prev_id_trace).time;
+        float lcs_delay = lcs.get(id_lcs-1).time - lcs.get(id_lcs).time;
+        float trace_delay = input_trace.get(prev_id_trace).time - input_trace.get(id_trace).time;
 
         if(Math.abs(lcs_delay - trace_delay) <= 0.1) return true; // TODO Message Delay Similarity Threshold 0.1
         else return false;
