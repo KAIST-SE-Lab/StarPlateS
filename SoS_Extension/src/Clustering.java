@@ -19,6 +19,7 @@ public class Clustering {
 
         if (cluster.size() == 0) {
             cluster.add(new ArrayList<>());
+            centroidLCS.add(new ArrayList<>());
             cluster.get(0).add(im_trace);
             return;
         }
@@ -43,7 +44,9 @@ public class Clustering {
 
         if(!assignFlag) {
             cluster.add(new ArrayList<>());
+            centroidLCS.add(new ArrayList<>());
             cluster.get(cluster.size()-1).add(im_trace);
+            return;
         }
 
         // Updated cluster에 대해 Representative LCS (Centroid)를 업데이트하는 과정
@@ -61,7 +64,21 @@ public class Clustering {
     }
 
     public void printCluster() {
+        Message temp;
+        for(int i = 0; i <cluster.size(); i++) {
+            System.out.println("Cluster " + i + "=================");
+            System.out.println("Representative LCS:");
 
+            for(int j = 0; j < centroidLCS.get(i).size(); j++) {
+                temp = centroidLCS.get(i).get(j);
+                System.out.println(temp.time + ": " + temp.commandSent + " from " + temp.senderPltId + " to " + temp.receiverId);
+            }
+
+            System.out.println("Clustered IMs:");
+            for(int j = 0; j < cluster.get(i).size(); j++) {
+                System.out.println((j+1) + ": IM_" + cluster.get(i).get(j).getId());
+            }
+        }
     }
 
     private ArrayList<Message> LCSExtractor(ArrayList<Message> data_point, ArrayList<Message> input_trace) {
@@ -123,8 +140,10 @@ public class Clustering {
 
     private boolean compareMessage(Message m_a, Message m_b) {
 
-        if(m_a.commandSent.equals(m_b.commandSent) && m_a.senderPltId.equals(m_b.senderPltId) // TODO How much information would be considered in comparison??
-                && m_a.receiverId.equals(m_b.receiverId)) return true;
+        if(m_a.commandSent.equals(m_b.commandSent)) return true;
+
+//        if(m_a.commandSent.equals(m_b.commandSent) && m_a.senderPltId.equals(m_b.senderPltId) // TODO How much information would be considered in comparison??
+//                && m_a.receiverId.equals(m_b.receiverId)) return true;
 
         return false;
     }
