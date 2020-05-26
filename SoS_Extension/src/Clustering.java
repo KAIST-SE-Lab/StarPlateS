@@ -56,6 +56,7 @@ public class Clustering {
                 generatedLCS = (ArrayList) cluster.get(i).get(0).getMsgSequence().clone();
                 while(j <= cluster.get(i).size()-1) {
                     generatedLCS = LCSExtractor(generatedLCS, cluster.get(i).get(j).getMsgSequence());
+                    Collections.reverse(generatedLCS);
                     j++;
                 }
                 centroidLCS.set(i, generatedLCS);
@@ -140,6 +141,7 @@ public class Clustering {
 
     private boolean compareMessage(Message m_a, Message m_b) {
 
+        if(m_a.time < 25.00 || m_b.time < 25.00) return false;
         if(m_a.commandSent.equals(m_b.commandSent)) return true;
 
 //        if(m_a.commandSent.equals(m_b.commandSent) && m_a.senderPltId.equals(m_b.senderPltId) // TODO How much information would be considered in comparison??
