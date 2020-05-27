@@ -34,7 +34,7 @@ public class Clustering {
                 }
             } else {
                 generatedLCS = LCSExtractor(cluster.get(i).get(0).getMsgSequence(), im_trace.getMsgSequence());         // Cluster에 1개의 IM만 존재할때는 해당 IM 과의 LCS가 존재하는지
-                if(generatedLCS.size() > 10) {                                                                           // 여부를 이용하여 해당 Cluster에 포함가능한지를 확인함
+                if(generatedLCS.size() > 10) {                                                                          // 여부를 이용하여 해당 Cluster에 포함가능한지를 확인함
                     cluster.get(i).add(im_trace);
                     updatedCluster.set(i,1);
                     assignFlag = true;
@@ -72,7 +72,7 @@ public class Clustering {
 
             for(int j = 0; j < centroidLCS.get(i).size(); j++) {
                 temp = centroidLCS.get(i).get(j);
-                System.out.println(temp.time + ": " + temp.commandSent + " from " + temp.senderPltId + " to " + temp.receiverId);
+                System.out.println(j + " " + temp.time + ": " + temp.commandSent + " from " + temp.senderPltId + " to " + temp.receiverId);
             }
 
             System.out.println("Clustered IMs:");
@@ -161,6 +161,7 @@ public class Clustering {
                     if(compareMessage(lcs.get(i), input_trace.get(j)) == true) {
                         matched += 1;
                         prevMatchedId = j;
+//                        System.out.println(i);
                         break;
                     }
                 }
@@ -171,6 +172,7 @@ public class Clustering {
                             && calMessageDelay(lcs, input_trace, i, j, prevMatchedId) == true) {
                         matched += 1;
                         prevMatchedId = j;
+//                        System.out.println(i);
                         break;
                     }
                 }
@@ -185,7 +187,10 @@ public class Clustering {
         float lcs_delay = lcs.get(id_lcs-1).time - lcs.get(id_lcs).time;
         float trace_delay = input_trace.get(prev_id_trace).time - input_trace.get(id_trace).time;
 
-        if(Math.abs(lcs_delay - trace_delay) <= 0.1) return true; // TODO Message Delay Similarity Threshold 0.1
-        else return false;
+        if(Math.abs(lcs_delay - trace_delay) <= 0.15) return true; // TODO Message Delay Similarity Threshold 0.1 & Simlr 0.85 / 0.15 & Simlr 0.95
+        else {
+            System.out.println("lcs_id: " + id_lcs + " id_trace: " + id_trace + "time: "+ input_trace.get(id_trace).time + " prev_id_trace " + prev_id_trace+ "time: "+ input_trace.get(prev_id_trace).time);
+            return false;
+        }
     }
 }
