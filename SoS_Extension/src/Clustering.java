@@ -1,6 +1,5 @@
 import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.Collections;
+import java.util.*;
 
 public class Clustering {
 
@@ -12,7 +11,7 @@ public class Clustering {
         centroidLCS = new ArrayList<>();
     }
 
-    public void addTrace(InterplayModel im_trace, float simlrThreshold) {                                               // simThreshold: Similarity Threshold
+    public void addTrace(InterplayModel im_trace, double simlr_threshold) {                                               // simThreshold: Similarity Threshold
         ArrayList<Integer> updatedCluster = new ArrayList<>(Collections.nCopies(cluster.size(), 0));
         ArrayList<Message> generatedLCS;
         Boolean assignFlag = false;
@@ -27,7 +26,9 @@ public class Clustering {
         // Given IM이 어떤 Cluster에 속하는지를 확인하는 과정: IM은 Failed tag를 가진다는 것을 가정함 / 여러 클러스터에 중복으로 할당 가능
         for(int i = 0; i < cluster.size(); i++) {
             if(cluster.get(i).size() > 1) {                                                                             // Cluster에 2개 이상의 IM이 존재할때, Cluster의 LCS가 존재하는것을
-                if(similarityChecker(centroidLCS.get(i), im_trace.getMsgSequence()) >= simlrThreshold) {                // 가정하기 때문에 LCS와 given IM간의 Similarity를 비교함
+                double temp = similarityChecker(centroidLCS.get(i), im_trace.getMsgSequence());
+                System.out.println("Cluster id: " + i + " Input_trace id: "+ im_trace.id + " similarity: " + temp);
+                if(temp >= simlr_threshold) {                                                                            // 가정하기 때문에 LCS와 given IM간의 Similarity를 비교함
                     cluster.get(i).add(im_trace);
                     updatedCluster.set(i,1);
                     assignFlag = true;
@@ -62,6 +63,12 @@ public class Clustering {
                 centroidLCS.set(i, generatedLCS);
             }
         }
+    }
+
+    private void LCSRedundancyAnalyzer(int id_cluster, int redundancy_threshold) {
+       HashMap<String, Integer> LCS_analysis = new HashMap<>();
+
+
     }
 
     public void printCluster() {
@@ -135,6 +142,7 @@ public class Clustering {
             }
             return ret;
         } else { // No shorter LCS exists
+            Collections.reverse(data_point);
             return data_point;
         }
     }
@@ -150,12 +158,12 @@ public class Clustering {
         return false;
     }
 
-    private float similarityChecker(ArrayList<Message> lcs, ArrayList<Message> input_trace) {
+    private double similarityChecker(ArrayList<Message> lcs, ArrayList<Message> input_trace) {
         int matched = 0;
         int prevMatchedId = -1;
         int total = 0;
 
-        for(int i = 0; i < lcs.size(); i++) {
+        for(int i = 0; i < lcs.size(); i++) { // TODO 단일 IM 상에서 여러 개의 시작 지점 고려해야함
             if (matched == 0) {
                 for(int j = 0; j < input_trace.size(); j++) {
                     if(compareMessage(lcs.get(i), input_trace.get(j)) == true) {
@@ -180,7 +188,7 @@ public class Clustering {
             }
         }
 
-        return (float) matched/total;
+        return (double)matched/(double)total;
     }
 
     private boolean calMessageDelay(ArrayList<Message> lcs, ArrayList<Message> input_trace, int id_lcs, int id_trace, int prev_id_trace) {
@@ -189,7 +197,8 @@ public class Clustering {
 
         if(Math.abs(lcs_delay - trace_delay) <= 0.15) return true; // TODO Message Delay Similarity Threshold 0.1 & Simlr 0.85 / 0.15 & Simlr 0.95
         else {
-            System.out.println("lcs_id: " + id_lcs + " id_trace: " + id_trace + "time: "+ input_trace.get(id_trace).time + " prev_id_trace " + prev_id_trace+ "time: "+ input_trace.get(prev_id_trace).time);
+//            System.out.println("lcs_id: " + id_lcs + "/ id_trace: " + id_trace + " time: "+ input_trace.get(id_trace).time + "/ prev_id_trace " + prev_id_trace+ " time: "+ input_trace.get(prev_id_trace).time);
+//            System.out.println(Math.abs(lcs_delay - trace_delay));
             return false;
         }
     }
