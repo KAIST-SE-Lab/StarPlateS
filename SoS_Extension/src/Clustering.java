@@ -62,13 +62,51 @@ public class Clustering {
                 }
                 centroidLCS.set(i, generatedLCS);
             }
+            LCSRedundancyAnalyzer(i, 20); // TODO Threshold: the number of repetition of the same sync messages threshold
         }
     }
 
     private void LCSRedundancyAnalyzer(int id_cluster, int redundancy_threshold) {
-       HashMap<String, Integer> LCS_analysis = new HashMap<>();
+        HashMap<String, Integer> LCS_analysis = new HashMap<>();
+        ArrayList<Message> target_LCS = centroidLCS.get(id_cluster);
+        ArrayList<Message> result_LCS = new ArrayList<>();
+        ArrayList<Message> redundancy_list = new ArrayList<>();
+        String key_ = "";
+        Boolean flag = false;
 
+        for(int i = 0; i < target_LCS.size()-1; i++) {
+            key_ = target_LCS.get(i).commandSent + "_" + target_LCS.get(i+1).commandSent;
+            if(LCS_analysis.containsKey(key_)) {
+                LCS_analysis.put(key_, LCS_analysis.get(key_)+1);
 
+                if(LCS_analysis.get(key_) >= redundancy_threshold
+                        && !redundancy_list.contains(target_LCS.get(i))) {
+                    redundancy_list.add(target_LCS.get(i));
+                }
+            } else {
+                LCS_analysis.put(key_, 1);
+            }
+
+            if(LCS_analysis.get(key_) < redundancy_threshold) {
+                for(int j = 0; j < redundancy_list.size(); j++) {
+                    if(compareMessage(target_LCS.get(i), redundancy_list.get(j))) {
+                        flag = true;
+                    }
+                }
+                if (!flag) result_LCS.add(target_LCS.get(i));
+            }
+        }
+//
+//        for(String key : LCS_analysis.keySet()) {
+//            System.out.println(key + ": " + LCS_analysis.get(key));
+//        }
+//
+//        Message temp;
+//        for(int i = 0; i < result_LCS.size(); i++) {
+//            temp = result_LCS.get(i);
+//            System.out.println(i + " " + temp.time + ": " + temp.commandSent + " from " + temp.senderPltId + " to " + temp.receiverId);
+//        }
+        centroidLCS.set(id_cluster, (ArrayList) result_LCS.clone());
     }
 
     public void printCluster() {
@@ -77,10 +115,10 @@ public class Clustering {
             System.out.println("Cluster " + i + "=================");
             System.out.println("Representative LCS:");
 
-            for(int j = 0; j < centroidLCS.get(i).size(); j++) {
-                temp = centroidLCS.get(i).get(j);
-                System.out.println(j + " " + temp.time + ": " + temp.commandSent + " from " + temp.senderPltId + " to " + temp.receiverId);
-            }
+//            for(int j = 0; j < centroidLCS.get(i).size(); j++) {
+//                temp = centroidLCS.get(i).get(j);
+//                System.out.println(j + " " + temp.time + ": " + temp.commandSent + " from " + temp.senderPltId + " to " + temp.receiverId);
+//            }
 
             System.out.println("Clustered IMs:");
             for(int j = 0; j < cluster.get(i).size(); j++) {
@@ -195,7 +233,7 @@ public class Clustering {
         float lcs_delay = lcs.get(id_lcs-1).time - lcs.get(id_lcs).time;
         float trace_delay = input_trace.get(prev_id_trace).time - input_trace.get(id_trace).time;
 
-        if(Math.abs(lcs_delay - trace_delay) <= 0.15) return true; // TODO Message Delay Similarity Threshold 0.1 & Simlr 0.85 / 0.15 & Simlr 0.95
+        if(Math.abs(lcs_delay - trace_delay) <= 1.0) return true; // TODO Message Delay Similarity Threshold 0.1 & Simlr 0.85 / 0.15 & Simlr 0.95 / 1.00 Simlr 1.0?
         else {
 //            System.out.println("lcs_id: " + id_lcs + "/ id_trace: " + id_trace + " time: "+ input_trace.get(id_trace).time + "/ prev_id_trace " + prev_id_trace+ " time: "+ input_trace.get(prev_id_trace).time);
 //            System.out.println(Math.abs(lcs_delay - trace_delay));

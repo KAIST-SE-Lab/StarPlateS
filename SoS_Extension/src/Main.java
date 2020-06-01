@@ -66,7 +66,7 @@ public class Main {
         String base = System.getProperty("user.dir");
         System.out.println(System.getProperty("user.dir"));
         int matchingtxts = 0;
-        String currentdir = base + "/SoS_Extension/logs/sample/";
+        String currentdir = base + "/SoS_Extension/logs/";
         System.out.print("Current Working Directory : " + currentdir +"\n");
         File f = new File(currentdir);
         Boolean result;
@@ -83,7 +83,7 @@ public class Main {
                         result = verifier.verifyLog(txtdir,"operationSuccessRate", thshold);
                         if(!result) {
                             InterplayModel interplayModel = new InterplayModel(i, 0);                        // TODO r_index = 0 로 설정해놓음
-                            clustering.addTrace(interplayModel, 0.90);                                  // TODO Similarity Threshold = 95%
+                            clustering.addTrace(interplayModel, 1.0);                                  // TODO Similarity Threshold = 95%
                         }
                     }
 //                        for (int thshold2 : thresholds2){
