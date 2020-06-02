@@ -106,7 +106,7 @@ public class SimulationExecutor {
                 if (isBMBFL);
 //                  bmbfl.
                 if (isIMBFL);
-                    imbfl.addFailedLog(true, 1, 0);
+//                    imbfl.addFailedLog(true, 1, 0);
 
                 System.out.println(plnConfig.renameTo(new File("./examples/platoon_SoS/results/" + i + "_" + j +"plnConfig.txt")));
                 plnData.renameTo(new File("./examples/platoon_SoS/results/" + i + "_" + j +"plnData.txt"));
