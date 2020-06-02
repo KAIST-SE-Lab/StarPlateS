@@ -35,7 +35,7 @@ public class Clustering {
                 }
             } else {
                 generatedLCS = LCSExtractor(cluster.get(i).get(0).getMsgSequence(), im_trace.getMsgSequence());         // Cluster에 1개의 IM만 존재할때는 해당 IM 과의 LCS가 존재하는지
-                if(generatedLCS.size() > 10) {                                                                          // 여부를 이용하여 해당 Cluster에 포함가능한지를 확인함
+                if(generatedLCS != null && generatedLCS.size() > 10) {                                                                          // 여부를 이용하여 해당 Cluster에 포함가능한지를 확인함
                     cluster.get(i).add(im_trace);
                     updatedCluster.set(i,1);
                     assignFlag = true;
@@ -188,7 +188,8 @@ public class Clustering {
     private boolean compareMessage(Message m_a, Message m_b) {
 
         if(m_a.time < 25.00 || m_b.time < 25.00) return false;
-        if(m_a.commandSent.equals(m_b.commandSent)) return true;
+        if(m_a.commandSent.equals(m_b.commandSent) && m_a.senderRole.equals(m_b.senderRole)
+                && m_a.receiverRole.equals(m_b.receiverRole)) return true;
 
 //        if(m_a.commandSent.equals(m_b.commandSent) && m_a.senderPltId.equals(m_b.senderPltId) // TODO How much information would be considered in comparison??
 //                && m_a.receiverId.equals(m_b.receiverId)) return true;
