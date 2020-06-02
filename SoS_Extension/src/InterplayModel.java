@@ -1,7 +1,9 @@
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.StringTokenizer;
 
 class Message {
@@ -10,16 +12,20 @@ class Message {
     String senderPltId;
     String receiverId;
     String receiverPltId;
+    String senderRole;
+    String receiverRole;
 }
 
 public class InterplayModel {
 
     ArrayList<Message> msgSequence;
+    ArrayList<String> vehRole;
     String id;
 
     public InterplayModel(int s_index, int r_index) {
 
         msgSequence = new ArrayList<>();
+        vehRole = new ArrayList<>();
         id = s_index + "_" + r_index;
         
         try {
@@ -32,6 +38,7 @@ public class InterplayModel {
             Float t_time;
             String temp;
             String t_command;
+            String vehID;
 
             while((line = bufReader.readLine()) != null) {
                 stringTokenizer = new StringTokenizer(line," ");
@@ -45,7 +52,8 @@ public class InterplayModel {
                     t_time = Float.valueOf(temp);
                 }
 
-                for(int i = 0; i < 3; i++) stringTokenizer.nextToken();
+                vehID = stringTokenizer.nextToken();
+                for(int i = 0; i < 2; i++) stringTokenizer.nextToken();
 
                 temp = stringTokenizer.nextToken();
                 if(temp.equals("-")) {
@@ -62,6 +70,27 @@ public class InterplayModel {
                 msg.senderPltId = stringTokenizer.nextToken();
                 msg.receiverPltId = stringTokenizer.nextToken(); //TODO Consider ManueverStartEnd ?? ex) Split_Start
 
+                temp = stringTokenizer.nextToken();
+                if(temp.contains("Leave_Start") || temp.contains("Leave_Request")) {
+                    vehRole.add(vehID);
+                }
+
+                if(vehRole.contains(msg.senderPltId)) {
+                    if (vehRole.contains(msg.receiverId)) {
+                        msg.senderRole = "None";
+                        msg.receiverRole = "None";
+                    } else {
+                        msg.senderRole = "None";
+                        msg.receiverRole = "Leader";
+                    }
+                } else if (vehRole.contains(msg.receiverId)) {
+                    msg.senderRole = "Leader";
+                    msg.receiverRole = "None";
+                } else {
+                    msg.senderRole = "Leader";
+                    msg.receiverRole = "Leader";
+                }
+
                 msgSequence.add(msg);
             }
         } catch(Exception e) {
@@ -76,6 +105,11 @@ public class InterplayModel {
             System.out.println(temp.time + ": " + temp.commandSent + " from " + temp.senderPltId + " to " + temp.receiverId);
         }
     }
+//
+//    public String getCSRole(String vehID, float time) {
+//        if(vehRole.containsKey(vehID) && time >= vehRole.get(vehID)) return "None";
+//        else return "Leader";
+//    }
 
     public ArrayList<Message> getMsgSequence() {
         return msgSequence;
