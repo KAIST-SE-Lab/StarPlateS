@@ -35,7 +35,7 @@ public class Clustering {
                 }
             } else {
                 generatedLCS = LCSExtractor(cluster.get(i).get(0).getMsgSequence(), im_trace.getMsgSequence());         // Cluster에 1개의 IM만 존재할때는 해당 IM 과의 LCS가 존재하는지
-                if(generatedLCS != null && generatedLCS.size() > 10) {                                                                          // 여부를 이용하여 해당 Cluster에 포함가능한지를 확인함
+                if(generatedLCS != null && generatedLCS.size() > 10) {                                                  // 여부를 이용하여 해당 Cluster에 포함가능한지를 확인함
                     cluster.get(i).add(im_trace);
                     updatedCluster.set(i,1);
                     assignFlag = true;
@@ -93,7 +93,7 @@ public class Clustering {
 
             if(LCS_analysis.get(key_) < redundancy_threshold) {
                 for(int j = 0; j < redundancy_list.size(); j++) {
-                    if(compareMessage(target_LCS.get(i), redundancy_list.get(j))) {
+                    if(compareMessage(target_LCS.get(i), redundancy_list.get(j), (float)25.00)) {
                         flag = true;
                     }
                 }
@@ -135,66 +135,85 @@ public class Clustering {
     }
 
     private ArrayList<Message> LCSExtractor(ArrayList<Message> data_point, ArrayList<Message> input_trace) {
-        int[][] LCS = new int[data_point.size()+1][input_trace.size()+1];
+
         ArrayList<Message> ret_i = new ArrayList<>();
         ArrayList<Message> ret_j = new ArrayList<>();
-        ArrayList<Message> ret = new ArrayList<>();
+        ArrayList<ArrayList<Message>> ret = new ArrayList<>();
+        ArrayList<Message> temp = new ArrayList<>();
 
-        // Generate LCS Table between two inputs
-        for(int i = 0; i <= data_point.size(); i++) {
-            for(int j = 0; j <= input_trace.size(); j++) {
-                // For the convenience of the calculation, assign i=0 or j=0 as 0
-                if(i == 0 || j == 0) {
-                    LCS[i][j] = 0;
-                    continue;
-                }
+        float[] starting_time = new float[]{(float)25, (float)45, (float)65, (float)85};                                                             // TODO LCS extraction starting point setting by time
+        for(float time : starting_time) {
+            // Generate LCS Table between two inputs
+            int[][] LCS = new int[data_point.size()+1][input_trace.size()+1];
+            for (int i = 0; i <= data_point.size(); i++) {
+                for (int j = 0; j <= input_trace.size(); j++) {
+                    // For the convenience of the calculation, assign i=0 or j=0 as 0
+                    if (i == 0 || j == 0) {
+                        LCS[i][j] = 0;
+                        continue;
+                    }
 //                System.out.println(data_point.get(i-1).commandSent);
 //                System.out.println(compareMessage(data_point.get(i-1), input_trace.get(j-1)));
-                // Same message case
-                if(compareMessage(data_point.get(i-1), input_trace.get(j-1))) {                                         // TODO Delay Comparison?
-                    LCS[i][j] = LCS[i-1][j-1] + 1;
-                } else { // Different message case
-                    LCS[i][j] = Math.max(LCS[i][j-1], LCS[i-1][j]);
-                }
-            }
-        }
-
-        // No LCS exists
-        if(LCS[data_point.size()][input_trace.size()] == 0) return null;
-        else if (LCS[data_point.size()][input_trace.size()] < data_point.size()) { // Shorter LCS exists
-            // Extract new LCS
-            int current = 0;
-            for(int i = 1; i <= data_point.size(); i++) {
-                for(int j = 1; j <= input_trace.size(); j++) {
-
-                    if(LCS[i][j] > current) {
-                        current++;
-                        ret_i.add(data_point.get(i-1));
-                        ret_j.add(input_trace.get(j-1));
+                    // Same message case
+                    if (compareMessage(data_point.get(i - 1), input_trace.get(j - 1), time)) {                                         // TODO Delay Comparison?
+                        LCS[i][j] = LCS[i - 1][j - 1] + 1;
+                    } else { // Different message case
+                        LCS[i][j] = Math.max(LCS[i][j - 1], LCS[i - 1][j]);
                     }
-
                 }
             }
-            // To remove commonly happened events in the beginning of the simulations
-            // E.g. Split operation of platoons with size larger than the opt_size
-            float time_i = -1;
-            float time_j = -1;
-            for(int i = ret_i.size()-1, j = ret_j.size()-1; i >= 0 && j >= 0; i--, j--) {
-                time_i = Float.valueOf(ret_i.get(i).time);
-                time_j = Float.valueOf(ret_j.get(j).time);
-                if(time_i < 25.0 || time_j < 25.0) continue;
-                else ret.add(ret_i.get(i));
+
+            // No LCS exists
+            if (LCS[data_point.size()][input_trace.size()] == 0) ret.add(null);
+            else if (LCS[data_point.size()][input_trace.size()] < data_point.size()) { // Shorter LCS exists
+                temp.clear();
+                ret_i.clear();
+                ret_j.clear();
+                // Extract new LCS
+                int current = 0;
+                for (int i = 1; i <= data_point.size(); i++) {
+                    for (int j = 1; j <= input_trace.size(); j++) {
+
+                        if (LCS[i][j] > current) {
+                            current++;
+                            ret_i.add(data_point.get(i - 1));
+                            ret_j.add(input_trace.get(j - 1));
+                        }
+
+                    }
+                }
+                // To remove commonly happened events in the beginning of the simulations
+                // E.g. Split operation of platoons with size larger than the opt_size
+                float time_i = -1;
+                float time_j = -1;
+                for (int i = ret_i.size() - 1, j = ret_j.size() - 1; i >= 0 && j >= 0; i--, j--) {
+                    time_i = Float.valueOf(ret_i.get(i).time);
+                    time_j = Float.valueOf(ret_j.get(j).time);
+                    if (time_i < time || time_j < 25.0) continue;
+                    else temp.add(ret_i.get(i));
+                }
+                ret.add((ArrayList)temp.clone());
+            } else { // No shorter LCS exists
+                Collections.reverse(data_point);
+                ret.add(data_point);
             }
-            return ret;
-        } else { // No shorter LCS exists
-            Collections.reverse(data_point);
-            return data_point;
         }
+
+        // Find the longest LCS among the generated LCSs by each starting time
+        ArrayList<Message> finalLCS = ret.get(0);
+        for(int i = 1; i < ret.size(); i++) {
+            if(finalLCS == null) finalLCS = ret.get(i);
+            else if (ret.get(i) == null) continue;
+            else {
+                if(finalLCS.size() < ret.get(i).size()) finalLCS = ret.get(i);
+            }
+        }
+        return finalLCS;
     }
 
-    private boolean compareMessage(Message m_a, Message m_b) {
+    private boolean compareMessage(Message m_a, Message m_b, float time) {
 
-        if(m_a.time < 25.00 || m_b.time < 25.00) return false;
+        if(m_a.time < time || m_b.time < 25.00) return false;
         if(m_a.commandSent.equals(m_b.commandSent) && m_a.senderRole.equals(m_b.senderRole)
                 && m_a.receiverRole.equals(m_b.receiverRole)) return true;
 
@@ -212,7 +231,7 @@ public class Clustering {
         for(int i = 0; i < lcs.size(); i++) { // TODO 단일 IM 상에서 여러 개의 시작 지점 고려해야함
             if (matched == 0) {
                 for(int j = 0; j < input_trace.size(); j++) {
-                    if(compareMessage(lcs.get(i), input_trace.get(j)) == true) {
+                    if(compareMessage(lcs.get(i), input_trace.get(j), (float)25.00) == true) {
                         matched += 1;
                         prevMatchedId = j;
 //                        System.out.println(i);
