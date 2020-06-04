@@ -60,10 +60,12 @@ public class Clustering {
                     Collections.reverse(generatedLCS);
                     j++;
                 }
+                updatedCluster.set(i,0);
                 centroidLCS.set(i, generatedLCS);
             }
             LCSRedundancyAnalyzer(i, 20); // TODO Threshold: the number of repetition of the same sync messages threshold
         }
+//        System.out.println("add trace Finish");
     }
 
     private void LCSRedundancyAnalyzer(int id_cluster, int redundancy_threshold) {
@@ -73,6 +75,8 @@ public class Clustering {
         ArrayList<Message> redundancy_list = new ArrayList<>();
         String key_ = "";
         Boolean flag = false;
+
+        if(target_LCS.size() == 0) return;
 
         for(int i = 0; i < target_LCS.size()-1; i++) {
             key_ = target_LCS.get(i).commandSent + "_" + target_LCS.get(i+1).commandSent;
@@ -96,6 +100,9 @@ public class Clustering {
                 if (!flag) result_LCS.add(target_LCS.get(i));
             }
         }
+
+        // 위의 for문에 포함되지 않는 LCS의 맨 마지막 인자 추가
+        if(!redundancy_list.contains(target_LCS.get(target_LCS.size()-1))) result_LCS.add(target_LCS.get(target_LCS.size()-1));
 //
 //        for(String key : LCS_analysis.keySet()) {
 //            System.out.println(key + ": " + LCS_analysis.get(key));
@@ -216,7 +223,7 @@ public class Clustering {
             } else {
                 for(int j = prevMatchedId + 1; j <input_trace.size(); j++) {
                     if(compareMessage(lcs.get(i), input_trace.get(j)) == true
-                            && calMessageDelay(lcs, input_trace, i, j, prevMatchedId) == true) {
+                           && calMessageDelay(lcs, input_trace, i, j, prevMatchedId) == true) {
                         matched += 1;
                         prevMatchedId = j;
 //                        System.out.println(i);
