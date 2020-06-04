@@ -54,6 +54,7 @@ public class Clustering {
         for(int i = 0; i < cluster.size(); i++) {
             if(updatedCluster.get(i) == 1) {
                 int j = 1;
+                Collections.shuffle(cluster.get(i));  // TODO Choose whether to use the shuffle in LCS generation for generating appropriate LCS among multiple IMs
                 generatedLCS = (ArrayList) cluster.get(i).get(0).getMsgSequence().clone();
                 while(j <= cluster.get(i).size()-1) {
                     generatedLCS = LCSExtractor(generatedLCS, cluster.get(i).get(j).getMsgSequence());
@@ -122,10 +123,10 @@ public class Clustering {
             System.out.println("Cluster " + i + "=================");
             System.out.println("Representative LCS:");
 
-//            for(int j = 0; j < centroidLCS.get(i).size(); j++) {
-//                temp = centroidLCS.get(i).get(j);
-//                System.out.println(j + " " + temp.time + ": " + temp.commandSent + " from " + temp.senderPltId + " to " + temp.receiverId);
-//            }
+            for(int j = 0; j < centroidLCS.get(i).size(); j++) {
+                temp = centroidLCS.get(i).get(j);
+                System.out.println(j + " " + temp.time + ": " + temp.commandSent + " from " + temp.senderPltId + " to " + temp.receiverId);
+            }
 
             System.out.println("Clustered IMs:");
             for(int j = 0; j < cluster.get(i).size(); j++) {
