@@ -1,3 +1,5 @@
+import jdk.javadoc.internal.doclets.toolkit.util.Utils;
+
 import java.lang.reflect.Array;
 import java.util.*;
 
@@ -141,6 +143,11 @@ public class Clustering {
         ArrayList<Message> ret_j = new ArrayList<>();
         ArrayList<Message> ret = new ArrayList<>();
 
+        // To save previous LCS point for comparing delay function.
+        int prev_i = -1;
+        int prev_j = -1;
+        ArrayList<Utils.Pair<Integer, Integer>> LCS_log = new ArrayList<>();
+
         // Generate LCS Table between two inputs
         for(int i = 0; i <= data_point.size(); i++) {
             for(int j = 0; j <= input_trace.size(); j++) {
@@ -152,8 +159,18 @@ public class Clustering {
 //                System.out.println(data_point.get(i-1).commandSent);
 //                System.out.println(compareMessage(data_point.get(i-1), input_trace.get(j-1)));
                 // Same message case
-                if(compareMessage(data_point.get(i-1), input_trace.get(j-1))) {                                         // TODO Delay Comparison?
-                    LCS[i][j] = LCS[i-1][j-1] + 1;
+                if(compareMessage(data_point.get(i-1), input_trace.get(j-1))) {
+                    // Checking message delay difference between two given IM
+                    if((prev_i == -1 && prev_j == -1)
+                            || calMessageDelay(data_point.get(prev_i), data_point.get(i), input_trace.get(prev_j), input_trace.get(j)))
+                    {
+                        LCS[i][j] = LCS[i - 1][j - 1] + 1;
+                        prev_i = i;
+                        prev_j = j;
+                        LCS_log.add(new Utils.Pair(prev_i, prev_j));
+                    } else { // Same message but different delay
+                        LCS[i][j] = Math.max(LCS[i][j-1], LCS[i-1][j]);
+                    }
                 } else { // Different message case
                     LCS[i][j] = Math.max(LCS[i][j-1], LCS[i-1][j]);
                 }
@@ -248,5 +265,13 @@ public class Clustering {
 //            System.out.println(Math.abs(lcs_delay - trace_delay));
             return false;
         }
+    }
+
+    private boolean calMessageDelay(Message prev_i, Message curnt_i, Message prev_j, Message curnt_j) {
+        float i_delay = curnt_i.time - prev_i.time;
+        float j_delay = curnt_j.time - prev_j.time;
+
+        if(Math.abs(i_delay - j_delay) <= 1.0) return true;
+        else return false;
     }
 }
