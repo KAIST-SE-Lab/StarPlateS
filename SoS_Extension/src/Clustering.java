@@ -28,8 +28,8 @@ public class Clustering {
         // Given IM이 어떤 Cluster에 속하는지를 확인하는 과정: IM은 Failed tag를 가진다는 것을 가정함 / 여러 클러스터에 중복으로 할당 가능
         for(int i = 0; i < cluster.size(); i++) {
             if(cluster.get(i).size() > 1) {                                                                             // Cluster에 2개 이상의 IM이 존재할때, Cluster의 LCS가 존재하는것을
-                double temp = similarityChecker(centroidLCS.get(i), im_trace.getMsgSequence());
-                System.out.println("Cluster id: " + i + " Input_trace id: "+ im_trace.id + " similarity: " + temp);
+                double temp = similarityCheckerLCS(centroidLCS.get(i), im_trace.getMsgSequence());
+//                System.out.println("Cluster id: " + i + " Input_trace id: "+ im_trace.id + " similarity: " + temp);
                 if(temp >= simlr_threshold) {                                                                            // 가정하기 때문에 LCS와 given IM간의 Similarity를 비교함
                     cluster.get(i).add(im_trace);
                     updatedCluster.set(i,1);
@@ -220,6 +220,12 @@ public class Clustering {
 //                && m_a.receiverId.equals(m_b.receiverId)) return true;
 
         return false;
+    }
+
+    private double similarityCheckerLCS(ArrayList<Message> lcs, ArrayList<Message> input_trace) {
+        ArrayList<Message> lcs_lcs = LCSExtractor(lcs, input_trace);
+
+        return (double) lcs_lcs.size() / (double)lcs.size();
     }
 
     private double similarityChecker(ArrayList<Message> lcs, ArrayList<Message> input_trace) {
