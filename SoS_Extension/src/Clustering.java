@@ -1,6 +1,4 @@
-import jdk.javadoc.internal.doclets.toolkit.util.Utils;
 
-import java.lang.reflect.Array;
 import java.util.*;
 
 public class Clustering {
@@ -146,7 +144,7 @@ public class Clustering {
         // To save previous LCS point for comparing delay function.
         int prev_i = -1;
         int prev_j = -1;
-        ArrayList<Utils.Pair<Integer, Integer>> LCS_log = new ArrayList<>();
+        ArrayList<Pair> LCS_log = new ArrayList<>();
 
         // Generate LCS Table between two inputs
         for(int i = 0; i <= data_point.size(); i++) {
@@ -162,12 +160,12 @@ public class Clustering {
                 if(compareMessage(data_point.get(i-1), input_trace.get(j-1))) {
                     // Checking message delay difference between two given IM
                     if((prev_i == -1 && prev_j == -1)
-                            || calMessageDelay(data_point.get(prev_i), data_point.get(i), input_trace.get(prev_j), input_trace.get(j)))
+                            || calMessageDelay(data_point.get(prev_i), data_point.get(i-1), input_trace.get(prev_j), input_trace.get(j-1)))
                     {
                         LCS[i][j] = LCS[i - 1][j - 1] + 1;
-                        prev_i = i;
-                        prev_j = j;
-                        LCS_log.add(new Utils.Pair(prev_i, prev_j));
+                        prev_i = i-1;
+                        prev_j = j-1;
+                        LCS_log.add(new Pair(prev_i, prev_j));
                     } else { // Same message but different delay
                         LCS[i][j] = Math.max(LCS[i][j-1], LCS[i-1][j]);
                     }
@@ -225,7 +223,10 @@ public class Clustering {
     private double similarityCheckerLCS(ArrayList<Message> lcs, ArrayList<Message> input_trace) {
         ArrayList<Message> lcs_lcs = LCSExtractor(lcs, input_trace);
 
-        return (double) lcs_lcs.size() / (double)lcs.size();
+        if(lcs_lcs == null) return 0;
+        else {
+            return (double) lcs_lcs.size() / (double) lcs.size();
+        }
     }
 
     private double similarityChecker(ArrayList<Message> lcs, ArrayList<Message> input_trace) {
