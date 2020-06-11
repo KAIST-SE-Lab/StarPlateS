@@ -1,20 +1,28 @@
 
+import java.lang.reflect.Array;
 import java.util.*;
 
 public class Clustering {
 
     private ArrayList<ArrayList<InterplayModel>> cluster;
     private ArrayList<ArrayList<Message>> centroidLCS;
+    private ArrayList<Float> startingTime;
 
     public Clustering() {
         cluster = new ArrayList<>();
         centroidLCS = new ArrayList<>();
+        startingTime = new ArrayList<>();
+        startingTime.add((float)25.00);
+        startingTime.add((float)45.00);
+        startingTime.add((float)65.00);
+        startingTime.add((float)85.00);
     }
 
     public void addTrace(InterplayModel im_trace, double simlr_threshold) {                                               // simThreshold: Similarity Threshold
         ArrayList<Integer> updatedCluster = new ArrayList<>(Collections.nCopies(cluster.size(), 0));
-        ArrayList<Message> generatedLCS;
+        ArrayList<ArrayList<Message>> generatedLCS = new ArrayList<>();
         Boolean assignFlag = false;
+        int lcs_index = -1;
 
         if (cluster.size() == 0) {
             cluster.add(new ArrayList<>());
@@ -25,48 +33,111 @@ public class Clustering {
 
         // Given IM이 어떤 Cluster에 속하는지를 확인하는 과정: IM은 Failed tag를 가진다는 것을 가정함 / 여러 클러스터에 중복으로 할당 가능
         for(int i = 0; i < cluster.size(); i++) {
-            if(cluster.get(i).size() > 1) {                                                                             // Cluster에 2개 이상의 IM이 존재할때, Cluster의 LCS가 존재하는것을
-                double temp = similarityCheckerLCS(centroidLCS.get(i), im_trace.getMsgSequence());
-//                System.out.println("Cluster id: " + i + " Input_trace id: "+ im_trace.id + " similarity: " + temp);
-                if(temp >= simlr_threshold) {                                                                            // 가정하기 때문에 LCS와 given IM간의 Similarity를 비교함
-                    cluster.get(i).add(im_trace);
-                    updatedCluster.set(i,1);
-                    assignFlag = true;
+            generatedLCS.clear();
+            for(int j = 0; j < startingTime.size(); j++) {                                                              
+                generatedLCS.add(LCSExtractor(IMSlicer(startingTime.get(j),im_trace.getMsgSequence()),                    // Starting time에 따라 given IM을 slicing 하여
+                        cluster.get(i).get(0).getMsgSequence()));                                                         // 중간에 중요 사건의 sequence가 시작하는 경우의 예외 처리 진행
+                if(generatedLCS.get(j) != null) Collections.reverse(generatedLCS.get(j));
+            }
+            
+            if(cluster.get(i).size() > 1) {                                                                             // Cluster에 2개 이상의 IM이 존재하는 경우, representative lcs 와 given IM 사이의 LCS를 생성하여 Similarity 비교
+                for(int j = 0; j < startingTime.size(); j++) {                                                          // Starting time에 따라 slicing 된 given IM에 대해 생성된
+                    if(generatedLCS.get(j) == null) continue;                                                           // generated_LCS (lcs between centroid_lcs and given IM)
+                    double temp = (double) generatedLCS.get(j).size() / (double) centroidLCS.get(i).size();             // 와 기존 centroid_lcs와의 size를 비교하여 simlr_threshold
+                                                                                                                        // 를 넘는지 확인함
+                    if (temp >= simlr_threshold) {                                                                      // simlr_threshold를 넘는 경우, centroidLCS를 업데이트
+
+                        assignFlag = true;
+                        if(lcs_index == -1) centroidLCS.set(i, generatedLCS.get(j));
+                        else {
+                            if(generatedLCS.get(j).size() > generatedLCS.get(lcs_index).size()) {                         //길이가 더 긴 경우가 있다면 추가로 업데이트
+                                centroidLCS.set(i, generatedLCS.get(lcs_index));
+                            }
+                        }
+                        if(!cluster.get(i).contains(im_trace)) cluster.get(i).add(im_trace);                              // im_trace가 중복으로 cluster에 입력되는 거 방지
+                    }
                 }
-            } else {
-                generatedLCS = LCSExtractor(cluster.get(i).get(0).getMsgSequence(), im_trace.getMsgSequence());         // Cluster에 1개의 IM만 존재할때는 해당 IM 과의 LCS가 존재하는지
-                if(generatedLCS != null && generatedLCS.size() > 10) {                                                                          // 여부를 이용하여 해당 Cluster에 포함가능한지를 확인함
+            } else {                                                                                                    // Cluster에 1개의 IM만 존재할때는 해당 IM 과의 LCS가 존재하는지 여부를 이용하여 해당 Cluster에 포함가능한지를 확인함
+                int best_message_type_num = 0;
+                int lcs_length = 0;
+                int current_message_type_num = 0;
+                for(ArrayList<Message> lcs : generatedLCS) {                                                            // Starting time에 따른 IM_Sliced로 생성된 generated LCS
+                    if(lcs == null) continue;                                                                           // 중 가장 최적의 LCS를 선택하는 프로세스
+                    current_message_type_num = LCSPatternAnalyzer(lcs);
+                    if(best_message_type_num < current_message_type_num) {                                                // 1번 조건: LCS를 구성하는 Message type의 갯수
+                        lcs_index = generatedLCS.indexOf(lcs);                                                            // Ex) Merge_request로만 구성 vs Merge_request + Split_request
+                        lcs_length = lcs.size();                                                                          // 후자 선택
+                        best_message_type_num = current_message_type_num;
+                    } else if (best_message_type_num == current_message_type_num) {                                       // 2번 조건: LCS의 길이
+                        if(lcs_length < lcs.size()) {                                                                     // 같은 Message type의 갯수를 가지는 경우, LCS의 길이가 긴쪽 선택
+                            lcs_index = generatedLCS.indexOf(lcs);
+                            lcs_length = lcs.size();
+                            best_message_type_num = current_message_type_num;
+                        }
+                    }
+                }
+
+                if(lcs_index != -1 && generatedLCS.get(lcs_index).size() > 10) {                                                           // TODO Length Threshold
                     cluster.get(i).add(im_trace);
-                    updatedCluster.set(i,1);
+                    centroidLCS.set(i,generatedLCS.get(lcs_index));
+//                    updatedCluster.set(i,1);
                     assignFlag = true;
                 }
             }
         }
-
-        if(!assignFlag) {
-            cluster.add(new ArrayList<>());
+//
+        if(!assignFlag) {                                                                                               // given IM이 어떠한 existing cluster에도 입력되지 않은 경우
+            cluster.add(new ArrayList<>());                                                                             // 새로운 cluster와 centroidLCS slot를 생성한 후
             centroidLCS.add(new ArrayList<>());
-            cluster.get(cluster.size()-1).add(im_trace);
+            cluster.get(cluster.size()-1).add(im_trace);                                                                // 해당 IM을 cluster에 삽입
             return;
         }
 
         // Updated cluster에 대해 Representative LCS (Centroid)를 업데이트하는 과정
-        for(int i = 0; i < cluster.size(); i++) {
-            if(updatedCluster.get(i) == 1) {
-                int j = 1;
-                Collections.shuffle(cluster.get(i));  // TODO Choose whether to use the shuffle in LCS generation for generating appropriate LCS among multiple IMs
-                generatedLCS = (ArrayList) cluster.get(i).get(0).getMsgSequence().clone();
-                while(j <= cluster.get(i).size()-1) {
-                    generatedLCS = LCSExtractor(generatedLCS, cluster.get(i).get(j).getMsgSequence());
-                    Collections.reverse(generatedLCS);
-                    j++;
-                }
-                updatedCluster.set(i,0);
-                centroidLCS.set(i, generatedLCS);
-            }
-            LCSRedundancyAnalyzer(i, 20); // TODO Threshold: the number of repetition of the same sync messages threshold
-        }
+//        for(int i = 0; i < cluster.size(); i++) {
+//            if(updatedCluster.get(i) == 1) {
+//                int j = 1;
+//                Collections.shuffle(cluster.get(i));  // TODO Choose whether to use the shuffle in LCS generation for generating appropriate LCS among multiple IMs
+//                generatedLCS = (ArrayList) cluster.get(i).get(0).getMsgSequence().clone();
+//                while(j <= cluster.get(i).size()-1) {
+//                    generatedLCS = LCSExtractor(generatedLCS, cluster.get(i).get(j).getMsgSequence());
+////                    Collections.reverse(generatedLCS);
+//                    j++;
+//                }
+//                updatedCluster.set(i,0);
+//                centroidLCS.set(i, generatedLCS);
+//            }
+//            LCSRedundancyAnalyzer(i, 20); // TODO Threshold: the number of repetition of the same sync messages threshold
+//        }
 //        System.out.println("add trace Finish");
+    }
+
+    private ArrayList<Message> IMSlicer(float starting_time, ArrayList<Message> IM_msg) {
+        ArrayList<Message> ret = new ArrayList<>();
+
+        for(int i = 0; i < IM_msg.size(); i++) {
+            if(IM_msg.get(i).time >= starting_time) ret.add(IM_msg.get(i));
+        }
+
+        return (ArrayList)ret.clone();
+    }
+
+    private int LCSPatternAnalyzer(ArrayList<Message> lcs) {
+        HashMap<String, Integer> LCS_analysis = new HashMap<>();
+        String key_ = "";
+
+        if(lcs.size() == 0) return 0;
+
+        for(int i = 0; i < lcs.size()-1; i++) {
+            key_ = lcs.get(i).commandSent + "_" + lcs.get(i + 1).commandSent;
+            if (LCS_analysis.containsKey(key_)) {
+                LCS_analysis.put(key_, LCS_analysis.get(key_) + 1);
+            } else {
+                LCS_analysis.put(key_, 1);
+            }
+        }
+
+        return LCS_analysis.size();
     }
 
     private void LCSRedundancyAnalyzer(int id_cluster, int redundancy_threshold) {
@@ -123,10 +194,10 @@ public class Clustering {
             System.out.println("Cluster " + i + "=================");
             System.out.println("Representative LCS:");
 
-            for(int j = 0; j < centroidLCS.get(i).size(); j++) {
-                temp = centroidLCS.get(i).get(j);
-                System.out.println(j + " " + temp.time + ": " + temp.commandSent + " from " + temp.senderPltId + " to " + temp.receiverId);
-            }
+//            for(int j = 0; j < centroidLCS.get(i).size(); j++) {
+//                temp = centroidLCS.get(i).get(j);
+//                System.out.println(j + " " + temp.time + ": " + temp.commandSent + " from " + temp.senderPltId + " to " + temp.receiverId);
+//            }
 
             System.out.println("Clustered IMs:");
             for(int j = 0; j < cluster.get(i).size(); j++) {
@@ -160,12 +231,14 @@ public class Clustering {
                 if(compareMessage(data_point.get(i-1), input_trace.get(j-1))) {
                     // Checking message delay difference between two given IM
                     if((prev_i == -1 && prev_j == -1)
-                            || calMessageDelay(data_point.get(prev_i), data_point.get(i-1), input_trace.get(prev_j), input_trace.get(j-1)))
+                            || calMessageDelay(data_point.get(prev_i-1), data_point.get(i-1), input_trace.get(prev_j-1), input_trace.get(j-1)))
                     {
                         LCS[i][j] = LCS[i - 1][j - 1] + 1;
-                        prev_i = i-1;
-                        prev_j = j-1;
-                        LCS_log.add(new Pair(prev_i, prev_j));
+                        if(prev_i != i) {
+                            prev_i = i;
+                            prev_j = j;
+//                            LCS_log.add(new Pair(prev_i, prev_j));
+                        }
                     } else { // Same message but different delay
                         LCS[i][j] = Math.max(LCS[i][j-1], LCS[i-1][j]);
                     }
@@ -175,6 +248,8 @@ public class Clustering {
             }
         }
 
+//        System.out.println(LCS[data_point.size()][input_trace.size()]);
+
         // No LCS exists
         if(LCS[data_point.size()][input_trace.size()] == 0) return null;
         else if (LCS[data_point.size()][input_trace.size()] < data_point.size()) { // Shorter LCS exists
@@ -182,7 +257,6 @@ public class Clustering {
             int current = 0;
             for(int i = 1; i <= data_point.size(); i++) {
                 for(int j = 1; j <= input_trace.size(); j++) {
-
                     if(LCS[i][j] > current) {
                         current++;
                         ret_i.add(data_point.get(i-1));
