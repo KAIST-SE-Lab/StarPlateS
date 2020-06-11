@@ -363,4 +363,62 @@ public class Clustering {
         if(Math.abs(i_delay - j_delay) <= 1.0) return true;
         else return false;
     }
+
+    public double EvaluateClusteringFMIndex(ArrayList<ArrayList<String>> oracle) {
+        double TP = 0;
+        double FP = 0;
+        double FN = 0;
+        double TN = 0;
+        boolean cl_front;
+        boolean cl_back;
+        boolean cl_same;
+        boolean ol_front;
+        boolean ol_back;
+        boolean ol_same;
+
+        ArrayList<String> index = new ArrayList<>(Arrays.asList("IM_3_0","IM_6_0","IM_7_0","IM_8_0","IM_9_0","IM_11_0"
+                ,"IM_12_0","IM_13_0","IM_17_0","IM_22_0","IM_24_0","IM_27_0","IM_29_0","IM_30_0","IM_34_0","IM_38_0"
+                ,"IM_41_0","IM_45_0","IM_46_0","IM_47_0","IM_49_0"));
+
+        for(int i = 0; i < index.size(); i++) {                                                                         // Generate pair for indexes
+            for(int j = i+1; j < index.size(); j++) {
+                cl_front = false;
+                cl_back = false;
+                cl_same = false;
+                ol_front = false;
+                ol_back = false;
+                ol_same = false;
+
+                for(ArrayList<InterplayModel> IMs : cluster) {                                                          // Checking whether the pair is in the
+                    for(InterplayModel IM : IMs) {                                                                      // same cluster in the Clustering result
+                        if(IM.getId().equals(index.get(i))) cl_front = true;
+                        if(IM.getId().equals(index.get(j))) cl_back = true;
+                        if(cl_front && cl_back) {
+                            cl_same = true;
+                            break;
+                        }
+                    }
+                    if(cl_same) break;
+                }
+
+                for(ArrayList<String> ids: oracle) {                                                                    // Checking whether the pair is in the
+                    for(String id: ids) {                                                                               // same cluster in the Oracle
+                        if(id.equals(index.get(i))) ol_front = true;
+                        if(id.equals(index.get(j))) ol_back = true;
+                        if(ol_front && ol_back) {
+                            ol_same = true;
+                            break;
+                        }
+                    }
+                    if(ol_same) break;
+                }
+
+                if(cl_same && ol_same) TP++;
+                else if (cl_same) FP++;
+                else if ( ol_same) FN++;
+                else TN++;
+            }
+        }
+        return Math.sqrt((TP/(TP+FP)) * (TP/(TP+FN)));                                                                  // Fowlkes-Mallows index
+    }                                                                                                                   // https://gentlej90.tistory.com/64
 }
