@@ -34,7 +34,7 @@ public class Clustering {
         // Given IM이 어떤 Cluster에 속하는지를 확인하는 과정: IM은 Failed tag를 가진다는 것을 가정함 / 여러 클러스터에 중복으로 할당 가능
         for(int i = 0; i < cluster.size(); i++) {
             generatedLCS.clear();
-            for(int j = 0; j < startingTime.size(); j++) {                                                              
+            for(int j = 0; j < startingTime.size(); j++) {
                 generatedLCS.add(LCSExtractor(IMSlicer(startingTime.get(j),im_trace.getMsgSequence()),                    // Starting time에 따라 given IM을 slicing 하여
                         cluster.get(i).get(0).getMsgSequence()));                                                         // 중간에 중요 사건의 sequence가 시작하는 경우의 예외 처리 진행
                 if(generatedLCS.get(j) != null) Collections.reverse(generatedLCS.get(j));
@@ -202,6 +202,14 @@ public class Clustering {
             System.out.println("Clustered IMs:");
             for(int j = 0; j < cluster.get(i).size(); j++) {
                 System.out.println((j+1) + ": IM_" + cluster.get(i).get(j).getId());
+            }
+        }
+    }
+
+    public void ClusteringFinalize(double simlr_threshold) {
+        for(int i = 0; i < cluster.size(); i++) {
+            for(InterplayModel im : cluster.get(i)) {
+                this.addTrace(im, simlr_threshold);
             }
         }
     }
