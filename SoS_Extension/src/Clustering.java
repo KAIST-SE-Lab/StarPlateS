@@ -364,7 +364,7 @@ public class Clustering {
         else return false;
     }
 
-    public double EvaluateClusteringFMIndex(ArrayList<ArrayList<String>> oracle) {
+    public double EvaluateClusteringResult(ArrayList<ArrayList<String>> oracle) {
         double TP = 0;
         double FP = 0;
         double FN = 0;
