@@ -376,9 +376,9 @@ public class Clustering {
         boolean ol_back;
         boolean ol_same;
 
-        ArrayList<String> index = new ArrayList<>(Arrays.asList("IM_3_0","IM_6_0","IM_7_0","IM_8_0","IM_9_0","IM_11_0"
-                ,"IM_12_0","IM_13_0","IM_17_0","IM_22_0","IM_24_0","IM_27_0","IM_29_0","IM_30_0","IM_34_0","IM_38_0"
-                ,"IM_41_0","IM_45_0","IM_46_0","IM_47_0","IM_49_0"));
+        ArrayList<String> index = new ArrayList<>(Arrays.asList("3_0","6_0","7_0","8_0","9_0","11_0"
+                ,"12_0","13_0","17_0","22_0","24_0","27_0","29_0","30_0","34_0","38_0"
+                ,"41_0","43_0","45_0","46_0","47_0","49_0"));
 
         for(int i = 0; i < index.size(); i++) {                                                                         // Generate pair for indexes
             for(int j = i+1; j < index.size(); j++) {
@@ -399,6 +399,8 @@ public class Clustering {
                         }
                     }
                     if(cl_same) break;
+                    cl_front = false;
+                    cl_back = false;
                 }
 
                 for(ArrayList<String> ids: oracle) {                                                                    // Checking whether the pair is in the
@@ -411,11 +413,13 @@ public class Clustering {
                         }
                     }
                     if(ol_same) break;
+                    ol_front = false;
+                    ol_back = false;
                 }
 
                 if(cl_same && ol_same) TP++;
                 else if (cl_same) FP++;
-                else if ( ol_same) FN++;
+                else if (ol_same) FN++;
                 else TN++;
             }
         }
