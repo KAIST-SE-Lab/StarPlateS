@@ -177,6 +177,7 @@ public class Main {
             evaluation_score = clustering.EvaluateClusteringResult(oracle);
             System.out.println("Clustering Evaluation Score: " + evaluation_score);
             clustering.printCluster();
+            clustering.clusterClear();
         }
     }
 }

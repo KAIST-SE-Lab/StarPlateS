@@ -426,4 +426,9 @@ public class Clustering {
         }
         return Math.sqrt((TP/(TP+FP)) * (TP/(TP+FN)));                                                                  // Fowlkes-Mallows index
     }                                                                                                                   // https://gentlej90.tistory.com/64
+
+    public void clusterClear() {
+        this.cluster.clear();
+        this.centroidLCS.clear();
+    }
 }
