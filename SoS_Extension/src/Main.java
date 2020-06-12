@@ -1,6 +1,5 @@
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -60,7 +59,6 @@ public class Main {
             simulationExecutor.run(numScenario, numRepeat, isSMBFL, isBMBFL, isIMBFL, smbfl, imbfl); // TODO add more configuration params, eventDuration, etc
         }
 
-        Clustering clustering = new Clustering();
         Verifier verifier = new Verifier();
         int[] thresholds = {80};                                        // TODO Threshold value for the Verirfication Property 1
         int[] thresholds2 = {4};                                        // TODO Threshold value for the VP2
@@ -170,14 +168,31 @@ public class Main {
         double evaluation_score = 0;
 
         if(isClustering) {
-            for(InterplayModel im : IMs) {
-                clustering.addTrace(im, simlr_threshold, delay_threshold, lcs_min_len_threshold);
+            File file2 = new File(base + "/SoS_Extension/" + "HyperparameterAnalysis.csv");
+
+            try {
+                FileWriter writer = new FileWriter(file2, true);
+                for(simlr_threshold = 0.7; simlr_threshold <=1.0; simlr_threshold+=0.01) {
+                    for(delay_threshold = 0.3; delay_threshold <= 1.5; delay_threshold+=0.1) {
+                        for(lcs_min_len_threshold = 7; lcs_min_len_threshold <= 20; lcs_min_len_threshold++) {
+                            Clustering clustering = new Clustering();
+
+                            for (InterplayModel im : IMs) {
+                                clustering.addTrace(im, simlr_threshold, delay_threshold, lcs_min_len_threshold);
+                            }
+//                            clustering.ClusteringFinalize(simlr_threshold, delay_threshold, lcs_min_len_threshold);
+                            evaluation_score = clustering.EvaluateClusteringResult(oracle);
+                            System.out.println("Clustering Evaluation Score: " + evaluation_score);
+                            writer.write(simlr_threshold + "," + delay_threshold + "," + lcs_min_len_threshold + "," + evaluation_score);
+                            writer.write("\n");
+//                            clustering.printCluster();
+//                            clustering.clusterClear();
+                        }
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-            clustering.ClusteringFinalize(simlr_threshold, delay_threshold, lcs_min_len_threshold);
-            evaluation_score = clustering.EvaluateClusteringResult(oracle);
-            System.out.println("Clustering Evaluation Score: " + evaluation_score);
-            clustering.printCluster();
-            clustering.clusterClear();
         }
     }
 }

@@ -23,7 +23,7 @@ public class Clustering {
         ArrayList<Integer> updatedCluster = new ArrayList<>(Collections.nCopies(cluster.size(), 0));
         ArrayList<ArrayList<Message>> generatedLCS = new ArrayList<>();
         Boolean assignFlag = false;
-        int lcs_index = -1;
+        int lcs_index;
 
         if (cluster.size() == 0) {
             cluster.add(new ArrayList<>());
@@ -35,6 +35,7 @@ public class Clustering {
         // Given IM이 어떤 Cluster에 속하는지를 확인하는 과정: IM은 Failed tag를 가진다는 것을 가정함 / 여러 클러스터에 중복으로 할당 가능
         for(int i = 0; i < cluster.size(); i++) {
             generatedLCS.clear();
+            lcs_index = -1;
             for(int j = 0; j < startingTime.size(); j++) {
                 generatedLCS.add(LCSExtractor(IMSlicer(startingTime.get(j),im_trace.getMsgSequence()),                  // Starting time에 따라 given IM을 slicing 하여
                         cluster.get(i).get(0).getMsgSequence(), delay_threshold));                                                       // 중간에 중요 사건의 sequence가 시작하는 경우의 예외 처리 진행
@@ -207,12 +208,16 @@ public class Clustering {
         }
     }
 
-    public void ClusteringFinalize(double simlr_threshold, double delay_threshold, int lcs_min_len_threshold) {
-        for(int i = 0; i < cluster.size(); i++) {
-            for(InterplayModel im : cluster.get(i)) {
-                this.addTrace(im, simlr_threshold, delay_threshold, lcs_min_len_threshold);
-            }
-        }
+    public void ClusteringFinalize(double simlr_threshold, double delay_threshold, int lcs_min_len_threshold) {         // TODO Clustering Finalize Concurrent Modification Exception
+//        for(Iterator<ArrayList<InterplayModel>> iterator = cluster.iterator(); iterator.hasNext();) {                 // TODO cluster에 접근해서 데이터를 cluster내의 다른 arraylist에 입력
+//            for(Iterator<InterplayModel> it2= iterator.next().iterator(); it2.hasNext();) {                           // TODO 해서 그런거라 예상됨
+//                this.addTrace(it2.next(), simlr_threshold, delay_threshold, lcs_min_len_threshold);
+//            }
+//        }
+//        cluster.stream().forEach(IMs -> IMs.stream().forEach(
+//                IM -> this.addTrace(IM, simlr_threshold, delay_threshold, lcs_min_len_threshold)
+//                )
+//        );
     }
 
     private ArrayList<Message> LCSExtractor(ArrayList<Message> data_point, ArrayList<Message> input_trace, double delay_threshold) {
