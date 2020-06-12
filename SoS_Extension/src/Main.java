@@ -161,24 +161,24 @@ public class Main {
         oracle.add(new ArrayList<>(Arrays.asList("24_0","27_0","29_0","34_0","38_0","47_0")));
         oracle.add(new ArrayList<>(Arrays.asList("43_0")));
 
-
         double simlr_threshold = 0.70;
         double delay_threshold = 1.00;
         int lcs_min_len_threshold = 10;
         double evaluation_score = 0;
+        boolean single = false;
 
-        if(isClustering) {
+        if(isClustering && !single) {
             File file2 = new File(base + "/SoS_Extension/" + "HyperparameterAnalysis.csv");
 
             try {
                 FileWriter writer = new FileWriter(file2, true);
-                for(simlr_threshold = 0.7; simlr_threshold <=1.0; simlr_threshold+=0.01) {
+                for(simlr_threshold = 0.7; simlr_threshold <= 1.0; simlr_threshold+=0.01) {
                     for(delay_threshold = 0.3; delay_threshold <= 1.5; delay_threshold+=0.1) {
                         for(lcs_min_len_threshold = 7; lcs_min_len_threshold <= 20; lcs_min_len_threshold++) {
                             Clustering clustering = new Clustering();
 
                             for (InterplayModel im : IMs) {
-                                clustering.addTrace(im, simlr_threshold, delay_threshold, lcs_min_len_threshold);
+                                clustering.addTraceSim2(im, simlr_threshold, delay_threshold, lcs_min_len_threshold);
                             }
 //                            clustering.ClusteringFinalize(simlr_threshold, delay_threshold, lcs_min_len_threshold);
                             evaluation_score = clustering.EvaluateClusteringResult(oracle);
@@ -193,6 +193,16 @@ public class Main {
             } catch (Exception e) {
                 e.printStackTrace();
             }
+        } else {
+            Clustering clustering = new Clustering();
+
+            for (InterplayModel im : IMs) {
+                clustering.addTraceSim2(im, simlr_threshold, delay_threshold, lcs_min_len_threshold);
+            }
+            evaluation_score = clustering.EvaluateClusteringResult(oracle);
+            System.out.println("Clustering Evaluation Score: " + evaluation_score);
+            clustering.printCluster();
+            clustering.clusterClear();
         }
     }
 }
