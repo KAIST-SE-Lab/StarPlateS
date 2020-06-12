@@ -73,8 +73,6 @@ public class Main {
         Boolean result;
         matchingtxts = 0;
 
-        double simlr_threshold = 0.70;
-        double evaluation_score = 0;
         ArrayList<InterplayModel> IMs = new ArrayList<>();
 
         if(f.exists()){
@@ -165,11 +163,17 @@ public class Main {
         oracle.add(new ArrayList<>(Arrays.asList("24_0","27_0","29_0","34_0","38_0","47_0")));
         oracle.add(new ArrayList<>(Arrays.asList("43_0")));
 
+
+        double simlr_threshold = 0.70;
+        double delay_threshold = 1.00;
+        int lcs_min_len_threshold = 10;
+        double evaluation_score = 0;
+
         if(isClustering) {
             for(InterplayModel im : IMs) {
-                clustering.addTrace(im, simlr_threshold);
+                clustering.addTrace(im, simlr_threshold, delay_threshold, lcs_min_len_threshold);
             }
-            clustering.ClusteringFinalize(simlr_threshold);
+            clustering.ClusteringFinalize(simlr_threshold, delay_threshold, lcs_min_len_threshold);
             evaluation_score = clustering.EvaluateClusteringResult(oracle);
             System.out.println("Clustering Evaluation Score: " + evaluation_score);
             clustering.printCluster();

@@ -18,7 +18,8 @@ public class Clustering {
         startingTime.add((float)85.00);
     }
 
-    public void addTrace(InterplayModel im_trace, double simlr_threshold) {                                               // simThreshold: Similarity Threshold
+    public void addTrace(InterplayModel im_trace, double simlr_threshold, double delay_threshold
+            , int lcs_min_len_threshold) {                                                                        // simlrThreshold: Similarity Threshold
         ArrayList<Integer> updatedCluster = new ArrayList<>(Collections.nCopies(cluster.size(), 0));
         ArrayList<ArrayList<Message>> generatedLCS = new ArrayList<>();
         Boolean assignFlag = false;
@@ -35,8 +36,8 @@ public class Clustering {
         for(int i = 0; i < cluster.size(); i++) {
             generatedLCS.clear();
             for(int j = 0; j < startingTime.size(); j++) {
-                generatedLCS.add(LCSExtractor(IMSlicer(startingTime.get(j),im_trace.getMsgSequence()),                    // Starting time에 따라 given IM을 slicing 하여
-                        cluster.get(i).get(0).getMsgSequence()));                                                         // 중간에 중요 사건의 sequence가 시작하는 경우의 예외 처리 진행
+                generatedLCS.add(LCSExtractor(IMSlicer(startingTime.get(j),im_trace.getMsgSequence()),                  // Starting time에 따라 given IM을 slicing 하여
+                        cluster.get(i).get(0).getMsgSequence(), delay_threshold));                                                       // 중간에 중요 사건의 sequence가 시작하는 경우의 예외 처리 진행
                 if(generatedLCS.get(j) != null) Collections.reverse(generatedLCS.get(j));
             }
             
@@ -77,7 +78,7 @@ public class Clustering {
                     }
                 }
 
-                if(lcs_index != -1 && generatedLCS.get(lcs_index).size() > 10) {                                                           // TODO Length Threshold
+                if(lcs_index != -1 && generatedLCS.get(lcs_index).size() > lcs_min_len_threshold) {                  // TODO Length Threshold
                     cluster.get(i).add(im_trace);
                     centroidLCS.set(i,generatedLCS.get(lcs_index));
 //                    updatedCluster.set(i,1);
@@ -206,15 +207,15 @@ public class Clustering {
         }
     }
 
-    public void ClusteringFinalize(double simlr_threshold) {
+    public void ClusteringFinalize(double simlr_threshold, double delay_threshold, int lcs_min_len_threshold) {
         for(int i = 0; i < cluster.size(); i++) {
             for(InterplayModel im : cluster.get(i)) {
-                this.addTrace(im, simlr_threshold);
+                this.addTrace(im, simlr_threshold, delay_threshold, lcs_min_len_threshold);
             }
         }
     }
 
-    private ArrayList<Message> LCSExtractor(ArrayList<Message> data_point, ArrayList<Message> input_trace) {
+    private ArrayList<Message> LCSExtractor(ArrayList<Message> data_point, ArrayList<Message> input_trace, double delay_threshold) {
         int[][] LCS = new int[data_point.size()+1][input_trace.size()+1];
         ArrayList<Message> ret_i = new ArrayList<>();
         ArrayList<Message> ret_j = new ArrayList<>();
@@ -239,7 +240,7 @@ public class Clustering {
                 if(compareMessage(data_point.get(i-1), input_trace.get(j-1))) {
                     // Checking message delay difference between two given IM
                     if((prev_i == -1 && prev_j == -1)
-                            || calMessageDelay(data_point.get(prev_i-1), data_point.get(i-1), input_trace.get(prev_j-1), input_trace.get(j-1)))
+                            || calMessageDelay(data_point.get(prev_i-1), data_point.get(i-1), input_trace.get(prev_j-1), input_trace.get(j-1), delay_threshold))
                     {
                         LCS[i][j] = LCS[i - 1][j - 1] + 1;
                         if(prev_i != i) {
@@ -302,14 +303,14 @@ public class Clustering {
         return false;
     }
 
-    private double similarityCheckerLCS(ArrayList<Message> lcs, ArrayList<Message> input_trace) {
-        ArrayList<Message> lcs_lcs = LCSExtractor(lcs, input_trace);
-
-        if(lcs_lcs == null) return 0;
-        else {
-            return (double) lcs_lcs.size() / (double) lcs.size();
-        }
-    }
+//    private double similarityCheckerLCS(ArrayList<Message> lcs, ArrayList<Message> input_trace) {
+//        ArrayList<Message> lcs_lcs = LCSExtractor(lcs, input_trace);
+//
+//        if(lcs_lcs == null) return 0;
+//        else {
+//            return (double) lcs_lcs.size() / (double) lcs.size();
+//        }
+//    }
 
     private double similarityChecker(ArrayList<Message> lcs, ArrayList<Message> input_trace) {
         int matched = 0;
@@ -356,11 +357,11 @@ public class Clustering {
         }
     }
 
-    private boolean calMessageDelay(Message prev_i, Message curnt_i, Message prev_j, Message curnt_j) {
+    private boolean calMessageDelay(Message prev_i, Message curnt_i, Message prev_j, Message curnt_j, double delay_threshold) {
         float i_delay = curnt_i.time - prev_i.time;
         float j_delay = curnt_j.time - prev_j.time;
 
-        if(Math.abs(i_delay - j_delay) <= 1.0) return true;
+        if(Math.abs(i_delay - j_delay) <= delay_threshold) return true;
         else return false;
     }
 
