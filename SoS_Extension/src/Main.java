@@ -75,6 +75,8 @@ public class Main {
 
         double simlr_threshold = 0.70;
         double evaluation_score = 0;
+        ArrayList<InterplayModel> IMs = new ArrayList<>();
+
         if(f.exists()){
             int numoffiles = f.listFiles().length + 300;
             System.out.println("and it has " + numoffiles + " files.");
@@ -87,7 +89,8 @@ public class Main {
                         result = verifier.verifyLog(txtdir,"operationSuccessRate", thshold);
                         if(!result) {
                             InterplayModel interplayModel = new InterplayModel(i, 0);                        // TODO r_index = 0 로 설정해놓음
-                            clustering.addTrace(interplayModel, simlr_threshold);                                  // TODO Similarity Threshold = 75%
+//                            clustering.addTrace(interplayModel, simlr_threshold);                                  // TODO Similarity Threshold = 75%
+                            IMs.add(interplayModel);
                         }
                     }
 //                        for (int thshold2 : thresholds2){
@@ -163,6 +166,9 @@ public class Main {
         oracle.add(new ArrayList<>(Arrays.asList("43_0")));
 
         if(isClustering) {
+            for(InterplayModel im : IMs) {
+                clustering.addTrace(im, simlr_threshold);
+            }
             clustering.ClusteringFinalize(simlr_threshold);
             evaluation_score = clustering.EvaluateClusteringResult(oracle);
             System.out.println("Clustering Evaluation Score: " + evaluation_score);
