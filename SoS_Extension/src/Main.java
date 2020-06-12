@@ -2,6 +2,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class Main {
 
@@ -71,6 +72,9 @@ public class Main {
         File f = new File(currentdir);
         Boolean result;
         matchingtxts = 0;
+
+        double simlr_threshold = 0.70;
+        double evaluation_score = 0;
         if(f.exists()){
             int numoffiles = f.listFiles().length + 300;
             System.out.println("and it has " + numoffiles + " files.");
@@ -83,7 +87,7 @@ public class Main {
                         result = verifier.verifyLog(txtdir,"operationSuccessRate", thshold);
                         if(!result) {
                             InterplayModel interplayModel = new InterplayModel(i, 0);                        // TODO r_index = 0 로 설정해놓음
-                            clustering.addTrace(interplayModel, 0.70);                                  // TODO Similarity Threshold = 75%
+                            clustering.addTrace(interplayModel, simlr_threshold);                                  // TODO Similarity Threshold = 75%
                         }
                     }
 //                        for (int thshold2 : thresholds2){
@@ -150,7 +154,18 @@ public class Main {
             imbfl.printSuspSequences();
         }
 
+        ArrayList<ArrayList<String>> oracle = new ArrayList<>();
+        oracle.add(new ArrayList<>(Arrays.asList("6_0","7_0","8_0","9_0","11_0","13_0","41_0","47_0")));
+        oracle.add(new ArrayList<>(Arrays.asList("3_0","6_0","12_0","46_0")));
+        oracle.add(new ArrayList<>(Arrays.asList("17_0","30_0","45_0","49_0")));
+        oracle.add(new ArrayList<>(Arrays.asList("22_0","24_0","29_0","38_0","46_0")));
+        oracle.add(new ArrayList<>(Arrays.asList("24_0","27_0","29_0","34_0","38_0","47_0")));
+        oracle.add(new ArrayList<>(Arrays.asList("43_0")));
+
         if(isClustering) {
+            clustering.ClusteringFinalize(simlr_threshold);
+            evaluation_score = clustering.EvaluateClusteringResult(oracle);
+            System.out.println("Clustering Evaluation Score: " + evaluation_score);
             clustering.printCluster();
         }
     }
