@@ -178,9 +178,9 @@ public class Main {
                             Clustering clustering = new Clustering();
 
                             for (InterplayModel im : IMs) {
-                                clustering.addTrace(im, simlr_threshold, delay_threshold, lcs_min_len_threshold);
+                                clustering.addTraceCase6(im, simlr_threshold, delay_threshold, lcs_min_len_threshold);
                             }
-                            clustering.ClusteringFinalize(simlr_threshold, delay_threshold, lcs_min_len_threshold);
+//                            clustering.ClusteringFinalize(simlr_threshold, delay_threshold, lcs_min_len_threshold);
                             evaluation_score = clustering.EvaluateClusteringResult(oracle);
                             System.out.println("Clustering Evaluation Score: " + evaluation_score);
                             writer.write(simlr_threshold + "," + delay_threshold + "," + lcs_min_len_threshold + "," + evaluation_score);
@@ -201,9 +201,9 @@ public class Main {
             lcs_min_len_threshold = 15;
 
             for (InterplayModel im : IMs) {
-                clustering.addTraceSim3(im, simlr_threshold, delay_threshold, lcs_min_len_threshold);
+                clustering.addTraceCase6(im, simlr_threshold, delay_threshold, lcs_min_len_threshold);
             }
-            clustering.ClusteringFinalize(simlr_threshold, delay_threshold, lcs_min_len_threshold);
+//            clustering.ClusteringFinalize(simlr_threshold, delay_threshold, lcs_min_len_threshold);
             evaluation_score = clustering.EvaluateClusteringResult(oracle);
             System.out.println("Clustering Evaluation Score: " + evaluation_score);
 //            clustering.printCluster();
