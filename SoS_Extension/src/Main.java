@@ -172,9 +172,9 @@ public class Main {
 
             try {
                 FileWriter writer = new FileWriter(file2, true);
-                for(simlr_threshold = 0.7; simlr_threshold <= 1.0; simlr_threshold+=0.01) {
-                    for(delay_threshold = 0.5; delay_threshold <= 1.5; delay_threshold+=0.1) {
-                        for(lcs_min_len_threshold = 7; lcs_min_len_threshold <= 20; lcs_min_len_threshold++) {
+                for(simlr_threshold = 0.5; simlr_threshold <= 1.0; simlr_threshold+=0.01) {
+                    for(delay_threshold = 0.1; delay_threshold <= 1.5; delay_threshold+=0.1) {
+                        for(lcs_min_len_threshold = 5; lcs_min_len_threshold <= 20; lcs_min_len_threshold++) {
                             Clustering clustering = new Clustering();
 
                             for (InterplayModel im : IMs) {
