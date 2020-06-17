@@ -161,11 +161,11 @@ public class Main {
         oracle.add(new ArrayList<>(Arrays.asList("24_0","27_0","29_0","34_0","38_0","47_0")));
         oracle.add(new ArrayList<>(Arrays.asList("43_0")));
 
-        double simlr_threshold = 0.70;
-        double delay_threshold = 1.00;
-        int lcs_min_len_threshold = 15;
-        double evaluation_score = 0;
-        boolean single = true;
+        double simlr_threshold;
+        double delay_threshold;
+        int lcs_min_len_threshold;
+        double evaluation_score;
+        boolean single = false;
 
         if(isClustering && !single) {
             File file2 = new File(base + "/SoS_Extension/" + "HyperparameterAnalysis.csv");
@@ -196,6 +196,9 @@ public class Main {
             }
         } else {
             Clustering clustering = new Clustering();
+            simlr_threshold = 0.7;
+            delay_threshold = 1.0;
+            lcs_min_len_threshold = 15;
 
             for (InterplayModel im : IMs) {
                 clustering.addTraceSim3(im, simlr_threshold, delay_threshold, lcs_min_len_threshold);
