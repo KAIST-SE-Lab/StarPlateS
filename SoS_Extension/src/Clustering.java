@@ -441,10 +441,11 @@ public class Clustering {
         ArrayList<ArrayList<Message>> generatedLCS = new ArrayList<>();
         int lcs_index;
 
-        for(int i = 0; i < this.cluster.size(); i++) {
-            finalCluster.add(new ArrayList<>());
+        for(int i = 0; i < cluster.size(); i++) finalCluster.add(new ArrayList<>());
+
+        for(int i = 0; i < cluster.size(); i++) {
             for(InterplayModel IM : cluster.get(i)) {
-                for(int j = 0; j < this.cluster.size(); j++) {
+                for(int j = 0; j < cluster.size(); j++) {
                     if(i == j) continue;
                     generatedLCS.clear();
                     lcs_index = -1;
@@ -460,7 +461,7 @@ public class Clustering {
                             double temp = similarityChecker(centroidLCS.get(i), generatedLCS.get(k), delay_threshold);          // 와 기존 centroid_lcs와의 size를 비교하여 simlr_threshold
                                                                                                                                 // 를 넘는지 확인함
                             if (temp >= simlr_threshold) {                                                                      // simlr_threshold를 넘는 경우, centroidLCS를 업데이트
-                                if(!finalCluster.get(i).contains(IM)) finalCluster.get(i).add(IM);
+                                if(!finalCluster.get(j).contains(IM)) finalCluster.get(j).add(IM);
                             }
                         }
                     } else {                                                                                                    // Cluster에 1개의 IM만 존재할때는 해당 IM 과의 LCS가 존재하는지 여부를 이용하여 해당 Cluster에 포함가능한지를 확인함
@@ -484,7 +485,7 @@ public class Clustering {
                         }
 
                         if(lcs_index != -1 && generatedLCS.get(lcs_index).size() > lcs_min_len_threshold) {                  // TODO Length Threshold
-                            if(!finalCluster.get(i).contains(IM)) finalCluster.get(i).add(IM);
+                            if(!finalCluster.get(j).contains(IM)) finalCluster.get(j).add(IM);
                         }
                     }
                 }
@@ -732,8 +733,6 @@ public class Clustering {
         ArrayList<String> index = new ArrayList<>(Arrays.asList("3_0","6_0","7_0","8_0","9_0","11_0"
                 ,"12_0","13_0","17_0","22_0","24_0","27_0","29_0","30_0","34_0","38_0"
                 ,"41_0","43_0","45_0","46_0","47_0","49_0"));
-
-        if(finalCluster == null) finalCluster = (ArrayList)cluster.clone();
 
         for(int i = 0; i < index.size(); i++) {                                                                         // Generate pair for indexes
             for(int j = i+1; j < index.size(); j++) {
