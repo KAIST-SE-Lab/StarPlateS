@@ -174,7 +174,7 @@ public class Main {
                 FileWriter writer = new FileWriter(file2, true);
                 for(int simlr_counter = 50; simlr_counter <= 100; simlr_counter++) {
                     simlr_threshold = (double)simlr_counter/100;
-                    for(int delay_counter = 10; delay_counter <= 100; delay_counter+=10) {
+                    for(int delay_counter = 10; delay_counter <= 150; delay_counter+=10) {
                         delay_threshold = (double)delay_counter/100;
                         for(lcs_min_len_threshold = 5; lcs_min_len_threshold <= 20; lcs_min_len_threshold++) {
                             Clustering clustering = new Clustering();
@@ -189,7 +189,7 @@ public class Main {
                             writer.write(simlr_threshold + "," + delay_threshold + "," + lcs_min_len_threshold + "," + evaluation_score);
                             writer.write("\n");
 //                            clustering.printCluster();
-//                            clustering.clusterClear();
+                            clustering.clusterClear();
                         }
                     }
                 }
@@ -199,19 +199,19 @@ public class Main {
             }
         } else {
             Clustering clustering = new Clustering();
-            simlr_threshold = 0.55;
-            delay_threshold = 1;
-            lcs_min_len_threshold = 14;
+            simlr_threshold = 0.59;
+            delay_threshold = 0.7;
+            lcs_min_len_threshold = 15;
 
             for (InterplayModel im : IMs) {
-//                clustering.addTraceCase5(im, simlr_threshold, delay_threshold, lcs_min_len_threshold);
-                clustering.addTraceBaseLCS(im, delay_threshold, lcs_min_len_threshold);
+                clustering.addTraceCase5(im, simlr_threshold, delay_threshold, lcs_min_len_threshold);
+//                clustering.addTraceBaseLCS(im, delay_threshold, lcs_min_len_threshold);
             }
 //            clustering.ClusteringFinalize(simlr_threshold, delay_threshold, lcs_min_len_threshold);
             evaluation_score = clustering.EvaluateClusteringResult(oracle);
             System.out.println("Clustering Evaluation Score: " + evaluation_score);
             clustering.printCluster();
-//            clustering.clusterClear();
+            clustering.clusterClear();
         }
     }
 }

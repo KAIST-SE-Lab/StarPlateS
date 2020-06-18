@@ -661,7 +661,7 @@ public class Clustering {
 
     public void printCluster() {
         Message temp;
-        for(int i = 0; i <finalCluster.size(); i++) {
+        for(int i = 0; i <cluster.size(); i++) {
             System.out.println("Cluster " + i + "=================");
             System.out.println("Representative LCS:");
 
@@ -671,8 +671,8 @@ public class Clustering {
 //            }
 
             System.out.println("Clustered IMs:");
-            for(int j = 0; j < finalCluster.get(i).size(); j++) {
-                System.out.println((j+1) + ": IM_" + finalCluster.get(i).get(j).getId());
+            for(int j = 0; j < cluster.get(i).size(); j++) {
+                System.out.println((j+1) + ": IM_" + cluster.get(i).get(j).getId());
             }
         }
     }
@@ -1092,7 +1092,9 @@ public class Clustering {
     }                                                                                                                   // https://gentlej90.tistory.com/64
 
     public void clusterClear() {
-        this.cluster.clear();
-        this.centroidLCS.clear();
+        cluster.clear();
+        centroidLCS.clear();
+        finalCluster.clear();
+        finalCentroidLCS.clear();
     }
 }
