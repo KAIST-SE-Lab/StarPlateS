@@ -536,6 +536,53 @@ public class Clustering {
 //        System.out.println("add trace Finish");
     }
 
+    public void addTraceBaseLCS(InterplayModel im_trace, double delay_threshold, int lcs_min_len_threshold) {
+        ArrayList<Integer> updatedCluster = new ArrayList<>(Collections.nCopies(cluster.size(), 0));
+        ArrayList<Message> generatedLCS;
+        Boolean assignFlag = false;
+
+        if (cluster.size() == 0) {
+            cluster.add(new ArrayList<>());
+            centroidLCS.add(new ArrayList<>());
+            cluster.get(0).add(im_trace);
+            return;
+        }
+
+        for(int i = 0; i < cluster.size(); i++) {
+            generatedLCS = LCSExtractorWithoutDelayBase(cluster.get(i).get(0).getMsgSequence(), im_trace.getMsgSequence());      // Cluster에 1개의 IM만 존재할때는 해당 IM 과의 LCS가 존재하는지
+            if(generatedLCS != null && generatedLCS.size() > lcs_min_len_threshold) {                               // 여부를 이용하여 해당 Cluster에 포함가능한지를 확인함
+                cluster.get(i).add(im_trace);
+                updatedCluster.set(i,1);
+                assignFlag = true;
+            }
+        }
+
+        if(!assignFlag) {
+            cluster.add(new ArrayList<>());
+            centroidLCS.add(new ArrayList<>());
+            cluster.get(cluster.size()-1).add(im_trace);
+            return;
+        }
+
+        // Updated cluster에 대해 Representative LCS (Centroid)를 업데이트하는 과정
+        for(int i = 0; i < cluster.size(); i++) {
+            if(updatedCluster.get(i) == 1) {
+                int j = 1;
+//                Collections.shuffle(cluster.get(i));  // TODO Choose whether to use the shuffle in LCS generation for generating appropriate LCS among multiple IMs
+                generatedLCS = (ArrayList) cluster.get(i).get(0).getMsgSequence().clone();
+                while(j <= cluster.get(i).size()-1) {
+                    generatedLCS = LCSExtractorWithoutDelay(generatedLCS, cluster.get(i).get(j).getMsgSequence());
+                    if(generatedLCS == null) break;
+                    Collections.reverse(generatedLCS);
+                    j++;
+                }
+                updatedCluster.set(i,0);
+                centroidLCS.set(i, generatedLCS);
+            }
+//            LCSRedundancyAnalyzer(i, 20); // TODO Threshold: the number of repetition of the same sync messages threshold
+        }
+    }
+
     private ArrayList<Message> IMSlicer(float starting_time, ArrayList<Message> IM_msg) {
         ArrayList<Message> ret = new ArrayList<>();
 
@@ -572,7 +619,7 @@ public class Clustering {
         String key_ = "";
         Boolean flag = false;
 
-        if(target_LCS.size() == 0) return;
+        if(target_LCS != null && target_LCS.size() == 0) return;
 
         for(int i = 0; i < target_LCS.size()-1; i++) {
             key_ = target_LCS.get(i).commandSent + "_" + target_LCS.get(i+1).commandSent;
@@ -614,7 +661,7 @@ public class Clustering {
 
     public void printCluster() {
         Message temp;
-        for(int i = 0; i <cluster.size(); i++) {
+        for(int i = 0; i <finalCluster.size(); i++) {
             System.out.println("Cluster " + i + "=================");
             System.out.println("Representative LCS:");
 
@@ -624,8 +671,8 @@ public class Clustering {
 //            }
 
             System.out.println("Clustered IMs:");
-            for(int j = 0; j < cluster.get(i).size(); j++) {
-                System.out.println((j+1) + ": IM_" + cluster.get(i).get(j).getId());
+            for(int j = 0; j < finalCluster.get(i).size(); j++) {
+                System.out.println((j+1) + ": IM_" + finalCluster.get(i).get(j).getId());
             }
         }
     }
@@ -838,6 +885,64 @@ public class Clustering {
         }
     }
 
+    private ArrayList<Message> LCSExtractorWithoutDelayBase(ArrayList<Message> data_point, ArrayList<Message> input_trace) {
+        int[][] LCS = new int[data_point.size()+1][input_trace.size()+1];
+        ArrayList<Message> ret_i = new ArrayList<>();
+        ArrayList<Message> ret_j = new ArrayList<>();
+        ArrayList<Message> ret = new ArrayList<>();
+
+        // Generate LCS Table between two inputs
+        for(int i = 0; i <= data_point.size(); i++) {
+            for(int j = 0; j <= input_trace.size(); j++) {
+                // For the convenience of the calculation, assign i=0 or j=0 as 0
+                if(i == 0 || j == 0) {
+                    LCS[i][j] = 0;
+                    continue;
+                }
+//                System.out.println(data_point.get(i-1).commandSent);
+//                System.out.println(compareMessage(data_point.get(i-1), input_trace.get(j-1)));
+                // Same message case
+                if(compareMessageBase(data_point.get(i-1), input_trace.get(j-1))) {                                         // TODO Delay Comparison?
+                    LCS[i][j] = LCS[i-1][j-1] + 1;
+                } else { // Different message case
+                    LCS[i][j] = Math.max(LCS[i][j-1], LCS[i-1][j]);
+                }
+            }
+        }
+
+        // No LCS exists
+        if(LCS[data_point.size()][input_trace.size()] == 0) return null;
+        else if (LCS[data_point.size()][input_trace.size()] < data_point.size()) { // Shorter LCS exists
+            // Extract new LCS
+            int current = 0;
+            for(int i = 1; i <= data_point.size(); i++) {
+                for(int j = 1; j <= input_trace.size(); j++) {
+
+                    if(LCS[i][j] > current) {
+                        current++;
+                        ret_i.add(data_point.get(i-1));
+                        ret_j.add(input_trace.get(j-1));
+                    }
+
+                }
+            }
+            // To remove commonly happened events in the beginning of the simulations
+            // E.g. Split operation of platoons with size larger than the opt_size
+            float time_i = -1;
+            float time_j = -1;
+            for(int i = ret_i.size()-1, j = ret_j.size()-1; i >= 0 && j >= 0; i--, j--) {
+                time_i = Float.valueOf(ret_i.get(i).time);
+                time_j = Float.valueOf(ret_j.get(j).time);
+                if(time_i < 25.0 || time_j < 25.0) continue;
+                else ret.add(ret_i.get(i));
+            }
+            return ret;
+        } else { // No shorter LCS exists
+            Collections.reverse(data_point);
+            return data_point;
+        }
+    }
+
     private boolean compareMessage(Message m_a, Message m_b) {
 
         if(m_a.time < 25.00 || m_b.time < 25.00) return false;
@@ -846,6 +951,17 @@ public class Clustering {
 
 //        if(m_a.commandSent.equals(m_b.commandSent) && m_a.senderPltId.equals(m_b.senderPltId) // TODO How much information would be considered in comparison??
 //                && m_a.receiverId.equals(m_b.receiverId)) return true;
+
+        return false;
+    }
+
+    private boolean compareMessageBase(Message m_a, Message m_b) {
+
+        if(m_a.time < 25.00 || m_b.time < 25.00) return false;
+//        if(m_a.commandSent.equals(m_b.commandSent) && m_a.senderRole.equals(m_b.senderRole)
+//                && m_a.receiverRole.equals(m_b.receiverRole)) return true;
+
+        if(m_a.commandSent.equals(m_b.commandSent)) return true;
 
         return false;
     }
@@ -938,7 +1054,7 @@ public class Clustering {
                 ol_same = false;
 
 //                for(ArrayList<InterplayModel> IMs : finalCluster) {                                                          // Checking whether the pair is in the
-                for(ArrayList<InterplayModel> IMs : finalCluster) {
+                for(ArrayList<InterplayModel> IMs : cluster) {
                     for(InterplayModel IM : IMs) {                                                                      // same cluster in the Clustering result
                         if(IM.getId().equals(index.get(i))) cl_front = true;
                         if(IM.getId().equals(index.get(j))) cl_back = true;
