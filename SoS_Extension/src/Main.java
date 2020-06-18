@@ -173,8 +173,8 @@ public class Main {
             try {
                 FileWriter writer = new FileWriter(file2, true);
                 for(int simlr_counter = 50; simlr_counter <= 100; simlr_counter++) {
-                    simlr_threshold = (double)simlr_counter / 100;
-                    for(int delay_counter = 1; delay_counter <= 10; delay_counter++) {
+                    simlr_threshold = (double)simlr_counter/100;
+                    for(int delay_counter = 10; delay_counter <= 100; delay_counter+=10) {
                         delay_threshold = (double)delay_counter/100;
                         for(lcs_min_len_threshold = 5; lcs_min_len_threshold <= 20; lcs_min_len_threshold++) {
                             Clustering clustering = new Clustering();
