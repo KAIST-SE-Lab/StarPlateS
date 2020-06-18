@@ -191,9 +191,7 @@ public class Main {
 //                            clustering.printCluster();
 //                            clustering.clusterClear();
                         }
-                        delay_threshold = delay_threshold + 1*0.1;
                     }
-                    simlr_threshold = simlr_threshold + 1*0.1;
                 }
                 writer.close();
             } catch (Exception e) {
