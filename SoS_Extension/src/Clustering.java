@@ -938,7 +938,7 @@ public class Clustering {
                 ol_same = false;
 
 //                for(ArrayList<InterplayModel> IMs : finalCluster) {                                                          // Checking whether the pair is in the
-                for(ArrayList<InterplayModel> IMs : cluster) {
+                for(ArrayList<InterplayModel> IMs : finalCluster) {
                     for(InterplayModel IM : IMs) {                                                                      // same cluster in the Clustering result
                         if(IM.getId().equals(index.get(i))) cl_front = true;
                         if(IM.getId().equals(index.get(j))) cl_back = true;

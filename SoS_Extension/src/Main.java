@@ -165,7 +165,7 @@ public class Main {
         double delay_threshold;
         int lcs_min_len_threshold;
         double evaluation_score;
-        boolean single = false;
+        boolean single = true;
 
         if(isClustering && !single) {
             File file2 = new File(base + "/SoS_Extension/" + "HyperparameterAnalysis.csv");
@@ -178,9 +178,9 @@ public class Main {
                             Clustering clustering = new Clustering();
 
                             for (InterplayModel im : IMs) {
-                                clustering.addTraceCase6(im, simlr_threshold, delay_threshold, lcs_min_len_threshold);
+                                clustering.addTraceCase5(im, simlr_threshold, delay_threshold, lcs_min_len_threshold);
                             }
-//                            clustering.ClusteringFinalize(simlr_threshold, delay_threshold, lcs_min_len_threshold);
+                            clustering.ClusteringFinalize(simlr_threshold, delay_threshold, lcs_min_len_threshold);
                             evaluation_score = clustering.EvaluateClusteringResult(oracle);
                             System.out.println("Clustering Evaluation Score: " + evaluation_score);
                             writer.write(simlr_threshold + "," + delay_threshold + "," + lcs_min_len_threshold + "," + evaluation_score);
