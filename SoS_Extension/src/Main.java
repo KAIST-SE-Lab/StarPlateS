@@ -172,13 +172,16 @@ public class Main {
 
             try {
                 FileWriter writer = new FileWriter(file2, true);
-                for(simlr_threshold = 0.5; simlr_threshold <= 0.5; simlr_threshold+=0.01) {
-                    for(delay_threshold = 0.1; delay_threshold <= 0.1; delay_threshold+=0.1) {
+                for(int simlr_counter = 50; simlr_counter <= 100; simlr_counter++) {
+                    simlr_threshold = (double)simlr_counter / 100;
+                    for(int delay_counter = 1; delay_counter <= 10; delay_counter++) {
+                        delay_threshold = (double)delay_counter/100;
                         for(lcs_min_len_threshold = 5; lcs_min_len_threshold <= 20; lcs_min_len_threshold++) {
                             Clustering clustering = new Clustering();
 
                             for (InterplayModel im : IMs) {
-                                clustering.addTraceBaseLCS(im, delay_threshold, lcs_min_len_threshold);
+//                                clustering.addTraceBaseLCS(im, delay_threshold, lcs_min_len_threshold);
+                                clustering.addTraceCase5(im, simlr_threshold, delay_threshold, lcs_min_len_threshold);
                             }
 //                            clustering.ClusteringFinalize(simlr_threshold, delay_threshold, lcs_min_len_threshold);
                             evaluation_score = clustering.EvaluateClusteringResult(oracle);
@@ -188,7 +191,9 @@ public class Main {
 //                            clustering.printCluster();
 //                            clustering.clusterClear();
                         }
+                        delay_threshold = delay_threshold + 1*0.1;
                     }
+                    simlr_threshold = simlr_threshold + 1*0.1;
                 }
                 writer.close();
             } catch (Exception e) {
