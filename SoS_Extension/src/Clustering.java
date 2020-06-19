@@ -696,6 +696,28 @@ public class Clustering {
 //        }
 //    }
 
+    private void ClusterMerge(double simlr_threshold, double delay_threshold, int lcs_min_len_threshold) {
+        double temp;
+        ArrayList<Integer> merged = new ArrayList<>();
+
+        for(int i = 0; i < cluster.size(); i++) {
+            for(int j = i+1; j < cluster.size(); j++) {
+                temp = similarityChecker(centroidLCS.get(i),
+                        LCSExtractorWithDelay(centroidLCS.get(i), centroidLCS.get(j), delay_threshold), delay_threshold);
+                if(temp >= simlr_threshold) {
+                    for(InterplayModel IM : cluster.get(j)) {
+                        cluster.get(i).add(IM);
+                    }
+                    merged.add(j);
+                }
+            }
+        }
+
+        for(int i = 0; i < merged.size(); i++) {
+            cluster.remove(merged.get(i));
+        }
+    }
+
     public void ClusteringFinalize(double simlr_threshold, double delay_threshold, int lcs_min_len_threshold) {         // TODO Clustering Finalize Concurrent Modification Exception
 
         ArrayList<ArrayList<Message>> generatedLCS = new ArrayList<>();

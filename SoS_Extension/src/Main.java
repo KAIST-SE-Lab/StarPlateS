@@ -188,7 +188,7 @@ public class Main {
 //
 //                            for (InterplayModel im : IMs) {
 ////                                clustering.addTraceBaseLCS(im, delay_threshold, lcs_min_len_threshold);
-//                                clustering.addTraceCase4(im, simlr_threshold, delay_threshold, lcs_min_len_threshold);
+//                                clustering.addTraceCase5(im, simlr_threshold, delay_threshold, lcs_min_len_threshold);
 //                            }
                             clustering.ClusteringFinalize(simlr_threshold, delay_threshold, lcs_min_len_threshold);
                             evaluation_score = clustering.EvaluateClusteringResult(oracle);
@@ -214,11 +214,12 @@ public class Main {
                 clustering.addTraceCase5(im, simlr_threshold, delay_threshold, lcs_min_len_threshold);
 //                clustering.addTraceBaseLCS(im, delay_threshold, lcs_min_len_threshold);
             }
+            clustering.printCluster();
             clustering.ClusteringFinalize(simlr_threshold, delay_threshold, lcs_min_len_threshold);
             evaluation_score = clustering.EvaluateClusteringResult(oracle);
             System.out.println("Clustering Evaluation Score: " + evaluation_score);
             clustering.printCluster();
-            clustering.printFinalCluster();
+//            clustering.printFinalCluster();
             clustering.clusterClear();
         }
     }
