@@ -8,15 +8,15 @@ public class Clustering {
     private ArrayList<ArrayList<Message>> centroidLCS;
     private ArrayList<Float> startingTime;
 
-    private ArrayList<ArrayList<InterplayModel>> finalCluster;
-    private ArrayList<ArrayList<Message>> finalCentroidLCS;
+//    private ArrayList<ArrayList<InterplayModel>> finalCluster;
+//    private ArrayList<ArrayList<Message>> finalCentroidLCS;
 
     public Clustering() {
         cluster = new ArrayList<>();
         centroidLCS = new ArrayList<>();
         startingTime = new ArrayList<>();
-        finalCluster = new ArrayList<>();
-        finalCentroidLCS = new ArrayList<>();
+//        finalCluster = new ArrayList<>();
+//        finalCentroidLCS = new ArrayList<>();
         startingTime.add((float)25.00);
         startingTime.add((float)45.00);
         startingTime.add((float)65.00);
@@ -678,36 +678,36 @@ public class Clustering {
         }
     }
 
-    public void printFinalCluster() {
-        Message temp;
-        for(int i = 0; i <finalCluster.size(); i++) {
-            System.out.println("Cluster " + i + "=================");
-            System.out.println("Representative LCS:");
-
-//            for(int j = 0; j < centroidLCS.get(i).size(); j++) {
-//                temp = centroidLCS.get(i).get(j);
-//                System.out.println(j + " " + temp.time + ": " + temp.commandSent + " from " + temp.senderPltId + " to " + temp.receiverId);
+//    public void printFinalCluster() {
+//        Message temp;
+//        for(int i = 0; i <finalCluster.size(); i++) {
+//            System.out.println("Cluster " + i + "=================");
+//            System.out.println("Representative LCS:");
+//
+////            for(int j = 0; j < centroidLCS.get(i).size(); j++) {
+////                temp = centroidLCS.get(i).get(j);
+////                System.out.println(j + " " + temp.time + ": " + temp.commandSent + " from " + temp.senderPltId + " to " + temp.receiverId);
+////            }
+//
+//            System.out.println("Clustered IMs:");
+//            for(int j = 0; j < finalCluster.get(i).size(); j++) {
+//                System.out.println((j+1) + ": IM_" + finalCluster.get(i).get(j).getId());
 //            }
-
-            System.out.println("Clustered IMs:");
-            for(int j = 0; j < finalCluster.get(i).size(); j++) {
-                System.out.println((j+1) + ": IM_" + finalCluster.get(i).get(j).getId());
-            }
-        }
-    }
+//        }
+//    }
 
     public void ClusteringFinalize(double simlr_threshold, double delay_threshold, int lcs_min_len_threshold) {         // TODO Clustering Finalize Concurrent Modification Exception
 
         ArrayList<ArrayList<Message>> generatedLCS = new ArrayList<>();
         int lcs_index;
-
-        finalCluster.clear();
-        finalCentroidLCS.clear();
-
-        for(int i = 0; i < cluster.size(); i++) {
-            finalCluster.add(new ArrayList<>());
-            finalCentroidLCS.add((ArrayList)centroidLCS.get(i).clone());
-        }
+//
+//        finalCluster.clear();
+//        finalCentroidLCS.clear();
+//
+//        for(int i = 0; i < cluster.size(); i++) {
+//            finalCluster.add(new ArrayList<>());
+//            finalCentroidLCS.add((ArrayList)centroidLCS.get(i).clone());
+//        }
 
         for(int i = 0; i < cluster.size(); i++) {
             for(InterplayModel IM : cluster.get(i)) {
@@ -724,12 +724,12 @@ public class Clustering {
                     if(cluster.get(j).size() > 1) {                                                                             // Cluster에 2개 이상의 IM이 존재하는 경우, representative lcs 와 given IM 사이의 LCS를 생성하여 Similarity 비교
                         for(int k = 0; k < startingTime.size(); k++) {                                                          // Starting time에 따라 slicing 된 given IM에 대해 생성된
                             if(generatedLCS.get(k) == null) continue;                                                           // generated_LCS (lcs between centroid_lcs and given IM)
-                            double temp = similarityChecker(finalCentroidLCS.get(j), generatedLCS.get(k), delay_threshold);          // 와 기존 centroid_lcs와의 size를 비교하여 simlr_threshold
+                            double temp = similarityChecker(centroidLCS.get(j), generatedLCS.get(k), delay_threshold);          // 와 기존 centroid_lcs와의 size를 비교하여 simlr_threshold
                                                                                                                                 // 를 넘는지 확인함
                             if (temp >= simlr_threshold) {                                                                      // simlr_threshold를 넘는 경우, centroidLCS를 업데이트
-                                if(!finalCluster.get(j).contains(IM)) {
-                                    finalCluster.get(j).add(IM);
-                                    finalCentroidLCS.set(j, generatedLCS.get(k));
+                                if(!cluster.get(j).contains(IM)) {
+                                    cluster.get(j).add(IM);
+                                    centroidLCS.set(j, generatedLCS.get(k));
                                 }
                             }
                         }
@@ -754,9 +754,9 @@ public class Clustering {
                         }
 
                         if(lcs_index != -1 && generatedLCS.get(lcs_index).size() > lcs_min_len_threshold) {                  // TODO Length Threshold
-                            if(!finalCluster.get(j).contains(IM)) {
-                                finalCluster.get(j).add(IM);
-                                finalCentroidLCS.set(j, generatedLCS.get(lcs_index));
+                            if(!cluster.get(j).contains(IM)) {
+                                cluster.get(j).add(IM);
+                                centroidLCS.set(j, generatedLCS.get(lcs_index));
                             }
                         }
                     }
@@ -1084,8 +1084,8 @@ public class Clustering {
                 ol_back = false;
                 ol_same = false;
 
-                for(ArrayList<InterplayModel> IMs : finalCluster) {                                                          // Checking whether the pair is in the
-//                for(ArrayList<InterplayModel> IMs : cluster) {
+//                for(ArrayList<InterplayModel> IMs : finalCluster) {                                                          // Checking whether the pair is in the
+                for(ArrayList<InterplayModel> IMs : cluster) {
                     for(InterplayModel IM : IMs) {                                                                      // same cluster in the Clustering result
                         if(IM.getId().equals(index.get(i))) cl_front = true;
                         if(IM.getId().equals(index.get(j))) cl_back = true;
@@ -1125,7 +1125,7 @@ public class Clustering {
     public void clusterClear() {
         cluster.clear();
         centroidLCS.clear();
-        finalCluster.clear();
-        finalCentroidLCS.clear();
+//        finalCluster.clear();
+//        finalCentroidLCS.clear();
     }
 }
