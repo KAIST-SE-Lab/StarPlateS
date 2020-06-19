@@ -414,6 +414,7 @@ public class Clustering {
             cluster.add(new ArrayList<>());                                                                             // 새로운 cluster와 centroidLCS slot를 생성한 후
             centroidLCS.add(new ArrayList<>());
             cluster.get(cluster.size()-1).add(im_trace);                                                                // 해당 IM을 cluster에 삽입
+            centroidLCS.set(centroidLCS.size()-1, im_trace.getMsgSequence());
             return;
         }
 
@@ -700,6 +701,9 @@ public class Clustering {
         ArrayList<ArrayList<Message>> generatedLCS = new ArrayList<>();
         int lcs_index;
 
+        finalCluster.clear();
+        finalCentroidLCS.clear();
+
         for(int i = 0; i < cluster.size(); i++) {
             finalCluster.add(new ArrayList<>());
             finalCentroidLCS.add((ArrayList)centroidLCS.get(i).clone());
@@ -712,8 +716,8 @@ public class Clustering {
                     generatedLCS.clear();
                     lcs_index = -1;
                     for(int k = 0; k < startingTime.size(); k++) {
-                        generatedLCS.add(LCSExtractorWithoutDelay(IMSlicer(startingTime.get(k),IM.getMsgSequence()),                  // Starting time에 따라 given IM을 slicing 하여
-                                cluster.get(i).get(0).getMsgSequence()));                                                       // 중간에 중요 사건의 sequence가 시작하는 경우의 예외 처리 진행
+                        generatedLCS.add(LCSExtractorWithoutDelay(cluster.get(i).get(0).getMsgSequence(),
+                                IMSlicer(startingTime.get(k),IM.getMsgSequence())));
                         if(generatedLCS.get(k) != null) Collections.reverse(generatedLCS.get(k));
                     }
 
@@ -1080,8 +1084,8 @@ public class Clustering {
                 ol_back = false;
                 ol_same = false;
 
-//                for(ArrayList<InterplayModel> IMs : finalCluster) {                                                          // Checking whether the pair is in the
-                for(ArrayList<InterplayModel> IMs : cluster) {
+                for(ArrayList<InterplayModel> IMs : finalCluster) {                                                          // Checking whether the pair is in the
+//                for(ArrayList<InterplayModel> IMs : cluster) {
                     for(InterplayModel IM : IMs) {                                                                      // same cluster in the Clustering result
                         if(IM.getId().equals(index.get(i))) cl_front = true;
                         if(IM.getId().equals(index.get(j))) cl_back = true;

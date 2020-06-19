@@ -172,24 +172,31 @@ public class Main {
 
             try {
                 FileWriter writer = new FileWriter(file2, true);
+                // The code for Finalize Function Hyperparameter testing
+                Clustering clustering = new Clustering();
+                for (InterplayModel im : IMs) {
+//                                clustering.addTraceBaseLCS(im, delay_threshold, lcs_min_len_threshold);
+                    clustering.addTraceCase5(im, 0.66, 0.7, 18);                // TODO The best option so far
+                }
+
                 for(int simlr_counter = 50; simlr_counter <= 100; simlr_counter++) {
                     simlr_threshold = (double)simlr_counter/100;
                     for(int delay_counter = 10; delay_counter <= 150; delay_counter+=10) {
                         delay_threshold = (double)delay_counter/100;
-                        for(lcs_min_len_threshold = 5; lcs_min_len_threshold <= 20; lcs_min_len_threshold++) {
-                            Clustering clustering = new Clustering();
-
-                            for (InterplayModel im : IMs) {
-//                                clustering.addTraceBaseLCS(im, delay_threshold, lcs_min_len_threshold);
-                                clustering.addTraceCase4(im, simlr_threshold, delay_threshold, lcs_min_len_threshold);
-                            }
-//                            clustering.ClusteringFinalize(simlr_threshold, delay_threshold, lcs_min_len_threshold);
+                        for(lcs_min_len_threshold = 5; lcs_min_len_threshold <= 30; lcs_min_len_threshold++) {
+//                            Clustering clustering = new Clustering();
+//
+//                            for (InterplayModel im : IMs) {
+////                                clustering.addTraceBaseLCS(im, delay_threshold, lcs_min_len_threshold);
+//                                clustering.addTraceCase4(im, simlr_threshold, delay_threshold, lcs_min_len_threshold);
+//                            }
+                            clustering.ClusteringFinalize(simlr_threshold, delay_threshold, lcs_min_len_threshold);
                             evaluation_score = clustering.EvaluateClusteringResult(oracle);
                             System.out.println(simlr_threshold + ", " + delay_threshold + "," + lcs_min_len_threshold + "," +"Clustering Evaluation Score: " + evaluation_score);
                             writer.write(simlr_threshold + "," + delay_threshold + "," + lcs_min_len_threshold + "," + evaluation_score);
                             writer.write("\n");
 //                            clustering.printCluster();
-                            clustering.clusterClear();
+//                            clustering.clusterClear();
                         }
                     }
                 }
@@ -204,14 +211,14 @@ public class Main {
             lcs_min_len_threshold = 18;
 
             for (InterplayModel im : IMs) {
-                clustering.addTraceCase4(im, simlr_threshold, delay_threshold, lcs_min_len_threshold);
+                clustering.addTraceCase5(im, simlr_threshold, delay_threshold, lcs_min_len_threshold);
 //                clustering.addTraceBaseLCS(im, delay_threshold, lcs_min_len_threshold);
             }
-//            clustering.ClusteringFinalize(simlr_threshold, delay_threshold, lcs_min_len_threshold);
+            clustering.ClusteringFinalize(simlr_threshold, delay_threshold, lcs_min_len_threshold);
             evaluation_score = clustering.EvaluateClusteringResult(oracle);
             System.out.println("Clustering Evaluation Score: " + evaluation_score);
             clustering.printCluster();
-//            clustering.printFinalCluster();
+            clustering.printFinalCluster();
             clustering.clusterClear();
         }
     }
