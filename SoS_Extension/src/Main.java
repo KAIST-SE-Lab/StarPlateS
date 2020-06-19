@@ -165,7 +165,7 @@ public class Main {
         double delay_threshold;
         int lcs_min_len_threshold;
         double evaluation_score;
-        boolean single = true;
+        boolean single = false;
 
         if(isClustering && !single) {
             File file2 = new File(base + "/SoS_Extension/" + "HyperparameterAnalysis.csv");
