@@ -165,7 +165,7 @@ public class Main {
         double delay_threshold;
         int lcs_min_len_threshold;
         double evaluation_score;
-        boolean single = false;
+        boolean single = true;
 
         if(isClustering && !single) {
             File file2 = new File(base + "/SoS_Extension/" + "HyperparameterAnalysis.csv");
@@ -181,7 +181,7 @@ public class Main {
 
                             for (InterplayModel im : IMs) {
 //                                clustering.addTraceBaseLCS(im, delay_threshold, lcs_min_len_threshold);
-                                clustering.addTraceCase5(im, simlr_threshold, delay_threshold, lcs_min_len_threshold);
+                                clustering.addTraceCase4(im, simlr_threshold, delay_threshold, lcs_min_len_threshold);
                             }
 //                            clustering.ClusteringFinalize(simlr_threshold, delay_threshold, lcs_min_len_threshold);
                             evaluation_score = clustering.EvaluateClusteringResult(oracle);
@@ -199,18 +199,19 @@ public class Main {
             }
         } else {
             Clustering clustering = new Clustering();
-            simlr_threshold = 0.59;
+            simlr_threshold = 0.66;
             delay_threshold = 0.7;
-            lcs_min_len_threshold = 15;
+            lcs_min_len_threshold = 18;
 
             for (InterplayModel im : IMs) {
-                clustering.addTraceCase5(im, simlr_threshold, delay_threshold, lcs_min_len_threshold);
+                clustering.addTraceCase4(im, simlr_threshold, delay_threshold, lcs_min_len_threshold);
 //                clustering.addTraceBaseLCS(im, delay_threshold, lcs_min_len_threshold);
             }
 //            clustering.ClusteringFinalize(simlr_threshold, delay_threshold, lcs_min_len_threshold);
             evaluation_score = clustering.EvaluateClusteringResult(oracle);
             System.out.println("Clustering Evaluation Score: " + evaluation_score);
             clustering.printCluster();
+//            clustering.printFinalCluster();
             clustering.clusterClear();
         }
     }
