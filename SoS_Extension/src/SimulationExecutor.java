@@ -102,7 +102,7 @@ public class SimulationExecutor {
                 // boolean isTracePassed=false; //TODO #REFACTOR tag the simulation result
                 // issue 1 insert fault vehicle?
                 if (isSMBFL)
-                    smbfl.structureModelOverlapping(false, 1, 0);
+//                    smbfl.structureModelOverlapping(false, 1, 0);
                 if (isBMBFL);
 //                  bmbfl.
                 if (isIMBFL);
