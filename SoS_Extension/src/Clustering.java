@@ -33,6 +33,7 @@ public class Clustering {
             cluster.add(new ArrayList<>());
             centroidLCS.add(new ArrayList<>());
             cluster.get(0).add(im_trace);
+            centroidLCS.set(0, im_trace.getMsgSequence());
             return;
         }
 
@@ -91,6 +92,7 @@ public class Clustering {
             cluster.add(new ArrayList<>());
             centroidLCS.add(new ArrayList<>());
             cluster.get(0).add(im_trace);
+            centroidLCS.set(0, im_trace.getMsgSequence());
             return;
         }
 
@@ -167,6 +169,7 @@ public class Clustering {
             cluster.add(new ArrayList<>());
             centroidLCS.add(new ArrayList<>());
             cluster.get(0).add(im_trace);
+            centroidLCS.set(0, im_trace.getMsgSequence());
             return;
         }
 
@@ -237,6 +240,7 @@ public class Clustering {
             cluster.add(new ArrayList<>());
             centroidLCS.add(new ArrayList<>());
             cluster.get(0).add(im_trace);
+            centroidLCS.set(0, im_trace.getMsgSequence());
             return;
         }
 
@@ -313,6 +317,7 @@ public class Clustering {
             cluster.add(new ArrayList<>());
             centroidLCS.add(new ArrayList<>());
             cluster.get(0).add(im_trace);
+            centroidLCS.set(0, im_trace.getMsgSequence());
             return;
         }
 
@@ -601,17 +606,17 @@ public class Clustering {
         }
     }
 
-    private void ClusterMerge(double simlr_threshold, double delay_threshold, int lcs_min_len_threshold) {
+    private void ClusterMerge(double simlr_threshold, double delay_threshold) {
         double temp;
         ArrayList<Integer> merged = new ArrayList<>();
 
         for(int i = 0; i < cluster.size(); i++) {
             for(int j = i+1; j < cluster.size(); j++) {
                 temp = similarityChecker(centroidLCS.get(i),
-                        LCSExtractorWithDelay(centroidLCS.get(i), centroidLCS.get(j), delay_threshold), delay_threshold);
+                        LCSExtractorWithoutDelay(centroidLCS.get(i), centroidLCS.get(j)), delay_threshold);
                 if(temp >= simlr_threshold) {
                     for(InterplayModel IM : cluster.get(j)) {
-                        cluster.get(i).add(IM);
+                        if(!cluster.get(i).contains(IM)) cluster.get(i).add(IM);
                     }
                     merged.add(j);
                 }
@@ -631,6 +636,8 @@ public class Clustering {
         originCluster = (ArrayList)cluster.clone();
         originCentroidLCS = (ArrayList) centroidLCS.clone();
 
+        ClusterMerge(simlr_threshold, delay_threshold);
+
         for(int i = 0; i < cluster.size(); i++) {
             for(InterplayModel IM : cluster.get(i)) {
                 for(int j = 0; j < cluster.size(); j++) {
@@ -638,7 +645,7 @@ public class Clustering {
                     generatedLCS.clear();
                     lcs_index = -1;
                     for(int k = 0; k < startingTime.size(); k++) {
-                        generatedLCS.add(LCSExtractorWithoutDelay(cluster.get(j).get(0).getMsgSequence(),
+                        generatedLCS.add(LCSExtractorWithoutDelay(centroidLCS.get(i),
                                 IMSlicer(startingTime.get(k),IM.getMsgSequence())));
                         if(generatedLCS.get(k) != null) Collections.reverse(generatedLCS.get(k));
                     }
@@ -906,6 +913,8 @@ public class Clustering {
         int matched = 0;
         int prevMatchedId = -1;
         int total = 0;
+
+        if(lcs == null || input_trace == null) return 0;
 
         for(int i = 0; i < lcs.size(); i++) { // TODO 단일 IM 상에서 여러 개의 시작 지점 고려해야함
             if (matched == 0) {
