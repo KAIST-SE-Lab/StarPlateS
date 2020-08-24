@@ -156,9 +156,10 @@ public class Main {
             oracle.add(new ArrayList<>(Arrays.asList("6_0", "7_0", "8_0", "9_0", "11_0", "13_0", "41_0", "47_0")));
             oracle.add(new ArrayList<>(Arrays.asList("3_0", "6_0", "12_0", "46_0")));
             oracle.add(new ArrayList<>(Arrays.asList("17_0", "30_0", "45_0", "49_0")));
-            oracle.add(new ArrayList<>(Arrays.asList("22_0", "24_0", "29_0", "38_0", "46_0")));
+            oracle.add(new ArrayList<>(Arrays.asList("24_0", "29_0", "38_0", "46_0")));
             oracle.add(new ArrayList<>(Arrays.asList("24_0", "27_0", "29_0", "34_0", "38_0", "47_0")));
             oracle.add(new ArrayList<>(Arrays.asList("43_0")));
+            oracle.add(new ArrayList<>(Arrays.asList("22_0")));
 
             double simlr_threshold;
             double delay_threshold;
@@ -172,23 +173,23 @@ public class Main {
                 try {
                     FileWriter writer = new FileWriter(file2, true);
                     // The code for Finalize Function Hyperparameter testing
-                    Clustering clustering = new Clustering();
-                    for (InterplayModel im : IMs) {
-//                                clustering.addTraceBaseLCS(im, delay_threshold, lcs_min_len_threshold);
-                        clustering.addTraceCase5(im, 0.66, 0.7, 18);                // TODO The best option so far
-                    }
+//                    Clustering clustering = new Clustering();
+//                    for (InterplayModel im : IMs) {
+////                                clustering.addTraceBaseLCS(im, delay_threshold, lcs_min_len_threshold);
+//                        clustering.addTraceCase5(im, 0.66, 0.7, 18);                // TODO The best option so far
+//                    }
 
                     for (int simlr_counter = 50; simlr_counter <= 100; simlr_counter++) {
                         simlr_threshold = (double) simlr_counter / 100;
-                        for (int delay_counter = 10; delay_counter <= 150; delay_counter += 10) {
+                        for (int delay_counter = 10; delay_counter <= 100; delay_counter += 10) {
                             delay_threshold = (double) delay_counter / 100;
-                            for (lcs_min_len_threshold = 5; lcs_min_len_threshold <= 30; lcs_min_len_threshold++) {
-//                            Clustering clustering = new Clustering();
-//
-//                            for (InterplayModel im : IMs) {
-////                                clustering.addTraceBaseLCS(im, delay_threshold, lcs_min_len_threshold);
-//                                clustering.addTraceCase5(im, simlr_threshold, delay_threshold, lcs_min_len_threshold);
-//                            }
+                            for (lcs_min_len_threshold = 5; lcs_min_len_threshold <= 25; lcs_min_len_threshold++) {
+                            Clustering clustering = new Clustering();
+
+                            for (InterplayModel im : IMs) {
+//                                clustering.addTraceBaseLCS(im, delay_threshold, lcs_min_len_threshold);
+                                clustering.addTraceCase5(im, simlr_threshold, delay_threshold, lcs_min_len_threshold);
+                            }
                                 clustering.ClusteringFinalize(simlr_threshold, delay_threshold, lcs_min_len_threshold);
                                 evaluation_score = clustering.EvaluateClusteringResult(oracle);
                                 System.out.println(simlr_threshold + ", " + delay_threshold + "," + lcs_min_len_threshold + "," + "Clustering Evaluation Score: " + evaluation_score);
@@ -205,20 +206,22 @@ public class Main {
                 }
             } else {
                 Clustering clustering = new Clustering();
-                simlr_threshold = 0.66;
-                delay_threshold = 0.7;
-                lcs_min_len_threshold = 18;
+                simlr_threshold = 0.78;
+                delay_threshold = 0.8;
+                lcs_min_len_threshold = 19;
 
                 for (InterplayModel im : IMs) {
                     clustering.addTraceCase5(im, simlr_threshold, delay_threshold, lcs_min_len_threshold);
 //                clustering.addTraceBaseLCS(im, delay_threshold, lcs_min_len_threshold);
                 }
                 clustering.printCluster();
+                simlr_threshold = 0.75;
+                delay_threshold = 0.8;
+                lcs_min_len_threshold = 15;
                 clustering.ClusteringFinalize(simlr_threshold, delay_threshold, lcs_min_len_threshold);
                 evaluation_score = clustering.EvaluateClusteringResult(oracle);
                 System.out.println("Clustering Evaluation Score: " + evaluation_score);
                 clustering.printCluster();
-//            clustering.printFinalCluster();
                 clustering.clusterClear();
             }
         }
