@@ -628,7 +628,7 @@ public class Clustering {
                                 centroidLCS.set(i, lcs_lcs);
                             }
                         }
-                        merged.add(j);
+                        if(!merged.contains(j)) merged.add(j);
                     }
                 } else {
                     for(int k = 0; k < startingTime.size(); k++) {
@@ -644,16 +644,17 @@ public class Clustering {
                                     centroidLCS.set(i, lcs_lcses.get(k));
                                 }
                             }
-                            merged.add(j);
+                            if(!merged.contains(j)) merged.add(j);
                             break;
                         }
                     }
                 }
             }
         }
-
+        Collections.sort(merged);
         int key = -1;
         for(int i = merged.size()-1; i >=0 ; i--) {
+//            System.out.println(merged.get(i));
             cluster.remove((int)merged.get(i));
         }
     }
@@ -1019,8 +1020,7 @@ public class Clustering {
                 ol_back = false;
                 ol_same = false;
 
-//                for(ArrayList<InterplayModel> IMs : finalCluster) {                                                          // Checking whether the pair is in the
-                for(ArrayList<InterplayModel> IMs : cluster) {
+                for(ArrayList<InterplayModel> IMs : cluster) {                                                          // Checking whether the pair is in the
                     for(InterplayModel IM : IMs) {                                                                      // same cluster in the Clustering result
                         if(IM.getId().equals(index.get(i))) cl_front = true;
                         if(IM.getId().equals(index.get(j))) cl_back = true;
