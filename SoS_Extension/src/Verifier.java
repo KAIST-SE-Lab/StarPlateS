@@ -57,36 +57,36 @@ public class Verifier {
 
     /* Distnace Checker Implementation */
 
-    public Boolean verifyLog(String txtdir_plt, String txtdir_veh, String nof, String property, int threshold) {
+    public Boolean verifyLog(String txtdir_pltConfig, String txtdir_veh, String nof, String property, float threshold) {
         boolean ret = false;
 
         switch(property) {
-            case "distanceChecker":
-                ret = DistanceVerification(txtdir_plt, txtdir_veh, threshold);
+            case "DistanceChecker":
+                ret = DistanceVerification(txtdir_pltConfig, txtdir_veh, threshold);
                 break;
         }
         return ret;
     }
 
-    private Boolean DistanceVerification(String txtdir_plt, String txtdir_veh, int threshold) {
+    private Boolean DistanceVerification(String txtdir_pltConfig, String txtdir_veh, float threshold) {
         boolean ret = true;
 
-        BufferedReader reader_plt = null;
         BufferedReader reader_veh = null;
-        ArrayList<Message> message_plt = new ArrayList<>();
+        BufferedReader reader_pltConfig = null;
+
         ArrayList<Message> message_veh = new ArrayList<>();
+        ArrayList<Message> message_pltConfig = new ArrayList<>();
 
         try {
 
             reader_veh = new BufferedReader(new FileReader(new File(txtdir_veh)));
 
             String line;
-            String startEnd;
             String vehId;
             float time;
             float distance;
 
-            while ((line = reader_plt.readLine()) != null) {
+            while ((line = reader_veh.readLine()) != null) {
 
                 StringTokenizer st = new StringTokenizer(line, "\t ");
 
@@ -118,17 +118,17 @@ public class Verifier {
             e.printStackTrace();
         }
 
-        int currentIndex = -1;
+        int currentIndex = 0;
 
         try {
-            reader_plt = new BufferedReader(new FileReader(new File(txtdir_plt)));
+            reader_pltConfig = new BufferedReader(new FileReader(new File(txtdir_pltConfig)));
 
             String line;
             int index;
             float time;
             String vehId;
 
-            while ((line = reader_plt.readLine()) != null) {
+            while ((line = reader_pltConfig.readLine()) != null) {
 
                 StringTokenizer st = new StringTokenizer(line, "\t ");
 
@@ -149,10 +149,10 @@ public class Verifier {
                     if(index != currentIndex) {
 
                         // Have data of previous vehicles group, calculate distance difference
-                        if(message_plt.size() > 0) {
-                            float totalDiff[] = new float[message_plt.size()-1];
-                            for(int i = 1; i < message_plt.size(); i++) {
-                                float diff = message_plt.get(i).distance - message_plt.get(i-1).distance;
+                        if(message_pltConfig.size() > 0) {
+                            float totalDiff[] = new float[message_pltConfig.size()-1];
+                            for(int i = 1; i < message_pltConfig.size(); i++) {
+                                float diff = message_pltConfig.get(i).distance - message_pltConfig.get(i-1).distance;
                                 totalDiff[i-1] = diff;
                             }
 
@@ -163,7 +163,7 @@ public class Verifier {
                         }
 
                         // Prepare For New Group
-                        message_plt = new ArrayList<>();
+                        message_pltConfig = new ArrayList<>();
                         currentIndex = index;
                     }
 
@@ -178,15 +178,15 @@ public class Verifier {
                         }
                     }
 
-                    Message msg_plt = new Message();
-                    msg_plt.time = time;
-                    msg_plt.senderPltId = vehId;
-                    msg_plt.distance = distance;
-                    message_plt.add(msg_plt);
+                    Message msg_pltConfig = new Message();
+                    msg_pltConfig.time = time;
+                    msg_pltConfig.senderPltId = vehId;
+                    msg_pltConfig.distance = distance;
+                    message_pltConfig.add(msg_pltConfig);
                 }
             }
 
-            reader_plt.close();
+            reader_pltConfig.close();
 
         }
         catch (FileNotFoundException e) {
