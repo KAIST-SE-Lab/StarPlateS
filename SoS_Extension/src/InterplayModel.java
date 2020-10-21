@@ -14,6 +14,7 @@ class Message {
     String receiverPltId;
     String senderRole;
     String receiverRole;
+    Float distance;
 }
 
 public class InterplayModel {
