@@ -68,7 +68,6 @@ public class Verifier {
         return ret;
     }
 
-    /* Distnace Checker Implementation */
     private Boolean DistanceVerification(String txtdir_pltConfig, String txtdir_veh, float threshold) {
         boolean ret = true;
 
@@ -197,6 +196,7 @@ public class Verifier {
         }
         return ret;
     }
+    /* -- */
 
     private Boolean operationTimeVerification(String txtdir, int threshold) {
         boolean ret = true;
