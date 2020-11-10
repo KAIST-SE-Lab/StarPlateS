@@ -4,6 +4,7 @@ import org.graphstream.graph.implementations.*;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
@@ -126,11 +127,27 @@ public class StructureModel {
         this.collaborationGraph.display();
     }
 
-    public String printNodeInfo() {
+    public String printGraphText() {
         String ret = "";
+        ArrayList<String> nodeList = new ArrayList<>();
         for(Node node : this.collaborationGraph) {
+            ret += "\t\t";
+            ret += node.getId();
+            nodeList.add(node.getId());
+            ret += "\t";
+        }
+        ret += "\n";
+        for(Node node: this.collaborationGraph) {
             ret += node.getId();
             ret += "\t";
+            for(String destNode: nodeList) {
+                if(node.hasEdgeBetween(destNode)) {
+                    ret += "1\t";
+                } else {
+                    ret += "0\t";
+                }
+            }
+            ret += "\n";
         }
         return ret;
     }
