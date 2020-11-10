@@ -39,7 +39,9 @@ public class StructureModel {
         int numEvent = 1;
         ArrayList<PltNode> prevPltNodes = new ArrayList<PltNode>();
         try {
-            File pltConfig = new File("/home/abalon1210/Desktop/VENTOS_Public/examples/platoon_SoS/results/" + s_index + "_" + r_index + "plnConfig.txt");
+            String base = System.getProperty("user.dir");
+            String currentdir = base + "/SoS_Extension/logs/";
+            File pltConfig = new File(currentdir + s_index + "_" + r_index + "plnConfig.txt");
             FileReader filereader = new FileReader(pltConfig);
             BufferedReader bufReader = new BufferedReader(filereader);
             String line="";
@@ -122,5 +124,14 @@ public class StructureModel {
 
         this.collaborationGraph.addAttribute("ui.stylesheet", styleSheet);
         this.collaborationGraph.display();
+    }
+
+    public String printNodeInfo() {
+        String ret = "";
+        for(Node node : this.collaborationGraph) {
+            ret += node.getId();
+            ret += "\t";
+        }
+        return ret;
     }
 }
