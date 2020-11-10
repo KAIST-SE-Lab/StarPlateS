@@ -75,6 +75,7 @@ public class Main {
             matchingtxts = 0;
 
             ArrayList<InterplayModel> IMs = new ArrayList<>();
+            ArrayList<StructureModel> SMs = new ArrayList<>();
 
             if (f.exists()) {
                 int numoffiles = f.listFiles().length + 300;
@@ -87,18 +88,40 @@ public class Main {
                         for (int thshold : thresholds) {
                             result = verifier.verifyLog(txtdir, "operationSuccessRate", thshold);
                             if (!result) {
-                                InterplayModel interplayModel = new InterplayModel(i, 0);                        // TODO r_index = 0 로 설정해놓음
+                                InterplayModel interplayModel = new InterplayModel(i, 0);                       // TODO r_index = 0 로 설정해놓음
+                                StructureModel structureModel = new StructureModel(i,0);
 //                            clustering.addTrace(interplayModel, simlr_threshold);                                  // TODO Similarity Threshold = 75%
                                 IMs.add(interplayModel);
+
+                                // Structure & Interplay model ".txt" file exporting part
+                                File exportTxt = new File(currentdir + Integer.toString(i) + "_S_I_Model.txt");
+                                FileWriter writerExport = null;
+                                try {
+                                    writerExport = new FileWriter(exportTxt, true);
+                                    writerExport.write(Integer.toString(i) + "\n");
+                                    writerExport.write("Interplay\n");
+                                    writerExport.write("Structure Model\n");
+                                    writerExport.write(structureModel.printGraphText());
+                                    writerExport.write("Interplay Model\n");
+                                    writerExport.write(interplayModel.printSequence());
+                                } catch (IOException e) {
+                                    System.out.println(e);
+                                } finally {
+                                    try {
+                                        if (writerExport != null) writerExport.close();
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
                             }
                         }
 //                        for (int thshold2 : thresholds2){
-////                           System.out.println("opreation Time" + thshold2);
-//                            result = verifier.verifyLog(txtdir, nof, "operationTime", thshold2);
-//                            smbfl.structureModelOverlapping(results, i, 0);
+//                            result = verifier.verifyLog(txtdir, "operationTime", thshold2);
+////                            smbfl.structureModelOverlapping(results, i, 0);
 //                        }
                     }
                 }
+
             } else {
                 System.out.println("There is no such directory");
             }
