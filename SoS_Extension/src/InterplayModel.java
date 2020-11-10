@@ -99,12 +99,15 @@ public class InterplayModel {
         }
     }
 
-    public void printSequence() {
+    public String printSequence() {
+        String ret = "";
         Message temp;
         for(int i = 0; i < msgSequence.size(); i++) {
             temp = msgSequence.get(i);
-            System.out.println(temp.time + ": " + temp.commandSent + " from " + temp.senderPltId + " to " + temp.receiverId);
+            ret += temp.time + ": " + temp.commandSent + " from " + temp.senderPltId + " to " + temp.receiverId + "\n";
+//            System.out.println(temp.time + ": " + temp.commandSent + " from " + temp.senderPltId + " to " + temp.receiverId);
         }
+        return ret;
     }
 //
 //    public String getCSRole(String vehID, float time) {
