@@ -86,8 +86,10 @@ public class Verifier {
 
         try {
 
+            // read data from vehicle text file
             reader_veh = new BufferedReader(new FileReader(new File(txtdir_veh)));
 
+            // fields of each vehicle data
             String line;
             String vehId;
             float time;
@@ -109,6 +111,7 @@ public class Verifier {
                     st.nextToken();//timegap
                     distance = Float.valueOf(st.nextToken());
 
+                    // Collect all vehicle data for later calculation
                     Message msg_veh = new Message();
                     msg_veh.time = time;
                     msg_veh.senderPltId = vehId;
@@ -128,6 +131,7 @@ public class Verifier {
         int currentIndex = 0;
 
         try {
+            // read platoon data
             reader_pltConfig = new BufferedReader(new FileReader(new File(txtdir_pltConfig)));
 
             String line;
@@ -141,7 +145,9 @@ public class Verifier {
 
                 if (st.countTokens() == 9) {
                     String temp = st.nextToken();
-                    if(temp.equals("index")) continue;
+                    if(temp.equals("index")) continue; // Initial index starts from index 0. Indexes are the same as long as they are 
+                                                       // in a group of vehicles at a time. A change of index means all neccessary data 
+                                                       // is read and ready to process the calculation. 
 
                     index = Integer.valueOf(temp);
                     time = Float.valueOf(st.nextToken());
@@ -165,13 +171,12 @@ public class Verifier {
 
                             for(int i = 1; i < totalDiff.length; i++) {
                                 if((totalDiff[i] - totalDiff[i-1]) > threshold)
-                                    ret = false;
+                                    ret = false; // verifier is not correct if the distance between vehicles is greater than a given thresold
                             }
                         }
 
-                        // Prepare For New Group
-                        message_pltConfig = new ArrayList<>();
-                        currentIndex = index;
+                        currentIndex = index; // Calculation has been done. Nex index has begin and new data will be collected.
+                        message_pltConfig = new ArrayList<>(); // Prepare for the new group as empty array
                     }
 
                     float distance = 0.0f;
@@ -185,6 +190,7 @@ public class Verifier {
                         }
                     }
 
+                    // Collect each vehicle data
                     Message msg_pltConfig = new Message();
                     msg_pltConfig.time = time;
                     msg_pltConfig.senderPltId = vehId;
