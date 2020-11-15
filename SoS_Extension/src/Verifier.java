@@ -55,7 +55,14 @@ public class Verifier {
         return ret;
     }
 
-    /* Distnace Checker Implementation */
+    /**
+    * Distnace Checker Implementation 
+    * @txtdir_pltConfig - pln data txt file
+    * @txtdir_veh - pln data txt file
+    * @property - [default] DistanceChecker
+    * @threshold 
+    * @return boolean of distance checker
+    **/
 
     public Boolean verifyLog(String txtdir_pltConfig, String txtdir_veh, String nof, String property, float threshold) {
         boolean ret = false;
