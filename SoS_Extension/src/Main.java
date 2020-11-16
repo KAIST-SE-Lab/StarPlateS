@@ -161,7 +161,8 @@ public class Main {
                         if (temptxt.exists() && temptxt2.exist()) {
                             matchingtxts++;
                             for (int thshold : thresholds) {
-                                result = verifier.verifyLog(txtdir_pltConfig, txtdir_veh, "DistanceChecker", thshold);
+                                result = verifier.verifyLog(txtdir_pltConfig, txtdir_veh, "DistanceChecker", thshold); // TODO first txt file is for platoon data 
+                                                                                                                       //and second txt file is for vehicle data
                                 if (!result) {
                                     InterplayModel interplayModel = new InterplayModel(i, 0);                       // TODO r_index = 0 로 설정해놓음
                                     StructureModel structureModel = new StructureModel(i,0);
