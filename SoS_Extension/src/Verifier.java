@@ -128,6 +128,9 @@ public class Verifier {
             e.printStackTrace();
         }
 
+        /**
+        * @currentIndex - to index vehicles in same group
+        **/
         int currentIndex = 0;
 
         try {
