@@ -20,7 +20,7 @@ public class Main {
             System.out.println("                  -behavior or -bmbfl");
             System.out.println("                  -interplay or -imbfl");
             System.out.println("                  -clustering or -cl");
-            System.out.println("                  -distancechecker or -dsch");
+            System.out.println("                  -distance or -dsch");
             System.out.println("                  -all");
             System.out.println("       <withSim> = -simon (default)");
             System.out.println("                   -simoff");
@@ -162,7 +162,7 @@ public class Main {
                             matchingtxts++;
                             for (int thshold : thresholds) {
                                 result = verifier.verifyLog(txtdir_pltConfig, txtdir_veh, "DistanceChecker", thshold); // TODO first txt file is for platoon data 
-                                                                                                                       //and second txt file is for vehicle data
+                                                                                                                    //and second txt file is for vehicle data
                                 if (!result) {
                                     InterplayModel interplayModel = new InterplayModel(i, 0);                       // TODO r_index = 0 로 설정해놓음
                                     StructureModel structureModel = new StructureModel(i,0);
