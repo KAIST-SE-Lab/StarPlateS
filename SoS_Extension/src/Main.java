@@ -185,6 +185,7 @@ public class Main {
                                     } finally {
                                         try {
                                             if (writerExport != null) writerExport.close();
+                                            System.out.println("DistanceChecker finished.");
                                         } catch (IOException e) {
                                             e.printStackTrace();
                                         }
