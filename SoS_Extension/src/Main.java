@@ -170,7 +170,7 @@ public class Main {
                                     IMs.add(interplayModel);
 
                                     // Structure & Interplay model ".txt" file exporting part
-                                    File exportTxt = new File(currentdir + Integer.toString(i) + "_S_I_Model.txt");
+                                    File exportTxt = new File(currentdir + Integer.toString(i) + "_DISTANCE_Model.txt");
                                     FileWriter writerExport = null;
                                     try {
                                         writerExport = new FileWriter(exportTxt, true);
