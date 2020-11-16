@@ -36,7 +36,7 @@ public class Main {
             isIMBFL = true;
         else if (args[0].equals("-clustering") || args[0].equals("-cl"))
             isClustering = true;
-        else if (args[0].equals("-distancechecker") || args[0].equals("-dsch"))
+        else if (args[0].equals("-distance") || args[0].equals("-dsch"))
             DistanceChecker = true;
         else if (args[0].equals("-all")) {
             isSMBFL = true;
