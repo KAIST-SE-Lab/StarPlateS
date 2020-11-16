@@ -195,7 +195,7 @@ public class Main {
                     }
 
                 } else {
-                    System.out.println("There is no such directory");
+                    System.out.println("There is no such directory [" + f + "]");
                 }
             }
 //
