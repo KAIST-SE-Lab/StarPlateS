@@ -12,6 +12,7 @@ public class Main {
         boolean isClustering = false;
         boolean withSim = true;
         boolean onlySim = false;
+        boolean DistanceChecker = false;
 
         if (args.length == 0) {
             System.out.println("Usage: java main <switch> <withSim> [<file>]");
@@ -19,6 +20,7 @@ public class Main {
             System.out.println("                  -behavior or -bmbfl");
             System.out.println("                  -interplay or -imbfl");
             System.out.println("                  -clustering or -cl");
+            System.out.println("                  -distancechecker or -dsch");
             System.out.println("                  -all");
             System.out.println("       <withSim> = -simon (default)");
             System.out.println("                   -simoff");
@@ -34,11 +36,14 @@ public class Main {
             isIMBFL = true;
         else if (args[0].equals("-clustering") || args[0].equals("-cl"))
             isClustering = true;
+        else if (args[0].equals("-distancechecker") || args[0].equals("-dsch"))
+            DistanceChecker = true;
         else if (args[0].equals("-all")) {
             isSMBFL = true;
             isBMBFL = true;
             isIMBFL = true;
             isClustering = true;
+            DistanceChecker = true;
         }
 
         if (args[1].equals("-simoff")) {
@@ -128,7 +133,8 @@ public class Main {
             System.out.println("There were " + matchingtxts + " platooning text files");
             //}
 
-            if() {
+            // TODO Check the input parameter whether distance checker should be processed
+            if(DistanceChecker) {
                 Verifier verifier = new Verifier();
                 int[] thresholds = {80};                                        // TODO Threshold value for the Verirfication Property 1
                 int[] thresholds2 = {4};                                        // TODO Threshold value for the VP2
