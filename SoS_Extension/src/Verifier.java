@@ -64,7 +64,7 @@ public class Verifier {
     * @return boolean of distance checker
     **/
 
-    public Boolean verifyLog(String txtdir_pltConfig, String txtdir_veh, String property, float threshold) {
+    public Boolean (String txtdir_pltConfig, String txtdir_veh, String property, float threshold) {
         boolean ret = false;
 
         switch(property) {

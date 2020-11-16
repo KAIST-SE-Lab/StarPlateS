@@ -127,6 +127,70 @@ public class Main {
             }
             System.out.println("There were " + matchingtxts + " platooning text files");
             //}
+
+            if() {
+                Verifier verifier = new Verifier();
+                int[] thresholds = {80};                                        // TODO Threshold value for the Verirfication Property 1
+                int[] thresholds2 = {4};                                        // TODO Threshold value for the VP2
+                String base = System.getProperty("user.dir");
+                System.out.println(System.getProperty("user.dir"));
+                int matchingtxts = 0;
+                String currentdir = base + "/SoS_Extension/logs/";
+                System.out.print("Current Working Directory : " + currentdir + "\n");
+                File f = new File(currentdir);
+                Boolean result;
+                matchingtxts = 0;
+
+                ArrayList<InterplayModel> IMs = new ArrayList<>();
+                ArrayList<StructureModel> SMs = new ArrayList<>();
+
+                if (f.exists()) {
+                    int numoffiles = f.listFiles().length + 300;
+                    System.out.println("and it has " + numoffiles + " files.");
+                    for (int i = 0; i < numoffiles; i++) {
+                        String txtdir_pltConfig = currentdir + Integer.toString(i) + "_0plnConfig.txt";
+                        String txtdir_veh = currentdir + Integer.toString(i) + "_0vehicleData.txt";
+                        File temptxt = new File(txtdir_pltConfig);
+                        File temptxt2 = new File(txtdir_veh);
+                        if (temptxt.exists() && temptxt2.exist()) {
+                            matchingtxts++;
+                            for (int thshold : thresholds) {
+                                result = verifier.verifyLog(txtdir_pltConfig, txtdir_veh, "DistanceChecker", thshold);
+                                if (!result) {
+                                    InterplayModel interplayModel = new InterplayModel(i, 0);                       // TODO r_index = 0 로 설정해놓음
+                                    StructureModel structureModel = new StructureModel(i,0);
+    //                            clustering.addTrace(interplayModel, simlr_threshold);                                  // TODO Similarity Threshold = 75%
+                                    IMs.add(interplayModel);
+
+                                    // Structure & Interplay model ".txt" file exporting part
+                                    File exportTxt = new File(currentdir + Integer.toString(i) + "_S_I_Model.txt");
+                                    FileWriter writerExport = null;
+                                    try {
+                                        writerExport = new FileWriter(exportTxt, true);
+                                        writerExport.write(Integer.toString(i) + "\n");
+                                        writerExport.write("Interplay\n");
+                                        writerExport.write("Structure Model\n");
+                                        writerExport.write(structureModel.printGraphText());
+                                        writerExport.write("Interplay Model\n");
+                                        writerExport.write(interplayModel.printSequence());
+                                    } catch (IOException e) {
+                                        System.out.println(e);
+                                    } finally {
+                                        try {
+                                            if (writerExport != null) writerExport.close();
+                                        } catch (IOException e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                } else {
+                    System.out.println("There is no such directory");
+                }
+            }
 //
             if (isSMBFL) {                                                  // Structure Model-based Fault Localization
                 ArrayList<EdgeInfo> edgeInfos = smbfl.SMcalculateSuspiciousness();
