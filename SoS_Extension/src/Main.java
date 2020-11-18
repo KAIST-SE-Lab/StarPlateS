@@ -135,20 +135,6 @@ public class Main {
 
             // TODO Check the input parameter whether distance checker should be processed
             if(DistanceChecker) {
-                Verifier verifier = new Verifier();
-                int[] thresholds = {80};                                        // TODO Threshold value for the Verirfication Property 1
-                int[] thresholds2 = {4};                                        // TODO Threshold value for the VP2
-                String base = System.getProperty("user.dir");
-                System.out.println(System.getProperty("user.dir"));
-                int matchingtxts = 0;
-                String currentdir = base + "/SoS_Extension/logs/";
-                System.out.print("Current Working Directory : " + currentdir + "\n");
-                File f = new File(currentdir);
-                Boolean result;
-                matchingtxts = 0;
-
-                ArrayList<InterplayModel> IMs = new ArrayList<>();
-                ArrayList<StructureModel> SMs = new ArrayList<>();
 
                 if (f.exists()) {
                     int numoffiles = f.listFiles().length + 300;
@@ -158,7 +144,7 @@ public class Main {
                         String txtdir_veh = currentdir + Integer.toString(i) + "_0vehicleData.txt";
                         File temptxt = new File(txtdir_pltConfig);
                         File temptxt2 = new File(txtdir_veh);
-                        if (temptxt.exists() && temptxt2.exist()) {
+                        if (temptxt.exists() && temptxt2.exists()) {
                             matchingtxts++;
                             for (int thshold : thresholds) {
                                 result = verifier.verifyLog(txtdir_pltConfig, txtdir_veh, "DistanceChecker", thshold); // TODO first txt file is for platoon data 
