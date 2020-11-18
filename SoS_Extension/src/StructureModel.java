@@ -130,13 +130,51 @@ public class StructureModel {
     public String printGraphText() {
         String ret = "";
         ArrayList<String> nodeList = new ArrayList<>();
-        for(Node node : this.collaborationGraph) {
+        ArrayList<String> fullNodeList = new ArrayList<>();
+
+        fullNodeList.add("Plt_veh");
+        fullNodeList.add("Crs_veh");
+        for(int i = 1; i < 7; i++) {
+            fullNodeList.add("Plt_veh." + i);
+            fullNodeList.add("Crs_veh." + i);
+        }
+        fullNodeList.add("Plt_veh1");
+        fullNodeList.add("Crs_veh1");
+        for(int i = 1; i < 7; i++) {
+            fullNodeList.add("Plt_veh1." + i);
+            fullNodeList.add("Crs_veh1." + i);
+        }
+
+        for(int i = 0; i < fullNodeList.size(); i++) {
+            if (this.collaborationGraph.getNode(fullNodeList.get(i)) != null)
+                ret += "1\t";
+            else
+                ret += "0\t";
+        }
+        ret += "\n";
+
+        for(int i = 0; i < fullNodeList.size(); i++) {
+            for(int j = 0; j < fullNodeList.size(); j++) {
+                Node temp_i = this.collaborationGraph.getNode(fullNodeList.get(i));
+                Node temp_j = this.collaborationGraph.getNode(fullNodeList.get(j));
+                if (temp_i == null || temp_j == null) {
+                    ret += "0\t";
+                } else {
+                    if (temp_i.hasEdgeBetween(temp_j)) {
+                        ret += "1\t";
+                    } else {
+                        ret += "0\t";
+                    }
+                }
+            } ret += "\n";
+        }
+        /*for(Node node : this.collaborationGraph) {
             ret += "\t\t";
             ret += node.getId();
             nodeList.add(node.getId());
             ret += "\t";
         }
-        ret += "\n";
+
         for(Node node: this.collaborationGraph) {
             ret += node.getId();
             ret += "\t";
@@ -148,7 +186,7 @@ public class StructureModel {
                 }
             }
             ret += "\n";
-        }
+        }*/
         return ret;
     }
 }

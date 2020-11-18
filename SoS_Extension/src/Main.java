@@ -80,7 +80,6 @@ public class Main {
             matchingtxts = 0;
 
             ArrayList<InterplayModel> IMs = new ArrayList<>();
-            ArrayList<StructureModel> SMs = new ArrayList<>();
 
             if (f.exists()) {
                 int numoffiles = f.listFiles().length + 300;
@@ -147,36 +146,7 @@ public class Main {
                         if (temptxt.exists() && temptxt2.exists()) {
                             matchingtxts++;
                             for (int thshold : thresholds) {
-                                result = verifier.verifyLog(txtdir_pltConfig, txtdir_veh, "DistanceChecker", thshold); // TODO first txt file is for platoon data 
-                                                                                                                    //and second txt file is for vehicle data
-                                if (!result) {
-                                    InterplayModel interplayModel = new InterplayModel(i, 0);                       // TODO r_index = 0 로 설정해놓음
-                                    StructureModel structureModel = new StructureModel(i,0);
-    //                            clustering.addTrace(interplayModel, simlr_threshold);                                  // TODO Similarity Threshold = 75%
-                                    IMs.add(interplayModel);
-
-                                    // Structure & Interplay model ".txt" file exporting part
-                                    File exportTxt = new File(currentdir + Integer.toString(i) + "_DISTANCE_Model.txt");
-                                    FileWriter writerExport = null;
-                                    try {
-                                        writerExport = new FileWriter(exportTxt, true);
-                                        writerExport.write(Integer.toString(i) + "\n");
-                                        writerExport.write("Interplay\n");
-                                        writerExport.write("Structure Model\n");
-                                        writerExport.write(structureModel.printGraphText());
-                                        writerExport.write("Interplay Model\n");
-                                        writerExport.write(interplayModel.printSequence());
-                                    } catch (IOException e) {
-                                        System.out.println(e);
-                                    } finally {
-                                        try {
-                                            if (writerExport != null) writerExport.close();
-                                            System.out.println("DistanceChecker finished.");
-                                        } catch (IOException e) {
-                                            e.printStackTrace();
-                                        }
-                                    }
-                                }
+                                result = verifier.verifyLog(txtdir_pltConfig, txtdir_veh, "DistanceChecker", thshold); // TODO first txt file is for platoon data
                             }
                         }
                     }
