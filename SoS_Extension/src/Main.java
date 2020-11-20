@@ -103,7 +103,7 @@ public class Main {
                                 try {
                                     writerExport = new FileWriter(exportTxt, true);
                                     writerExport.write(Integer.toString(i) + "\n");
-                                    writerExport.write("Interplay\n");
+                                    writerExport.write("Interplay\n");                                              // OpSuccessRate -> I / OpTime -> S
                                     writerExport.write("Structure Model\n");
                                     writerExport.write(structureModel.printGraphText());
                                     writerExport.write("Interplay Model\n");
