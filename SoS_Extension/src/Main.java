@@ -61,8 +61,8 @@ public class Main {
 
         if (withSim) {
             // Generate Random Scenario with Scenario Generation Module
-//            ScenarioGenerator scenarioGenerator = new ScenarioGenerator();
-//            scenarioGenerator.generateRandomScenario(numScenario);      // TODO Call the scenario generation module with the number of scenarios
+            ScenarioGenerator scenarioGenerator = new ScenarioGenerator();
+            scenarioGenerator.generateRandomScenario(numScenario);      // TODO Call the scenario generation module with the number of scenarios
 
             SimulationExecutor simulationExecutor = new SimulationExecutor();
             simulationExecutor.run(numScenario, numRepeat, isSMBFL, isBMBFL, isIMBFL, smbfl, imbfl); // TODO add more configuration params, eventDuration, etc
@@ -93,12 +93,11 @@ public class Main {
                             result = verifier.verifyLog(txtdir, "operationTime", thshold);
                             if (!result) {
                                 InterplayModel interplayModel = new InterplayModel(i, 0);                       // TODO r_index = 0 로 설정해놓음
-//                                StructureModel structureModel = new StructureModel(i,0);
-//                            clustering.addTrace(interplayModel, simlr_threshold);                                  // TODO Similarity Threshold = 75%
                                 IMs.add(interplayModel);
-
                                 // Structure & Interplay model ".txt" file exporting part
-                                /*File exportTxt = new File(currentdir + Integer.toString(i) + "_S_I_Model.txt");
+                                /*
+                                StructureModel structureModel = new StructureModel(i,0);
+                                File exportTxt = new File(currentdir + Integer.toString(i) + "_S_I_Model.txt");
                                 FileWriter writerExport = null;
                                 try {
                                     writerExport = new FileWriter(exportTxt, true);
@@ -157,11 +156,9 @@ public class Main {
                 System.out.println("There is no such directory");
             }
             System.out.println("There were " + matchingtxts + " platooning text files");
-            //}
 
             // TODO Check the input parameter whether distance checker should be processed
             if(DistanceChecker) {
-
                 if (f.exists()) {
                     int numoffiles = f.listFiles().length + 300;
                     System.out.println("and it has " + numoffiles + " files.");
@@ -177,12 +174,10 @@ public class Main {
                             }
                         }
                     }
-
                 } else {
                     System.out.println("There is no such directory [" + f.getAbsolutePath()+ "]");
                 }
             }
-//
             if (isSMBFL) {                                                  // Structure Model-based Fault Localization
                 ArrayList<EdgeInfo> edgeInfos = smbfl.SMcalculateSuspiciousness();
                 StructureModel finalSM = new StructureModel();
@@ -235,15 +230,14 @@ public class Main {
             }
 
             // Toy Example Oracle
-//            ArrayList<ArrayList<String>> oracle = new ArrayList<>();
-//            oracle.add(new ArrayList<>(Arrays.asList("6_0", "7_0", "8_0", "9_0", "11_0", "13_0", "41_0", "47_0")));
-//            oracle.add(new ArrayList<>(Arrays.asList("3_0", "6_0", "12_0", "46_0")));
-//            oracle.add(new ArrayList<>(Arrays.asList("17_0", "30_0", "45_0", "49_0")));
-//            oracle.add(new ArrayList<>(Arrays.asList("24_0", "29_0", "38_0", "46_0")));
-//            oracle.add(new ArrayList<>(Arrays.asList("24_0", "27_0", "29_0", "34_0", "38_0", "47_0")));
-//            oracle.add(new ArrayList<>(Arrays.asList("43_0")));
-//            oracle.add(new ArrayList<>(Arrays.asList("22_0")));
-
+/*            ArrayList<ArrayList<String>> oracle = new ArrayList<>();
+            oracle.add(new ArrayList<>(Arrays.asList("6_0", "7_0", "8_0", "9_0", "11_0", "13_0", "41_0", "47_0")));
+            oracle.add(new ArrayList<>(Arrays.asList("3_0", "6_0", "12_0", "46_0")));
+            oracle.add(new ArrayList<>(Arrays.asList("17_0", "30_0", "45_0", "49_0")));
+            oracle.add(new ArrayList<>(Arrays.asList("24_0", "29_0", "38_0", "46_0")));
+            oracle.add(new ArrayList<>(Arrays.asList("24_0", "27_0", "29_0", "34_0", "38_0", "47_0")));
+            oracle.add(new ArrayList<>(Arrays.asList("43_0")));
+            oracle.add(new ArrayList<>(Arrays.asList("22_0")));*/
             double simlr_threshold;
             double delay_threshold;
             int lcs_min_len_threshold;
@@ -253,16 +247,15 @@ public class Main {
 
             if (isClustering && !single) {
                 File file2 = new File(base + "/SoS_Extension/" + "HyperparameterAnalysis.csv");
-
                 try {
                     FileWriter writer = new FileWriter(file2, true);
                     // The code for Finalize Function Hyperparameter testing
-//                    Clustering clustering = new Clustering();
-//                    for (InterplayModel im : IMs) {
-////                                clustering.addTraceBaseLCS(im, delay_threshold, lcs_min_len_threshold);
-//                        clustering.addTraceCase5(im, 0.66, 0.7, 18);                // TODO The best option so far
-//                    }
-
+/*                    Clustering clustering = new Clustering();
+                    for (InterplayModel im : IMs) {
+//                                clustering.addTraceBaseLCS(im, delay_threshold, lcs_min_len_threshold);
+                        clustering.addTraceCase5(im, 0.66, 0.7, 18);                // TODO The best option so far
+                    }*/
+                    // The code for Hyperparameter optimization of clustering algorithm
                     for (int simlr_counter = 50; simlr_counter <= 100; simlr_counter++) {
                         simlr_threshold = (double) simlr_counter / 100;
                         for (int delay_counter = 10; delay_counter <= 100; delay_counter += 10) {
@@ -275,9 +268,12 @@ public class Main {
                                 clustering.addTraceCase5(im, simlr_threshold, delay_threshold, lcs_min_len_threshold);
                             }
                                 clustering.ClusteringFinalize(simlr_threshold, delay_threshold, lcs_min_len_threshold);
-//                                evaluation_score = clustering.EvaluateClusteringResult(oracle);
+                                number_of_clusters = clustering.clusterSize();
+                                // Oracle-based Evaluation Score
+ /*                               evaluation_score = clustering.EvaluateClusteringResult(oracle);
                                 System.out.println(simlr_threshold + ", " + delay_threshold + "," + lcs_min_len_threshold + "," + "Clustering Evaluation Score: " + evaluation_score);
-//                                writer.write(simlr_threshold + "," + delay_threshold + "," + lcs_min_len_threshold + "," + evaluation_score);
+                                writer.write(simlr_threshold + "," + delay_threshold + "," + lcs_min_len_threshold + "," + evaluation_score);*/
+                                writer.write(simlr_threshold + "," + delay_threshold + "," + lcs_min_len_threshold + "," + number_of_clusters);
                                 writer.write("\n");
 //                            clustering.printCluster();
 //                            clustering.clusterClear();
@@ -288,7 +284,8 @@ public class Main {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-            } else {
+            } // Single run for an optimized Hyperparameter setting
+            else {
                 Clustering clustering = new Clustering();
                 simlr_threshold = 0.78;
                 delay_threshold = 0.8;
@@ -303,8 +300,8 @@ public class Main {
                 delay_threshold = 0.8;
                 lcs_min_len_threshold = 15;
                 clustering.ClusteringFinalize(simlr_threshold, delay_threshold, lcs_min_len_threshold);
-                evaluation_score = clustering.EvaluateClusteringResult(oracle);
-                System.out.println("Clustering Evaluation Score: " + evaluation_score);
+//                evaluation_score = clustering.EvaluateClusteringResult(oracle);
+//                System.out.println("Clustering Evaluation Score: " + evaluation_score);
                 clustering.printCluster();
                 clustering.clusterClear();
             }
