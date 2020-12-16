@@ -84,7 +84,7 @@ public class Main {
             if (f.exists()) {
                 int numoffiles = f.listFiles().length;
                 System.out.println("and it has " + numoffiles + " files.");
-                for (int i = 0; i < 1512; i++) {
+                for (int i = 0; i < 1512; i++) {    // TODO the number of input log files
                     String txtdir = currentdir + Integer.toString(i) + "_0plnData.txt";
                     File temptxt = new File(txtdir);
                     if (temptxt.exists()) {
