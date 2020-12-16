@@ -246,7 +246,7 @@ public class Main {
             boolean single = false;
 
             if (isClustering && !single) {
-                File file2 = new File(base + "/SoS_Extension/" + "HyperparameterAnalysis.csv");
+                File file2 = new File(base + "/SoS_Extension/" + "HyperparameterAnalysis_Case5.csv");  // TODO Which Case? -> File Name Change
                 try {
                     FileWriter writer = new FileWriter(file2, true);
                     // The code for Finalize Function Hyperparameter testing
@@ -273,6 +273,7 @@ public class Main {
  /*                               evaluation_score = clustering.EvaluateClusteringResult(oracle);
                                 System.out.println(simlr_threshold + ", " + delay_threshold + "," + lcs_min_len_threshold + "," + "Clustering Evaluation Score: " + evaluation_score);
                                 writer.write(simlr_threshold + "," + delay_threshold + "," + lcs_min_len_threshold + "," + evaluation_score);*/
+                                System.out.println(simlr_threshold + ", " + delay_threshold + "," + lcs_min_len_threshold + "," + "Clustering Evaluation Score: " + number_of_clusters);
                                 writer.write(simlr_threshold + "," + delay_threshold + "," + lcs_min_len_threshold + "," + number_of_clusters);
                                 writer.write("\n");
 //                            clustering.printCluster();
