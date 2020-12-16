@@ -65,7 +65,8 @@ public class OracleGenerator {
                 else {
                     switch (Msgs.get(s_index).commandSent) {
                         // ======= SPLIT & MERGE (Case 5) =======
-                        case "SPLIT_REQ":
+                        case "SPLIT_REQ":                           // TODO SPLIT_REQ 면 바로 가능한게 맞는지 확인
+                            oracle.get(4).add(im.getId());
                             break;
                         // ======= LEADER LEAVE Cases =======
                         case "VOTE_LEADER":
