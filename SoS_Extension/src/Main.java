@@ -89,16 +89,16 @@ public class Main {
                     File temptxt = new File(txtdir);
                     if (temptxt.exists()) {
                         matchingtxts++;
-/*                        for (int thshold : thresholds) {
+                        for (int thshold : thresholds) {
                             result = verifier.verifyLog(txtdir, "operationTime", thshold);
                             if (!result) {
                                 InterplayModel interplayModel = new InterplayModel(i, 0);                       // TODO r_index = 0 로 설정해놓음
-                                StructureModel structureModel = new StructureModel(i,0);
+//                                StructureModel structureModel = new StructureModel(i,0);
 //                            clustering.addTrace(interplayModel, simlr_threshold);                                  // TODO Similarity Threshold = 75%
                                 IMs.add(interplayModel);
 
                                 // Structure & Interplay model ".txt" file exporting part
-                                File exportTxt = new File(currentdir + Integer.toString(i) + "_S_I_Model.txt");
+                                /*File exportTxt = new File(currentdir + Integer.toString(i) + "_S_I_Model.txt");
                                 FileWriter writerExport = null;
                                 try {
                                     writerExport = new FileWriter(exportTxt, true);
@@ -116,40 +116,40 @@ public class Main {
                                     } catch (IOException e) {
                                         e.printStackTrace();
                                     }
-                                }
-                            }
-                        }*/
-                        for (int thshold2 : thresholds2){
-                            result = verifier.verifyLog(txtdir, "operationTime", thshold2);
-//                            smbfl.structureModelOverlapping(results, i, 0);
-                            if (!result) {
-                                InterplayModel interplayModel = new InterplayModel(i, 0);                       // TODO r_index = 0 로 설정해놓음
-                                StructureModel structureModel = new StructureModel(i,0);
-//                            clustering.addTrace(interplayModel, simlr_threshold);                                  // TODO Similarity Threshold = 75%
-                                IMs.add(interplayModel);
-
-                                // Structure & Interplay model ".txt" file exporting part
-                                File exportTxt = new File(currentdir + Integer.toString(i+1512) + "_S_I_Model.txt");
-                                FileWriter writerExport = null;
-                                try {
-                                    writerExport = new FileWriter(exportTxt, true);
-                                    writerExport.write(Integer.toString(i) + "\n");
-                                    writerExport.write("Structure\n");                                              // OpSuccessRate -> I / OpTime -> S
-                                    writerExport.write("Structure Model\n");
-                                    writerExport.write(structureModel.printGraphText());
-                                    writerExport.write("Interplay Model\n");
-                                    writerExport.write(interplayModel.printSequence());
-                                } catch (IOException e) {
-                                    System.out.println(e);
-                                } finally {
-                                    try {
-                                        if (writerExport != null) writerExport.close();
-                                    } catch (IOException e) {
-                                        e.printStackTrace();
-                                    }
-                                }
+                                }*/
                             }
                         }
+//                        for (int thshold2 : thresholds2){
+//                            result = verifier.verifyLog(txtdir, "operationTime", thshold2);
+////                            smbfl.structureModelOverlapping(results, i, 0);
+//                            if (!result) {
+//                                InterplayModel interplayModel = new InterplayModel(i, 0);                       // TODO r_index = 0 로 설정해놓음
+//                                StructureModel structureModel = new StructureModel(i,0);
+////                            clustering.addTrace(interplayModel, simlr_threshold);                                  // TODO Similarity Threshold = 75%
+//                                IMs.add(interplayModel);
+//
+//                                // Structure & Interplay model ".txt" file exporting part
+//                                File exportTxt = new File(currentdir + Integer.toString(i+1512) + "_S_I_Model.txt");
+//                                FileWriter writerExport = null;
+//                                try {
+//                                    writerExport = new FileWriter(exportTxt, true);
+//                                    writerExport.write(Integer.toString(i) + "\n");
+//                                    writerExport.write("Structure\n");                                              // OpSuccessRate -> I / OpTime -> S
+//                                    writerExport.write("Structure Model\n");
+//                                    writerExport.write(structureModel.printGraphText());
+//                                    writerExport.write("Interplay Model\n");
+//                                    writerExport.write(interplayModel.printSequence());
+//                                } catch (IOException e) {
+//                                    System.out.println(e);
+//                                } finally {
+//                                    try {
+//                                        if (writerExport != null) writerExport.close();
+//                                    } catch (IOException e) {
+//                                        e.printStackTrace();
+//                                    }
+//                                }
+//                            }
+//                        }
                     }
                 }
 
@@ -234,19 +234,21 @@ public class Main {
                 imbfl.printSuspSequences();
             }
 
-            ArrayList<ArrayList<String>> oracle = new ArrayList<>();
-            oracle.add(new ArrayList<>(Arrays.asList("6_0", "7_0", "8_0", "9_0", "11_0", "13_0", "41_0", "47_0")));
-            oracle.add(new ArrayList<>(Arrays.asList("3_0", "6_0", "12_0", "46_0")));
-            oracle.add(new ArrayList<>(Arrays.asList("17_0", "30_0", "45_0", "49_0")));
-            oracle.add(new ArrayList<>(Arrays.asList("24_0", "29_0", "38_0", "46_0")));
-            oracle.add(new ArrayList<>(Arrays.asList("24_0", "27_0", "29_0", "34_0", "38_0", "47_0")));
-            oracle.add(new ArrayList<>(Arrays.asList("43_0")));
-            oracle.add(new ArrayList<>(Arrays.asList("22_0")));
+            // Toy Example Oracle
+//            ArrayList<ArrayList<String>> oracle = new ArrayList<>();
+//            oracle.add(new ArrayList<>(Arrays.asList("6_0", "7_0", "8_0", "9_0", "11_0", "13_0", "41_0", "47_0")));
+//            oracle.add(new ArrayList<>(Arrays.asList("3_0", "6_0", "12_0", "46_0")));
+//            oracle.add(new ArrayList<>(Arrays.asList("17_0", "30_0", "45_0", "49_0")));
+//            oracle.add(new ArrayList<>(Arrays.asList("24_0", "29_0", "38_0", "46_0")));
+//            oracle.add(new ArrayList<>(Arrays.asList("24_0", "27_0", "29_0", "34_0", "38_0", "47_0")));
+//            oracle.add(new ArrayList<>(Arrays.asList("43_0")));
+//            oracle.add(new ArrayList<>(Arrays.asList("22_0")));
 
             double simlr_threshold;
             double delay_threshold;
             int lcs_min_len_threshold;
             double evaluation_score;
+            int number_of_clusters;
             boolean single = false;
 
             if (isClustering && !single) {
@@ -273,9 +275,9 @@ public class Main {
                                 clustering.addTraceCase5(im, simlr_threshold, delay_threshold, lcs_min_len_threshold);
                             }
                                 clustering.ClusteringFinalize(simlr_threshold, delay_threshold, lcs_min_len_threshold);
-                                evaluation_score = clustering.EvaluateClusteringResult(oracle);
+//                                evaluation_score = clustering.EvaluateClusteringResult(oracle);
                                 System.out.println(simlr_threshold + ", " + delay_threshold + "," + lcs_min_len_threshold + "," + "Clustering Evaluation Score: " + evaluation_score);
-                                writer.write(simlr_threshold + "," + delay_threshold + "," + lcs_min_len_threshold + "," + evaluation_score);
+//                                writer.write(simlr_threshold + "," + delay_threshold + "," + lcs_min_len_threshold + "," + evaluation_score);
                                 writer.write("\n");
 //                            clustering.printCluster();
 //                            clustering.clusterClear();
