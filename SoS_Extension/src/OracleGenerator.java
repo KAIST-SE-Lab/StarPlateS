@@ -70,6 +70,25 @@ public class OracleGenerator {
                             break;
                         // ======= LEADER LEAVE Cases =======
                         case "VOTE_LEADER":
+                            String leaved = "";
+                            String newLeader = "";
+                            for(int i = s_index; i < Msgs.size(); i++) {
+                                if(i == s_index) leaved = Msgs.get(i).senderPltId;
+                                if(Msgs.get(i).commandSent.equals("SPLIT_REQ")) {
+                                    newLeader = Msgs.get(i).receiverId;
+                                } else if(Msgs.get(i).commandSent.equals("MERGE_REQ")) {
+                                    // ****** CASE 7 ******
+                                    if(Msgs.get(i).senderPltId.equals(newLeader) && Msgs.get(i).receiverId.equals(leaved)) {
+                                        oracle.get(6).add(im.getId());
+                                        break;
+                                    }
+                                    // ****** CASE 6 ******
+                                    else {
+                                        oracle.get(5).add(im.getId());
+                                        break;
+                                    }
+                                }
+                            }
                             break;
                         // ======= FOLLOWER LEAVE Cases =======
                         case "LEAVE_REQ":
