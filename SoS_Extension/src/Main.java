@@ -82,17 +82,17 @@ public class Main {
             ArrayList<InterplayModel> IMs = new ArrayList<>();
 
             if (f.exists()) {
-                int numoffiles = f.listFiles().length + 300;
+                int numoffiles = f.listFiles().length;
                 System.out.println("and it has " + numoffiles + " files.");
-                for (int i = 0; i < numoffiles; i++) {
+                for (int i = 0; i < 1512; i++) {
                     String txtdir = currentdir + Integer.toString(i) + "_0plnData.txt";
                     File temptxt = new File(txtdir);
                     if (temptxt.exists()) {
                         matchingtxts++;
                         for (int thshold : thresholds) {
-                            result = verifier.verifyLog(txtdir, "operationTime", thshold);
+                            result = verifier.verifyLog(txtdir, "operationSuccessRate", thshold);  // TODO operationSuccessRate or operationTime
                             if (!result) {
-                                InterplayModel interplayModel = new InterplayModel(i, 0);                       // TODO r_index = 0 로 설정해놓음
+                                InterplayModel interplayModel = new InterplayModel(i, 0); // TODO r_index = 0 로 설정해놓음
                                 IMs.add(interplayModel);
                                 // Structure & Interplay model ".txt" file exporting part
                                 /*
