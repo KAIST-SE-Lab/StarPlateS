@@ -245,6 +245,9 @@ public class Main {
             int number_of_clusters;
             boolean single = false;
 
+            OracleGenerator oracleGenerator = new OracleGenerator();
+            ArrayList<ArrayList<String>> oracle = oracleGenerator.oracleGeneration(IMs);
+
             if (isClustering && !single) {
                 File file2 = new File(base + "/SoS_Extension/" + "HyperparameterAnalysis_Case5.csv");  // TODO Which Case? -> File Name Change
                 try {
