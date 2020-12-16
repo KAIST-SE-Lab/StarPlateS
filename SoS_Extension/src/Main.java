@@ -89,7 +89,7 @@ public class Main {
                     File temptxt = new File(txtdir);
                     if (temptxt.exists()) {
                         matchingtxts++;
-                        for (int thshold : thresholds) {
+/*                        for (int thshold : thresholds) {
                             result = verifier.verifyLog(txtdir, "operationTime", thshold);
                             if (!result) {
                                 InterplayModel interplayModel = new InterplayModel(i, 0);                       // TODO r_index = 0 로 설정해놓음
@@ -118,8 +118,8 @@ public class Main {
                                     }
                                 }
                             }
-                        }
-                        /*for (int thshold2 : thresholds2){
+                        }*/
+                        for (int thshold2 : thresholds2){
                             result = verifier.verifyLog(txtdir, "operationTime", thshold2);
 //                            smbfl.structureModelOverlapping(results, i, 0);
                             if (!result) {
@@ -149,7 +149,7 @@ public class Main {
                                     }
                                 }
                             }
-                        }*/
+                        }
                     }
                 }
 
