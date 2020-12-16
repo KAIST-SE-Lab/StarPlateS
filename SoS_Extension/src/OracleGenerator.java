@@ -92,11 +92,39 @@ public class OracleGenerator {
                             break;
                         // ======= FOLLOWER LEAVE Cases =======
                         case "LEAVE_REQ":
+                            leaved = "";
+                            String intermediateLeader = "";
+
+                            for(int i = s_index; i < Msgs.size(); i++) {
+                                if (Msgs.get(i).commandSent.equals("LEAVE_ACCEPT")) leaved = Msgs.get(i).receiverId;
+                                if (Msgs.get(i).commandSent.equals("SPLIT_REQ")) {
+                                    if (!Msgs.get(i).receiverId.equals(leaved)) {
+                                        intermediateLeader = Msgs.get(i).receiverId;
+                                    }
+                                }
+                                if (Msgs.get(i).commandSent.equals("MERGE_REQ")) {
+                                    // ****** CASE 9 ******
+                                    if (Msgs.get(i).senderPltId.equals(intermediateLeader) && Msgs.get(i).receiverId.equals(leaved)) {
+                                        oracle.get(8).add(im.getId());
+                                        break;
+                                    } else {
+                                        // ****** CASE 8 ******
+                                        if (Msgs.get(i).receiverId.equals(intermediateLeader)) {
+                                            oracle.get(7).add(im.getId());
+                                            break;
+                                        }
+                                        // ****** CASE 10 ******
+                                        else if (Msgs.get(i).receiverId.equals(leaved)) {
+                                            oracle.get(9).add(im.getId());
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
                             break;
                     }
                 }
             }
-            break;
         }
         return oracle;
     }
