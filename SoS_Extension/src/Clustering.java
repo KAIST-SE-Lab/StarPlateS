@@ -1064,4 +1064,8 @@ public class Clustering {
         cluster.clear();
         centroidLCS.clear();
     }
+
+    public int clusterSize() {
+        return cluster.size();
+    }
 }
