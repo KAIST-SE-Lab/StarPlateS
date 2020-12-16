@@ -24,6 +24,7 @@ public class OracleGenerator {
             System.out.println("IM_"+im.getId());
             Msgs = im.getMsgSequence();
 
+            //======== Check continuous Merge_Requests ========
             time_to_check = timeToCheck(Msgs);
 
             for(int time : time_to_check) {
@@ -32,13 +33,38 @@ public class OracleGenerator {
                     if(Msgs.get(s_index).time >= time) break;
                 }
 
-                // ======= Simultaneous Requests (REQ 다음에 바로 REQ가 나오는 경우) =======
+                // ======= Simultaneous Requests Cases (REQ 다음에 바로 REQ가 나오는 경우) =======
                 if(Msgs.get(s_index+1).commandSent.contains("REQ")) {
-
+                    // ****** CASE 1 ******
+                    if(Msgs.get(s_index).commandSent.equals("MERGE_REQ")
+                            && Msgs.get(s_index+1).commandSent.equals("MERGE_REQ")){
+                        oracle.get(0).add(im.getId());
+                    }
+                    // ****** CASE 2 ******
+                    else if((Msgs.get(s_index).commandSent.equals("SPLIT_REQ")
+                            && Msgs.get(s_index+1).commandSent.equals("MERGE_REQ")) ||
+                            (Msgs.get(s_index).commandSent.equals("MERGE_REQ")
+                                    && Msgs.get(s_index+1).commandSent.equals("SPLIT_REQ"))){
+                        oracle.get(1).add(im.getId());
+                    }
+                    // ****** CASE 3 ******
+                    else if((Msgs.get(s_index).commandSent.equals("VOTE_LEADER")
+                            && Msgs.get(s_index+1).commandSent.equals("MERGE_REQ")) ||
+                            (Msgs.get(s_index).commandSent.equals("MERGE_REQ")
+                                    && Msgs.get(s_index+1).commandSent.equals("VOTE_LEADER"))){
+                        oracle.get(2).add(im.getId());
+                    }
+                    // ****** CASE 4 ******
+                    else if((Msgs.get(s_index).commandSent.equals("LEAVE_REQ")
+                            && Msgs.get(s_index+1).commandSent.equals("MERGE_REQ")) ||
+                            (Msgs.get(s_index).commandSent.equals("MERGE_REQ")
+                                    && Msgs.get(s_index+1).commandSent.equals("LEAVE_REQ"))){
+                        oracle.get(3).add(im.getId());
+                    }
                 }
                 else {
                     switch (Msgs.get(s_index).commandSent) {
-                        // ======= SPLIT & MERGE (by Optimal Size Policy) =======
+                        // ======= SPLIT & MERGE (Case 5) =======
                         case "SPLIT_REQ":
                             break;
                         // ======= LEADER LEAVE Cases =======
@@ -55,7 +81,6 @@ public class OracleGenerator {
         return oracle;
     }
 
-    //======== Check continuous Merge_Requests ========
     private ArrayList<Integer> timeToCheck(ArrayList<Message> Msgs) {
         ArrayList<Integer> time_to_check = new ArrayList<>();
         ArrayList<Integer> time_ret = new ArrayList<>();
