@@ -4,7 +4,17 @@ public class OracleGenerator {
     private ArrayList<ArrayList<String>> oracle;
 
     public OracleGenerator() {
-        oracle = new ArrayList<>();
+        oracle = new ArrayList<>();     // Based on https://docs.google.com/spreadsheets/d/1QfmDA-O8_cf2X6Fyj1hTpAEp0HWKrBKZw-YEcS8B2WI/edit#gid=0
+        oracle.add(new ArrayList<>());  // CASE 1: Simultaneous Merge & Merge
+        oracle.add(new ArrayList<>());  // CASE 2: Simultaneous Split & Merge
+        oracle.add(new ArrayList<>());  // CASE 3: Simultaneous LLeave & Merge
+        oracle.add(new ArrayList<>());  // CASE 4: Simultaneous FLeave & Merge
+        oracle.add(new ArrayList<>());  // CASE 5: Configuration conflict Split & Merge
+        oracle.add(new ArrayList<>());  // CASE 6: Configuration conflict LLeave & Merge
+        oracle.add(new ArrayList<>());  // CASE 7: Single Operation Failure LLeave
+        oracle.add(new ArrayList<>());  // CASE 8: Configuration conflict FLeave & Merge (->Intermediate Leader)
+        oracle.add(new ArrayList<>());  // CASE 9: Single Operation Failure FLeave
+        oracle.add(new ArrayList<>());  // CASE 10: Configuration conflict FLeave & Merge (->Leaved vehicle)
     }
 
     public ArrayList<ArrayList<String>> oracleGeneration(ArrayList<InterplayModel> IMs) {
