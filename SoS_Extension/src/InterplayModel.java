@@ -105,7 +105,7 @@ public class InterplayModel {
         for(int i = 0; i < msgSequence.size(); i++) {
             temp = msgSequence.get(i);
             ret += temp.time + ": " + temp.commandSent + " from " + temp.senderPltId + " to " + temp.receiverId + "\n";
-//            System.out.println(temp.time + ": " + temp.commandSent + " from " + temp.senderPltId + " to " + temp.receiverId);
+            System.out.println(temp.time + ": " + temp.commandSent + " from " + temp.senderPltId + " to " + temp.receiverId);
         }
         return ret;
     }
