@@ -21,7 +21,7 @@ public class OracleGenerator {
         ArrayList<Message> Msgs = null;
         ArrayList<Integer> time_to_check = new ArrayList<>();
         for (InterplayModel im : IMs) {
-//            if(!(im.getId().equals("694_0"))) continue;
+//            if(!(im.getId().equals("732_0"))) continue;
             Msgs = im.getMsgSequence();
             System.out.println(im.getId());
 
@@ -76,6 +76,7 @@ public class OracleGenerator {
                             String leaved = "";
                             String newLeader = "";
                             for(int i = s_index; i < Msgs.size(); i++) {
+                                if(Msgs.get(i).time > time + 20) break;
                                 if(i == s_index) leaved = Msgs.get(i).senderPltId;
                                 if(Msgs.get(i).commandSent.equals("SPLIT_REQ")) {
                                     newLeader = Msgs.get(i).receiverId;
@@ -95,8 +96,8 @@ public class OracleGenerator {
                         case "LEAVE_REQ":
                             leaved = "";
                             String intermediateLeader = "";
-
                             for(int i = s_index; i < Msgs.size(); i++) {
+                                if(Msgs.get(i).time > time + 20) break;
                                 if (Msgs.get(i).commandSent.equals("LEAVE_ACCEPT")) leaved = Msgs.get(i).receiverId;
                                 if (Msgs.get(i).commandSent.equals("SPLIT_REQ")) {
                                     if (!Msgs.get(i).receiverId.equals(leaved)) {
