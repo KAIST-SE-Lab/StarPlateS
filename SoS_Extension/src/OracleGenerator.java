@@ -21,7 +21,6 @@ public class OracleGenerator {
         ArrayList<Message> Msgs = null;
         ArrayList<Integer> time_to_check = new ArrayList<>();
         for (InterplayModel im : IMs) {
-            System.out.println("IM_"+im.getId());
             Msgs = im.getMsgSequence();
 
             //======== Check continuous Merge_Requests ========
