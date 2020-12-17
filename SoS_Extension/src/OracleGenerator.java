@@ -21,7 +21,7 @@ public class OracleGenerator {
         ArrayList<Message> Msgs = null;
         ArrayList<Integer> time_to_check = new ArrayList<>();
         for (InterplayModel im : IMs) {
-//            if(!(im.getId().equals("677_0"))) continue;
+            if(!(im.getId().equals("688_0"))) continue;
             Msgs = im.getMsgSequence();
             System.out.println(im.getId());
 
@@ -35,7 +35,9 @@ public class OracleGenerator {
                 }
 
                 // ======= Simultaneous Requests Cases (REQ 다음에 바로 REQ가 나오는 경우) =======
-                if(Msgs.get(s_index+1).commandSent.contains("REQ")) {
+                if(Msgs.get(s_index+1).commandSent.contains("REQ") &&
+                        (Msgs.get(s_index).receiverId.equals(Msgs.get(s_index+1).senderPltId)
+                                || Msgs.get(s_index).senderPltId.equals(Msgs.get(s_index+1).receiverId))) {
                     // ****** CASE 1 ******
                     if(Msgs.get(s_index).commandSent.equals("MERGE_REQ")
                             && Msgs.get(s_index+1).commandSent.equals("MERGE_REQ")){
