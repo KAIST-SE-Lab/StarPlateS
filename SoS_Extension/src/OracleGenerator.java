@@ -21,6 +21,7 @@ public class OracleGenerator {
         ArrayList<Message> Msgs = null;
         ArrayList<Integer> time_to_check = new ArrayList<>();
         for (InterplayModel im : IMs) {
+            if(!(im.getId().equals("740_0"))) continue;
             Msgs = im.getMsgSequence();
 
             //======== Check continuous Merge_Requests ========
@@ -134,6 +135,13 @@ public class OracleGenerator {
             if(Msgs.get(i).commandSent.equals("MERGE_REQ")) {
                 if(i < Msgs.size()-1 && (Msgs.get(i+1).commandSent.equals("MERGE_REQ") && Msgs.get(i+1).senderPltId.equals(Msgs.get(i).senderPltId)
                         && Msgs.get(i+1).receiverId.equals(Msgs.get(i).receiverId))) {
+                    int time = Msgs.get(i).time.intValue();
+                    if(time < 45) time_to_check.add(25);
+                    else if (time < 65) time_to_check.add(45);
+                    else if (time < 85) time_to_check.add(65);
+                    else time_to_check.add(85);
+                } else if (i < Msgs.size()-1 && (Msgs.get(i+1).commandSent.equals("MERGE_REJECT") && Msgs.get(i+1).senderPltId.equals(Msgs.get(i).receiverId)
+                        && Msgs.get(i+1).receiverId.equals(Msgs.get(i).senderPltId))) {
                     int time = Msgs.get(i).time.intValue();
                     if(time < 45) time_to_check.add(25);
                     else if (time < 65) time_to_check.add(45);
