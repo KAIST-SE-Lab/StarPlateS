@@ -21,7 +21,7 @@ public class OracleGenerator {
         ArrayList<Message> Msgs = null;
         ArrayList<Integer> time_to_check = new ArrayList<>();
         for (InterplayModel im : IMs) {
-            if(!(im.getId().equals("740_0"))) continue;
+//            if(!(im.getId().equals("672_0"))) continue;
             Msgs = im.getMsgSequence();
 
             //======== Check continuous Merge_Requests ========
@@ -38,35 +38,35 @@ public class OracleGenerator {
                     // ****** CASE 1 ******
                     if(Msgs.get(s_index).commandSent.equals("MERGE_REQ")
                             && Msgs.get(s_index+1).commandSent.equals("MERGE_REQ")){
-                        oracle.get(0).add(im.getId());
+                        if(!oracle.get(0).contains(im.getId())) oracle.get(0).add(im.getId());
                     }
                     // ****** CASE 2 ******
                     else if((Msgs.get(s_index).commandSent.equals("SPLIT_REQ")
                             && Msgs.get(s_index+1).commandSent.equals("MERGE_REQ")) ||
                             (Msgs.get(s_index).commandSent.equals("MERGE_REQ")
                                     && Msgs.get(s_index+1).commandSent.equals("SPLIT_REQ"))){
-                        oracle.get(1).add(im.getId());
+                        if(!oracle.get(1).contains(im.getId())) oracle.get(1).add(im.getId());
                     }
                     // ****** CASE 3 ******
                     else if((Msgs.get(s_index).commandSent.equals("VOTE_LEADER")
                             && Msgs.get(s_index+1).commandSent.equals("MERGE_REQ")) ||
                             (Msgs.get(s_index).commandSent.equals("MERGE_REQ")
                                     && Msgs.get(s_index+1).commandSent.equals("VOTE_LEADER"))){
-                        oracle.get(2).add(im.getId());
+                        if(!oracle.get(2).contains(im.getId())) oracle.get(2).add(im.getId());
                     }
                     // ****** CASE 4 ******
                     else if((Msgs.get(s_index).commandSent.equals("LEAVE_REQ")
                             && Msgs.get(s_index+1).commandSent.equals("MERGE_REQ")) ||
                             (Msgs.get(s_index).commandSent.equals("MERGE_REQ")
                                     && Msgs.get(s_index+1).commandSent.equals("LEAVE_REQ"))){
-                        oracle.get(3).add(im.getId());
+                        if(!oracle.get(3).contains(im.getId())) oracle.get(3).add(im.getId());
                     }
                 }
                 else {
                     switch (Msgs.get(s_index).commandSent) {
                         // ======= SPLIT & MERGE (Case 5) =======
                         case "SPLIT_REQ":                           // TODO SPLIT_REQ 면 바로 가능한게 맞는지 확인
-                            oracle.get(4).add(im.getId());
+                            if(!oracle.get(4).contains(im.getId())) oracle.get(4).add(im.getId());
                             break;
                         // ======= LEADER LEAVE Cases =======
                         case "VOTE_LEADER":
@@ -79,12 +79,12 @@ public class OracleGenerator {
                                 } else if(Msgs.get(i).commandSent.equals("MERGE_REQ")) {
                                     // ****** CASE 7 ******
                                     if(Msgs.get(i).senderPltId.equals(newLeader) && Msgs.get(i).receiverId.equals(leaved)) {
-                                        oracle.get(6).add(im.getId());
+                                        if(!oracle.get(6).contains(im.getId())) oracle.get(6).add(im.getId());
                                         break;
                                     }
                                     // ****** CASE 6 ******
                                     else {
-                                        oracle.get(5).add(im.getId());
+                                        if(!oracle.get(5).contains(im.getId())) oracle.get(5).add(im.getId());
                                         break;
                                     }
                                 }
@@ -105,17 +105,17 @@ public class OracleGenerator {
                                 if (Msgs.get(i).commandSent.equals("MERGE_REQ")) {
                                     // ****** CASE 9 ******
                                     if (Msgs.get(i).senderPltId.equals(intermediateLeader) && Msgs.get(i).receiverId.equals(leaved)) {
-                                        oracle.get(8).add(im.getId());
+                                        if(!oracle.get(8).contains(im.getId())) oracle.get(8).add(im.getId());
                                         break;
                                     } else {
                                         // ****** CASE 8 ******
                                         if (Msgs.get(i).receiverId.equals(intermediateLeader)) {
-                                            oracle.get(7).add(im.getId());
+                                            if(!oracle.get(7).contains(im.getId())) oracle.get(7).add(im.getId());
                                             break;
                                         }
                                         // ****** CASE 10 ******
                                         else if (Msgs.get(i).receiverId.equals(leaved)) {
-                                            oracle.get(9).add(im.getId());
+                                            if(!oracle.get(9).contains(im.getId())) oracle.get(9).add(im.getId());
                                             break;
                                         }
                                     }
