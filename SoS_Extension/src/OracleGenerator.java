@@ -21,8 +21,9 @@ public class OracleGenerator {
         ArrayList<Message> Msgs = null;
         ArrayList<Integer> time_to_check = new ArrayList<>();
         for (InterplayModel im : IMs) {
-//            if(!(im.getId().equals("672_0"))) continue;
+//            if(!(im.getId().equals("677_0"))) continue;
             Msgs = im.getMsgSequence();
+            System.out.println(im.getId());
 
             //======== Check continuous Merge_Requests ========
             time_to_check = timeToCheck(Msgs);
@@ -80,12 +81,10 @@ public class OracleGenerator {
                                     // ****** CASE 7 ******
                                     if(Msgs.get(i).senderPltId.equals(newLeader) && Msgs.get(i).receiverId.equals(leaved)) {
                                         if(!oracle.get(6).contains(im.getId())) oracle.get(6).add(im.getId());
-                                        break;
                                     }
                                     // ****** CASE 6 ******
                                     else {
                                         if(!oracle.get(5).contains(im.getId())) oracle.get(5).add(im.getId());
-                                        break;
                                     }
                                 }
                             }
@@ -106,17 +105,14 @@ public class OracleGenerator {
                                     // ****** CASE 9 ******
                                     if (Msgs.get(i).senderPltId.equals(intermediateLeader) && Msgs.get(i).receiverId.equals(leaved)) {
                                         if(!oracle.get(8).contains(im.getId())) oracle.get(8).add(im.getId());
-                                        break;
                                     } else {
                                         // ****** CASE 8 ******
                                         if (Msgs.get(i).receiverId.equals(intermediateLeader)) {
                                             if(!oracle.get(7).contains(im.getId())) oracle.get(7).add(im.getId());
-                                            break;
                                         }
                                         // ****** CASE 10 ******
                                         else if (Msgs.get(i).receiverId.equals(leaved)) {
                                             if(!oracle.get(9).contains(im.getId())) oracle.get(9).add(im.getId());
-                                            break;
                                         }
                                     }
                                 }
