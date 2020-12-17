@@ -17,7 +17,7 @@ public class OracleGenerator {
         oracle.add(new ArrayList<>());  // CASE 10: Configuration conflict FLeave & Merge (->Leaved vehicle)
     }
 
-    public ArrayList<ArrayList<String>> oracleGeneration(ArrayList<InterplayModel> IMs) {
+    public void oracleGeneration(ArrayList<InterplayModel> IMs) {
         ArrayList<Message> Msgs = null;
         ArrayList<Integer> time_to_check = new ArrayList<>();
         for (InterplayModel im : IMs) {
@@ -126,7 +126,6 @@ public class OracleGenerator {
                 }
             }
         }
-        return oracle;
     }
 
     private ArrayList<Integer> timeToCheck(ArrayList<Message> Msgs) {
@@ -152,5 +151,20 @@ public class OracleGenerator {
         }
 //        for(int i = 0; i < time_ret.size(); i++) System.out.println(time_ret.get(i));
         return time_ret;
+    }
+
+    public ArrayList<ArrayList<String>> getOracle() {
+        return oracle;
+    }
+
+    public void printOracle() {
+        System.out.println("===========Oracle Print===========");
+        for(int i = 0; i < oracle.size(); i++) {
+            String prt = "";
+            for(String str: oracle.get(i)) {
+                prt += str + ",";
+            }
+            System.out.println("CASE " + (i+1) + ": " + prt);
+        }
     }
 }
