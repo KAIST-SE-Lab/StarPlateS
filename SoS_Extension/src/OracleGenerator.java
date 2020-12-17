@@ -21,7 +21,7 @@ public class OracleGenerator {
         ArrayList<Message> Msgs = null;
         ArrayList<Integer> time_to_check = new ArrayList<>();
         for (InterplayModel im : IMs) {
-            if(!(im.getId().equals("688_0"))) continue;
+//            if(!(im.getId().equals("694_0"))) continue;
             Msgs = im.getMsgSequence();
             System.out.println(im.getId());
 
@@ -85,7 +85,7 @@ public class OracleGenerator {
                                         if(!oracle.get(6).contains(im.getId())) oracle.get(6).add(im.getId());
                                     }
                                     // ****** CASE 6 ******
-                                    else {
+                                    else if(Msgs.get(i).receiverId.equals(newLeader)){
                                         if(!oracle.get(5).contains(im.getId())) oracle.get(5).add(im.getId());
                                     }
                                 }
