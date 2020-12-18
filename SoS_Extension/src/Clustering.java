@@ -995,7 +995,7 @@ public class Clustering {
         else return false;
     }
 
-    public double EvaluateClusteringResult(ArrayList<ArrayList<String>> oracle) {
+    public double EvaluateClusteringResult(ArrayList<ArrayList<String>> oracle, ArrayList<String> index) {
         double TP = 0;
         double FP = 0;
         double FN = 0;
@@ -1006,10 +1006,6 @@ public class Clustering {
         boolean ol_front;
         boolean ol_back;
         boolean ol_same;
-
-        ArrayList<String> index = new ArrayList<>(Arrays.asList("3_0","6_0","7_0","8_0","9_0","11_0"
-                ,"12_0","13_0","17_0","22_0","24_0","27_0","29_0","30_0","34_0","38_0"
-                ,"41_0","43_0","45_0","46_0","47_0","49_0"));
 
         for(int i = 0; i < index.size(); i++) {                                                                         // Generate pair for indexes
             for(int j = i+1; j < index.size(); j++) {
