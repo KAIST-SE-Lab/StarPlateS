@@ -246,7 +246,9 @@ public class Main {
             boolean single = false;
 
             OracleGenerator oracleGenerator = new OracleGenerator();
-            ArrayList<ArrayList<String>> oracle = oracleGenerator.oracleGeneration(IMs);
+            oracleGenerator.oracleGeneration(IMs);
+            oracleGenerator.printOracle();
+            ArrayList<ArrayList<String>> oracle = oracleGenerator.getOracle();
 
             if (isClustering && !single) {
                 File file2 = new File(base + "/SoS_Extension/" + "HyperparameterAnalysis_Case5.csv");  // TODO Which Case? -> File Name Change
@@ -259,28 +261,26 @@ public class Main {
                         clustering.addTraceCase5(im, 0.66, 0.7, 18);                // TODO The best option so far
                     }*/
                     // The code for Hyperparameter optimization of clustering algorithm
-                    for (int simlr_counter = 70; simlr_counter <= 100; simlr_counter++) {
+                    for (int simlr_counter = 60; simlr_counter <= 100; simlr_counter++) {
                         simlr_threshold = (double) simlr_counter / 100;
                         for (int delay_counter = 10; delay_counter <= 100; delay_counter += 10) {
                             delay_threshold = (double) delay_counter / 100;
                             for (lcs_min_len_threshold = 5; lcs_min_len_threshold <= 25; lcs_min_len_threshold++) {
-                            Clustering clustering = new Clustering();
+                                Clustering clustering = new Clustering();
 
-                            for (InterplayModel im : IMs) {
-                                // 대조군 Clustering Algorithm
+                                for (InterplayModel im : IMs) {
+                                    // 대조군 Clustering Algorithm
 //                                clustering.addTraceBaseLCS(im, delay_threshold, lcs_min_len_threshold);
-                                clustering.addTraceCase5(im, simlr_threshold, delay_threshold, lcs_min_len_threshold);
-                            }
-                            // Clustering Finalize Optimization
-                             /*   clustering.ClusteringFinalize(simlr_threshold, delay_threshold, lcs_min_len_threshold);
-                             */
-                            number_of_clusters = clustering.clusterSize();
+                                    clustering.addTraceCase5(im, simlr_threshold, delay_threshold, lcs_min_len_threshold);
+                                }
+                                // Clustering Finalize Optimization
+                                /*   clustering.ClusteringFinalize(simlr_threshold, delay_threshold, lcs_min_len_threshold);
+                                */
+                                number_of_clusters = clustering.clusterSize();
                                 // Oracle-based Evaluation Score
- /*                               evaluation_score = clustering.EvaluateClusteringResult(oracle);
-                                System.out.println(simlr_threshold + ", " + delay_threshold + "," + lcs_min_len_threshold + "," + "Clustering Evaluation Score: " + evaluation_score);
-                                writer.write(simlr_threshold + "," + delay_threshold + "," + lcs_min_len_threshold + "," + evaluation_score);*/
-                                System.out.println(simlr_threshold + ", " + delay_threshold + "," + lcs_min_len_threshold + "," + "Clustering Evaluation Score: " + number_of_clusters);
-                                writer.write(simlr_threshold + "," + delay_threshold + "," + lcs_min_len_threshold + "," + number_of_clusters);
+                                evaluation_score = clustering.EvaluateClusteringResult(oracle, oracleGenerator.getIndex());
+                                System.out.println(simlr_threshold + ", " + delay_threshold + "," + lcs_min_len_threshold + "," + " Clustering Evaluation Score: " + evaluation_score + ", Cluster Size: " + number_of_clusters);
+                                writer.write(simlr_threshold + "," + delay_threshold + "," + lcs_min_len_threshold + "," + evaluation_score + "," + number_of_clusters);
                                 writer.write("\n");
                             }
                         }
@@ -290,7 +290,7 @@ public class Main {
                     e.printStackTrace();
                 }
             } // Single run for an optimized Hyperparameter setting
-            else {
+           /* else {
                 Clustering clustering = new Clustering();
                 simlr_threshold = 0.78;
                 delay_threshold = 0.8;
@@ -309,7 +309,7 @@ public class Main {
 //                System.out.println("Clustering Evaluation Score: " + evaluation_score);
                 clustering.printCluster();
                 clustering.clusterClear();
-            }
+            }*/
         }
     }
 }
