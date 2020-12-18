@@ -1,7 +1,9 @@
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class OracleGenerator {
     private ArrayList<ArrayList<String>> oracle;
+    private ArrayList<String> IM_index;
 
     public OracleGenerator() {
         oracle = new ArrayList<>();     // Based on https://docs.google.com/spreadsheets/d/1QfmDA-O8_cf2X6Fyj1hTpAEp0HWKrBKZw-YEcS8B2WI/edit#gid=0
@@ -15,6 +17,7 @@ public class OracleGenerator {
         oracle.add(new ArrayList<>());  // CASE 8: Configuration conflict FLeave & Merge (->Intermediate Leader)
         oracle.add(new ArrayList<>());  // CASE 9: Single Operation Failure FLeave
         oracle.add(new ArrayList<>());  // CASE 10: Configuration conflict FLeave & Merge (->Leaved vehicle)
+        IM_index = new ArrayList<>();
     }
 
     public void oracleGeneration(ArrayList<InterplayModel> IMs) {
@@ -22,6 +25,7 @@ public class OracleGenerator {
         ArrayList<Integer> time_to_check = new ArrayList<>();
         for (InterplayModel im : IMs) {
 //            if(!(im.getId().equals("616_0"))) continue;
+            IM_index.add(im.getId());
             Msgs = im.getMsgSequence();
 //            System.out.println(im.getId());
 
@@ -172,5 +176,9 @@ public class OracleGenerator {
             }
             System.out.println("CASE " + (i+1) + ": " + prt);
         }
+    }
+
+    public ArrayList<String> getIndex() {
+        return IM_index;
     }
 }
