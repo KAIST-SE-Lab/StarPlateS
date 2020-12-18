@@ -265,7 +265,7 @@ public class Main {
                         simlr_threshold = (double) simlr_counter / 100;
                         for (int delay_counter = 10; delay_counter <= 100; delay_counter += 10) {
                             delay_threshold = (double) delay_counter / 100;
-                            for (lcs_min_len_threshold = 5; lcs_min_len_threshold <= 25; lcs_min_len_threshold++) {
+                            for (lcs_min_len_threshold = 5; lcs_min_len_threshold <= 20; lcs_min_len_threshold++) {
                                 Clustering clustering = new Clustering();
 
                                 for (InterplayModel im : IMs) {
