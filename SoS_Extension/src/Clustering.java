@@ -664,10 +664,12 @@ public class Clustering {
         ArrayList<ArrayList<Message>> generatedLCS = new ArrayList<>();
         int lcs_index;
 
-        originCluster = (ArrayList)cluster.clone();
-        originCentroidLCS = (ArrayList) centroidLCS.clone();
+        while (originCluster.size() != cluster.size()) {
+            originCluster = (ArrayList)cluster.clone();
+            originCentroidLCS = (ArrayList) centroidLCS.clone();
 
-        ClusterMerge(simlr_threshold, delay_threshold, lcs_min_len_threshold);
+            ClusterMerge(simlr_threshold, delay_threshold, lcs_min_len_threshold);
+        }
 //
 //        for(int i = 0; i < cluster.size(); i++) {
 //            for(InterplayModel IM : cluster.get(i)) {
@@ -1051,8 +1053,8 @@ public class Clustering {
             }
         }
 
-        cluster = (ArrayList)originCluster.clone();
-        centroidLCS = (ArrayList)originCentroidLCS.clone();
+/*        cluster = (ArrayList)originCluster.clone();
+        centroidLCS = (ArrayList)originCentroidLCS.clone();*/
         return Math.sqrt((TP/(TP+FP)) * (TP/(TP+FN)));                                                                  // Fowlkes-Mallows index
     }                                                                                                                   // https://gentlej90.tistory.com/64
 
