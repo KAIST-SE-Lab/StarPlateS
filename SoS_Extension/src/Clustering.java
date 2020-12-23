@@ -1019,10 +1019,91 @@ public class Clustering {
             o_element_index.put(id, o_index);
             c_element_index.put(id, c_index);
         }
-
+/*
         for (String s : o_element_index.keySet())
             for (int i : o_element_index.get(s))
-                System.out.println("key :" + s + " value: " + i);
+                System.out.println("key :" + s + " value: " + i);*/
+
+        ArrayList<Double> bestMatches_cl = new ArrayList<Double>();
+        ArrayList<Double> bestMatches_or = new ArrayList<Double>();
+        double bestMatch = 0;
+        double cl_cl_cntb = 0;
+        double cl_or_cntb = 0;
+        double matched_cntb = 0;
+        double tempMatch = 0;
+
+        // Formed cluster의 결과에서 단일 cluster를 기준으로 oracle에서 가장 Best한 match값을 가지는
+        // oracle_cluster 와의 contribution sum을 해당 cluster의 match값으로 설정함. -> F_(C,O)
+        for(ArrayList<InterplayModel> cl_cl : cluster) {
+            for(ArrayList<String> cl_or: oracle) {
+                // contribution (cnbt) 값은 단일 element에 대해 해당 element가 overlapping한 cluster 개수의 1/n으로 나타나는 값
+                // 단일 element가 3개의 cluster에 중복으로 나타나면 해당 element의 cnbt 값은 0.3333
+                cl_cl_cntb = sumContributionsIM(cl_cl, c_element_index);
+                cl_or_cntb = sumContributions(cl_or, o_element_index);
+                ArrayList<String> matched = matchedElements(cl_cl, cl_or);
+
+                matched_cntb = sumContributions(matched, c_element_index);
+
+                // Match 값 계산
+                tempMatch = Math.pow(matched_cntb, 2) / (cl_cl_cntb * cl_or_cntb) ;
+                if(tempMatch > bestMatch) bestMatch = tempMatch;
+            }
+            bestMatches_cl.add(Math.sqrt(bestMatch));
+            bestMatch = 0;
+        }
+
+        // 위와 같은 과정이지만 Oracle을 기준으로 -> F_(O,C)
+        for(ArrayList<String> cl_or: oracle) {
+            for(ArrayList<InterplayModel> cl_cl : cluster) {
+                // contribution (cnbt) 값은 단일 element에 대해 해당 element가 overlapping한 cluster 개수의 1/n으로 나타나는 값
+                // 단일 element가 3개의 cluster에 중복으로 나타나면 해당 element의 cnbt 값은 0.3333
+                cl_cl_cntb = sumContributionsIM(cl_cl, c_element_index);
+                cl_or_cntb = sumContributions(cl_or, o_element_index);
+                ArrayList<String> matched = matchedElements(cl_cl, cl_or);
+
+                matched_cntb = sumContributions(matched, o_element_index);
+
+                // Match 값 계산
+                tempMatch = Math.pow(matched_cntb, 2) / (cl_cl_cntb * cl_or_cntb) ;
+                if(tempMatch > bestMatch) bestMatch = tempMatch;
+            }
+            bestMatches_or.add(Math.sqrt(bestMatch));
+            bestMatch = 0;
+        }
+
+        return ret;
+    }
+
+    private ArrayList<String> matchedElements(ArrayList<InterplayModel> cl_cl, ArrayList<String> cl_or) {
+        ArrayList<String> matched = new ArrayList<>();
+
+        for(InterplayModel im : cl_cl) {
+            for(String elem : cl_or) {
+                if(im.getId().equals(elem)) matched.add(im.getId());
+            }
+        }
+
+        return matched;
+    }
+
+    private double sumContributions(ArrayList<String> elements, HashMap<String, ArrayList<Integer>> elem_clusters) {
+        double ret = 0;
+
+        for(String elem: elements) {
+            double shares_elem = elem_clusters.get(elem).size();
+            ret += (1/shares_elem);
+        }
+
+        return ret;
+    }
+
+    private double sumContributionsIM(ArrayList<InterplayModel> elements, HashMap<String, ArrayList<Integer>> elem_clusters) {
+        double ret = 0;
+
+        for(InterplayModel elem: elements) {
+            double shares_elem = elem_clusters.get(elem.getId()).size();
+            ret += (1/shares_elem);
+        }
 
         return ret;
     }
