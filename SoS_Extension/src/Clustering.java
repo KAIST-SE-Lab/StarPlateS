@@ -1056,7 +1056,7 @@ public class Clustering {
             F_C_O += mat;
         }
         F_C_O /= bestMatches_cl.size();
-        System.out.println(F_C_O);
+//        System.out.println(F_C_O);
 
         // 위와 같은 과정이지만 Oracle을 기준으로 -> F_(O,C)
         for(ArrayList<String> cl_or: oracle) {
@@ -1081,7 +1081,7 @@ public class Clustering {
             F_O_C += mat;
         }
         F_O_C /= bestMatches_or.size();
-        System.out.println(F_O_C);
+//        System.out.println(F_O_C);
 
         // Harmonic mean calculation -> F1p
         return (2*F_C_O*F_O_C / (F_C_O + F_O_C));
@@ -1189,5 +1189,23 @@ public class Clustering {
 
     public int clusterSize() {
         return cluster.size();
+    }
+
+    private void testOracleClusterGenerate(ArrayList<ArrayList<String>> oracle) {
+        ArrayList<ArrayList<InterplayModel>> new_cluster = new ArrayList<>();
+        for (ArrayList<String> cl : oracle) {
+            ArrayList<InterplayModel> temp = new ArrayList<>();
+            for(ArrayList<InterplayModel> IMs : cluster) {
+                for(InterplayModel im : IMs) {
+                    if(im.getId().equals(cl)) {
+                        temp.add(im);
+                        break;
+                    }
+                }
+            }
+            new_cluster.add(temp);
+        }
+
+        cluster = (ArrayList)new_cluster.clone();
     }
 }
