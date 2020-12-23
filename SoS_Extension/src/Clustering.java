@@ -1083,7 +1083,7 @@ public class Clustering {
         F_O_C /= bestMatches_or.size();
         System.out.println(F_O_C);
 
-        // Harmonic mean calcuation -> F1p
+        // Harmonic mean calculation -> F1p
         return (2*F_C_O*F_O_C / (F_C_O + F_O_C));
     }
 
