@@ -997,6 +997,36 @@ public class Clustering {
         else return false;
     }
 
+    public double EvaluateF1P(ArrayList<ArrayList<String>> oracle, ArrayList<String> index) {
+        double ret = 0;
+
+        HashMap<String, ArrayList<Integer>> c_element_index = new HashMap<>();
+        HashMap<String, ArrayList<Integer>> o_element_index = new HashMap<>();
+
+        // Generate Element-wise hashmap of Oracle and the formed cluster
+        for(String id : index) {
+            ArrayList<Integer> c_index = new ArrayList<>();
+            ArrayList<Integer> o_index = new ArrayList<>();
+
+            for(ArrayList<String> cl : oracle) {
+                if(cl.contains(id)) o_index.add(oracle.indexOf(cl));
+            }
+            for(ArrayList<InterplayModel> IMs : cluster) {
+                for(InterplayModel IM: IMs) {
+                    if(IM.getId().equals(id)) c_index.add(cluster.indexOf(IMs));
+                }
+            }
+            o_element_index.put(id, o_index);
+            c_element_index.put(id, c_index);
+        }
+
+        for (String s : o_element_index.keySet())
+            for (int i : o_element_index.get(s))
+                System.out.println("key :" + s + " value: " + i);
+
+        return ret;
+    }
+
     public double EvaluateClusteringResult(ArrayList<ArrayList<String>> oracle, ArrayList<String> index) {
         double TP = 0;
         double FP = 0;
