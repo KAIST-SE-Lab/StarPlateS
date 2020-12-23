@@ -1051,6 +1051,12 @@ public class Clustering {
             bestMatches_cl.add(Math.sqrt(bestMatch));
             bestMatch = 0;
         }
+        double F_C_O = 0;
+        for(double mat : bestMatches_cl) {
+            F_C_O += mat;
+        }
+        F_C_O /= bestMatches_cl.size();
+        System.out.println(F_C_O);
 
         // 위와 같은 과정이지만 Oracle을 기준으로 -> F_(O,C)
         for(ArrayList<String> cl_or: oracle) {
@@ -1070,8 +1076,15 @@ public class Clustering {
             bestMatches_or.add(Math.sqrt(bestMatch));
             bestMatch = 0;
         }
+        double F_O_C = 0;
+        for(double mat : bestMatches_or) {
+            F_O_C += mat;
+        }
+        F_O_C /= bestMatches_or.size();
+        System.out.println(F_O_C);
 
-        return ret;
+        // Harmonic mean calcuation -> F1p
+        return (2*F_C_O*F_O_C / (F_C_O + F_O_C));
     }
 
     private ArrayList<String> matchedElements(ArrayList<InterplayModel> cl_cl, ArrayList<String> cl_or) {
