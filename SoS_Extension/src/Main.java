@@ -229,21 +229,16 @@ public class Main {
                 imbfl.printSuspSequences();
             }
 
-            // Toy Example Oracle
-/*            ArrayList<ArrayList<String>> oracle = new ArrayList<>();
-            oracle.add(new ArrayList<>(Arrays.asList("6_0", "7_0", "8_0", "9_0", "11_0", "13_0", "41_0", "47_0")));
-            oracle.add(new ArrayList<>(Arrays.asList("3_0", "6_0", "12_0", "46_0")));
-            oracle.add(new ArrayList<>(Arrays.asList("17_0", "30_0", "45_0", "49_0")));
-            oracle.add(new ArrayList<>(Arrays.asList("24_0", "29_0", "38_0", "46_0")));
-            oracle.add(new ArrayList<>(Arrays.asList("24_0", "27_0", "29_0", "34_0", "38_0", "47_0")));
-            oracle.add(new ArrayList<>(Arrays.asList("43_0")));
-            oracle.add(new ArrayList<>(Arrays.asList("22_0")));*/
             double simlr_threshold;
             double delay_threshold;
             int lcs_min_len_threshold;
             double evaluation_score;
             int number_of_clusters;
             boolean single = false;
+
+            double c_simlr = 0.88;
+            double c_delay = 0.9;
+            int c_len = 13;
 
             OracleGenerator oracleGenerator = new OracleGenerator();
             oracleGenerator.oracleGeneration(IMs);
@@ -254,12 +249,7 @@ public class Main {
                 File file2 = new File(base + "/SoS_Extension/" + "HyperparameterAnalysis_Case5.csv");  // TODO Which Case? -> File Name Change
                 try {
                     FileWriter writer = new FileWriter(file2, true);
-                    // The code for Finalize Function Hyperparameter testing
-/*                    Clustering clustering = new Clustering();
-                    for (InterplayModel im : IMs) {
-//                                clustering.addTraceBaseLCS(im, delay_threshold, lcs_min_len_threshold);
-                        clustering.addTraceCase5(im, 0.66, 0.7, 18);                // TODO The best option so far
-                    }*/
+                    String ret = "";
                     // The code for Hyperparameter optimization of clustering algorithm
                     for (int simlr_counter = 60; simlr_counter <= 100; simlr_counter++) {
                         simlr_threshold = (double) simlr_counter / 100;
@@ -270,46 +260,49 @@ public class Main {
 
                                 for (InterplayModel im : IMs) {
                                     // 대조군 Clustering Algorithm
-//                                clustering.addTraceBaseLCS(im, delay_threshold, lcs_min_len_threshold);
+//                                    clustering.addTraceBaseLCS(im, delay_threshold, lcs_min_len_threshold);
                                     clustering.addTraceCase5(im, simlr_threshold, delay_threshold, lcs_min_len_threshold);
+                                    // For Finalizing Optimization
+//                                    clustering.addTraceCase5(im, c_simlr, c_delay, c_len);
                                 }
                                 // Clustering Finalize Optimization
-                                /*   clustering.ClusteringFinalize(simlr_threshold, delay_threshold, lcs_min_len_threshold);
-                                */
+//                                clustering.ClusteringFinalize(simlr_threshold, delay_threshold, lcs_min_len_threshold);
                                 number_of_clusters = clustering.clusterSize();
                                 // Oracle-based Evaluation Score
                                 evaluation_score = clustering.EvaluateClusteringResult(oracle, oracleGenerator.getIndex());
                                 System.out.println(simlr_threshold + ", " + delay_threshold + "," + lcs_min_len_threshold + "," + " Clustering Evaluation Score: " + evaluation_score + ", Cluster Size: " + number_of_clusters);
-                                writer.write(simlr_threshold + "," + delay_threshold + "," + lcs_min_len_threshold + "," + evaluation_score + "," + number_of_clusters);
-                                writer.write("\n");
+                                ret += simlr_threshold + "," + delay_threshold + "," + lcs_min_len_threshold + "," + evaluation_score + "," + number_of_clusters + "\n";
                             }
                         }
                     }
+                    writer.write(ret);
                     writer.close();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-            } // Single run for an optimized Hyperparameter setting
-           /* else {
+            } // Single run with an optimized Hyperparameter setting
+            else {
                 Clustering clustering = new Clustering();
-                simlr_threshold = 0.78;
+                simlr_threshold = 0.71;
                 delay_threshold = 0.8;
-                lcs_min_len_threshold = 19;
+                lcs_min_len_threshold = 16;
 
                 for (InterplayModel im : IMs) {
                     clustering.addTraceCase5(im, simlr_threshold, delay_threshold, lcs_min_len_threshold);
 //                clustering.addTraceBaseLCS(im, delay_threshold, lcs_min_len_threshold);
                 }
+                simlr_threshold = 0.8;
+                delay_threshold = 0.1;
+                lcs_min_len_threshold = 11;
+//                clustering.ClusteringFinalize(simlr_threshold, delay_threshold, lcs_min_len_threshold);
+//                evaluation_score = clustering.EvaluateClusteringResult(oracle, oracleGenerator.getIndex());
+//                clustering.testOracleClusterGenerate(oracle);
                 clustering.printCluster();
-                simlr_threshold = 0.75;
-                delay_threshold = 0.8;
-                lcs_min_len_threshold = 15;
-                clustering.ClusteringFinalize(simlr_threshold, delay_threshold, lcs_min_len_threshold);
-//                evaluation_score = clustering.EvaluateClusteringResult(oracle);
-//                System.out.println("Clustering Evaluation Score: " + evaluation_score);
-                clustering.printCluster();
-                clustering.clusterClear();
-            }*/
+                evaluation_score = clustering.EvaluateF1P(oracle, oracleGenerator.getIndex());
+//                evaluation_score = clustering.EvaluateF1P(oracle, oracle, oracleGenerator.getIndex());
+                number_of_clusters = clustering.clusterSize();
+                System.out.println("Clustering Evaluation Score: " + evaluation_score + ", Cluster Size: " + number_of_clusters);
+            }
         }
     }
 }
