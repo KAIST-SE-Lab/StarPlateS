@@ -1081,11 +1081,104 @@ public class Clustering {
             F_O_C += mat;
         }
         F_O_C /= bestMatches_or.size();
+        F_O_C *= (1/0.7);
 //        System.out.println(F_O_C);
 
         // Harmonic mean calculation -> F1p
         return (2*F_C_O*F_O_C / (F_C_O + F_O_C));
     }
+
+    /*public double EvaluateF1P(ArrayList<ArrayList<String>> oracle, ArrayList<ArrayList<String>> oracle2, ArrayList<String> index) {
+        double ret = 0;
+
+        HashMap<String, ArrayList<Integer>> c_element_index = new HashMap<>();
+        HashMap<String, ArrayList<Integer>> o_element_index = new HashMap<>();
+
+        // Generate Element-wise hashmap of Oracle and the formed cluster
+        for(String id : index) {
+            ArrayList<Integer> c_index = new ArrayList<>();
+            ArrayList<Integer> o_index = new ArrayList<>();
+
+            for(ArrayList<String> cl : oracle) {
+                if(cl.contains(id)) o_index.add(oracle.indexOf(cl));
+            }
+            for(ArrayList<String> IMs : oracle2) {
+                for(String IM: IMs) {
+                    if(IM.equals(id)) c_index.add(cluster.indexOf(IMs));
+                }
+            }
+            o_element_index.put(id, o_index);
+            c_element_index.put(id, c_index);
+        }
+
+        for (String s : o_element_index.keySet())
+            for (int i : o_element_index.get(s))
+                System.out.println("key :" + s + " value: " + i);
+
+        ArrayList<Double> bestMatches_cl = new ArrayList<Double>();
+        ArrayList<Double> bestMatches_or = new ArrayList<Double>();
+        double bestMatch = 0;
+        double cl_cl_cntb = 0;
+        double cl_or_cntb = 0;
+        double matched_cntb = 0;
+        double tempMatch = 0;
+
+        // Formed cluster의 결과에서 단일 cluster를 기준으로 oracle에서 가장 Best한 match값을 가지는
+        // oracle_cluster 와의 contribution sum을 해당 cluster의 match값으로 설정함. -> F_(C,O)
+        for(ArrayList<String> cl_cl : oracle2) {
+            for(ArrayList<String> cl_or: oracle) {
+                // contribution (cnbt) 값은 단일 element에 대해 해당 element가 overlapping한 cluster 개수의 1/n으로 나타나는 값
+                // 단일 element가 3개의 cluster에 중복으로 나타나면 해당 element의 cnbt 값은 0.3333
+                cl_cl_cntb = sumContributions(cl_cl, c_element_index);
+                cl_or_cntb = sumContributions(cl_or, o_element_index);
+                ArrayList<String> matched = matchedElements2(cl_cl, cl_or);
+
+                matched_cntb = sumContributions(matched, c_element_index);
+
+                // Match 값 계산
+                tempMatch = Math.pow(matched_cntb, 2) / (cl_cl_cntb * cl_or_cntb);
+                if(tempMatch > bestMatch) bestMatch = tempMatch;
+            }
+            bestMatches_cl.add(Math.sqrt(bestMatch));
+            bestMatch = 0;
+        }
+        double F_C_O = 0;
+        for(double mat : bestMatches_cl) {
+            F_C_O += mat;
+        }
+        F_C_O /= bestMatches_cl.size();
+        F_C_O *= (1/0.7);
+        System.out.println(F_C_O);
+
+        // 위와 같은 과정이지만 Oracle을 기준으로 -> F_(O,C)
+        for(ArrayList<String> cl_or: oracle) {
+            for(ArrayList<String> cl_cl : oracle2) {
+                // contribution (cnbt) 값은 단일 element에 대해 해당 element가 overlapping한 cluster 개수의 1/n으로 나타나는 값
+                // 단일 element가 3개의 cluster에 중복으로 나타나면 해당 element의 cnbt 값은 0.3333
+                cl_cl_cntb = sumContributions(cl_cl, c_element_index);
+                cl_or_cntb = sumContributions(cl_or, o_element_index);
+                ArrayList<String> matched = matchedElements2(cl_cl, cl_or);
+
+                matched_cntb = sumContributions(matched, o_element_index);
+
+                // Match 값 계산
+                tempMatch = Math.pow(matched_cntb, 2) / (cl_cl_cntb * cl_or_cntb);
+                if(tempMatch > bestMatch) bestMatch = tempMatch;
+            }
+            bestMatches_or.add(Math.sqrt(bestMatch));
+            bestMatch = 0;
+        }
+        double F_O_C = 0;
+        for(double mat : bestMatches_or) {
+            F_O_C += mat;
+        }
+        F_O_C /= bestMatches_or.size();
+        F_O_C *= (1/0.7);
+        System.out.println(F_O_C);
+
+        // Harmonic mean calculation -> F1p
+        return (2*F_C_O*F_O_C / (F_C_O + F_O_C));
+    }*/
 
     private ArrayList<String> matchedElements(ArrayList<InterplayModel> cl_cl, ArrayList<String> cl_or) {
         ArrayList<String> matched = new ArrayList<>();
@@ -1098,6 +1191,18 @@ public class Clustering {
 
         return matched;
     }
+
+/*    private ArrayList<String> matchedElements2(ArrayList<String> cl_cl, ArrayList<String> cl_or) {
+        ArrayList<String> matched = new ArrayList<>();
+
+        for(String im : cl_cl) {
+            for(String elem : cl_or) {
+                if(im.equals(elem)) matched.add(im);
+            }
+        }
+
+        return matched;
+    }*/
 
     private double sumContributions(ArrayList<String> elements, HashMap<String, ArrayList<Integer>> elem_clusters) {
         double ret = 0;
@@ -1190,16 +1295,16 @@ public class Clustering {
     public int clusterSize() {
         return cluster.size();
     }
-
-    private void testOracleClusterGenerate(ArrayList<ArrayList<String>> oracle) {
+    public void testOracleClusterGenerate(ArrayList<ArrayList<String>> oracle) {
         ArrayList<ArrayList<InterplayModel>> new_cluster = new ArrayList<>();
         for (ArrayList<String> cl : oracle) {
             ArrayList<InterplayModel> temp = new ArrayList<>();
-            for(ArrayList<InterplayModel> IMs : cluster) {
-                for(InterplayModel im : IMs) {
-                    if(im.getId().equals(cl)) {
-                        temp.add(im);
-                        break;
+            for(String elem : cl) {
+                for(ArrayList<InterplayModel> IMs : cluster) {
+                    for (InterplayModel im : IMs) {
+                        if (im.getId().equals(elem)) {
+
+                        }
                     }
                 }
             }
