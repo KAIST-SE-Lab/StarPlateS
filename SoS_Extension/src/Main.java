@@ -266,7 +266,7 @@ public class Main {
 //                                    clustering.addTraceCase5(im, c_simlr, c_delay, c_len);
                                 }
                                 // Clustering Finalize Optimization
-//                                clustering.ClusteringFinalize(simlr_threshold, delay_threshold, lcs_min_len_threshold);
+                                clustering.ClusteringFinalize(simlr_threshold, delay_threshold, lcs_min_len_threshold);
                                 number_of_clusters = clustering.clusterSize();
                                 // Oracle-based Evaluation Score
                                 evaluation_score = clustering.EvaluateClusteringResult(oracle, oracleGenerator.getIndex());
