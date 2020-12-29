@@ -997,8 +997,8 @@ public class Clustering {
         else return false;
     }
 
-    public double EvaluateF1P(ArrayList<ArrayList<String>> oracle, ArrayList<String> index) {
-        double ret = 0;
+    public ArrayList<Double> EvaluateF1P(ArrayList<ArrayList<String>> oracle, ArrayList<String> index) {
+        ArrayList<Double> ret = new ArrayList<>();
 
         HashMap<String, ArrayList<Integer>> c_element_index = new HashMap<>();
         HashMap<String, ArrayList<Integer>> o_element_index = new HashMap<>();
@@ -1057,6 +1057,7 @@ public class Clustering {
         }
         F_C_O /= bestMatches_cl.size();
         F_C_O *= (1/0.9); // TODO # clusters
+        ret.add(F_C_O);
 //        System.out.println(F_C_O);
 
         // 위와 같은 과정이지만 Oracle을 기준으로 -> F_(O,C)
@@ -1083,10 +1084,12 @@ public class Clustering {
         }
         F_O_C /= bestMatches_or.size();
         F_O_C *= (1/0.9); // TODO # of clusters
+        ret.add(F_O_C);
 //        System.out.println(F_O_C);
 
         // Harmonic mean calculation -> F1p
-        return (2*F_C_O*F_O_C / (F_C_O + F_O_C));
+        ret.add(2*F_C_O*F_O_C / (F_C_O + F_O_C));
+        return ret;
     }
 
     /*public double EvaluateF1P(ArrayList<ArrayList<String>> oracle, ArrayList<ArrayList<String>> oracle2, ArrayList<String> index) {
