@@ -266,10 +266,11 @@ public class Main {
 //                                    clustering.addTraceCase5(im, c_simlr, c_delay, c_len);
                                 }
                                 // Clustering Finalize Optimization
-                                clustering.ClusteringFinalize(simlr_threshold, delay_threshold, lcs_min_len_threshold);
+//                                clustering.ClusteringFinalize(simlr_threshold, delay_threshold, lcs_min_len_threshold);
                                 number_of_clusters = clustering.clusterSize();
                                 // Oracle-based Evaluation Score
-                                evaluation_score = clustering.EvaluateClusteringResult(oracle, oracleGenerator.getIndex());
+                                evaluation_score = clustering.EvaluateF1P(oracle, oracleGenerator.getIndex());
+//                                evaluation_score = clustering.EvaluateClusteringResult(oracle, oracleGenerator.getIndex());
                                 System.out.println(simlr_threshold + ", " + delay_threshold + "," + lcs_min_len_threshold + "," + " Clustering Evaluation Score: " + evaluation_score + ", Cluster Size: " + number_of_clusters);
                                 ret += simlr_threshold + "," + delay_threshold + "," + lcs_min_len_threshold + "," + evaluation_score + "," + number_of_clusters + "\n";
                             }
