@@ -233,6 +233,7 @@ public class Main {
             double delay_threshold;
             int lcs_min_len_threshold;
             double evaluation_score;
+            ArrayList<Double> f1p_ev_score;
             int number_of_clusters;
             boolean single = false;
 
@@ -269,10 +270,10 @@ public class Main {
 //                                clustering.ClusteringFinalize(simlr_threshold, delay_threshold, lcs_min_len_threshold);
                                 number_of_clusters = clustering.clusterSize();
                                 // Oracle-based Evaluation Score
-                                evaluation_score = clustering.EvaluateF1P(oracle, oracleGenerator.getIndex());
+                                f1p_ev_score = clustering.EvaluateF1P(oracle, oracleGenerator.getIndex()); // 0: F_C_O, 1: F_O_C, 2: Evaluation Score
 //                                evaluation_score = clustering.EvaluateClusteringResult(oracle, oracleGenerator.getIndex());
-                                System.out.println(simlr_threshold + ", " + delay_threshold + "," + lcs_min_len_threshold + "," + " Clustering Evaluation Score: " + evaluation_score + ", Cluster Size: " + number_of_clusters);
-                                ret += simlr_threshold + "," + delay_threshold + "," + lcs_min_len_threshold + "," + evaluation_score + "," + number_of_clusters + "\n";
+                                System.out.println(simlr_threshold + ", " + delay_threshold + ", " + lcs_min_len_threshold + "," + " Clustering Evaluation Score: " + f1p_ev_score.get(2) + ", F_C_O: " + f1p_ev_score.get(0) + ", F_O_C: " + f1p_ev_score.get(1) + ", Cluster Size: " + number_of_clusters);
+                                ret += simlr_threshold + "," + delay_threshold + "," + lcs_min_len_threshold + "," + f1p_ev_score.get(2) + "," + f1p_ev_score.get(0) + "," + f1p_ev_score.get(1) + "," + number_of_clusters + "\n";
                             }
                         }
                     }
@@ -299,10 +300,10 @@ public class Main {
 //                evaluation_score = clustering.EvaluateClusteringResult(oracle, oracleGenerator.getIndex());
 //                clustering.testOracleClusterGenerate(oracle);
                 clustering.printCluster();
-                evaluation_score = clustering.EvaluateF1P(oracle, oracleGenerator.getIndex());
+//                evaluation_score = clustering.EvaluateF1P(oracle, oracleGenerator.getIndex());
 //                evaluation_score = clustering.EvaluateF1P(oracle, oracle, oracleGenerator.getIndex());
                 number_of_clusters = clustering.clusterSize();
-                System.out.println("Clustering Evaluation Score: " + evaluation_score + ", Cluster Size: " + number_of_clusters);
+//                System.out.println("Clustering Evaluation Score: " + evaluation_score + ", Cluster Size: " + number_of_clusters);
             }
         }
     }
