@@ -261,13 +261,13 @@ public class Main {
 
                                 for (InterplayModel im : IMs) {
                                     // 대조군 Clustering Algorithm
-//                                    clustering.addTraceBaseLCS(im, delay_threshold, lcs_min_len_threshold);
-                                    clustering.addTraceCase5(im, simlr_threshold, delay_threshold, lcs_min_len_threshold);
+                                    clustering.addTraceBaseLCS(im, delay_threshold, lcs_min_len_threshold);
+//                                    clustering.addTraceCase5(im, simlr_threshold, delay_threshold, lcs_min_len_threshold);
                                     // For Finalizing Optimization
 //                                    clustering.addTraceCase5(im, c_simlr, c_delay, c_len);
                                 }
                                 // Clustering Finalize Optimization
-                                clustering.ClusteringFinalize(simlr_threshold, delay_threshold, lcs_min_len_threshold);
+//                                clustering.ClusteringFinalize(simlr_threshold, delay_threshold, lcs_min_len_threshold);
                                 number_of_clusters = clustering.clusterSize();
                                 // Oracle-based Evaluation Score
                                 f1p_ev_score = clustering.EvaluateF1P(oracle, oracleGenerator.getIndex()); // 0: F_C_O, 1: F_O_C, 2: Evaluation Score
