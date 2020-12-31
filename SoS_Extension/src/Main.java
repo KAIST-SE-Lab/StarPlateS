@@ -73,7 +73,7 @@ public class Main {
             String base = System.getProperty("user.dir");
             System.out.println(System.getProperty("user.dir"));
             int matchingtxts = 0;
-            String currentdir = base + "/SoS_Extension/logs/";
+            String currentdir = base + "/SoS_Extension/logs/oracle_temp/";
             System.out.print("Current Working Directory : " + currentdir + "\n");
             File f = new File(currentdir);
             Boolean result;
@@ -232,14 +232,17 @@ public class Main {
             double simlr_threshold;
             double delay_threshold;
             int lcs_min_len_threshold;
-            double evaluation_score;
             ArrayList<Double> f1p_ev_score;
             int number_of_clusters;
-            boolean single = false;
+            boolean single = true;
 
-            double c_simlr = 0.6;
-            double c_delay = 1;
-            int c_len = 9;
+            double c_simlr = 0.73;
+            double c_delay = 0.8;
+            int c_len = 16;
+
+            double m_simlr = 0.86;
+            double m_delay = 1;
+            int m_len = 9;
 
             OracleGenerator oracleGenerator = new OracleGenerator();
             oracleGenerator.oracleGeneration(IMs);
@@ -247,7 +250,7 @@ public class Main {
             ArrayList<ArrayList<String>> oracle = oracleGenerator.getOracle();
 
             if (isClustering && !single) {
-                File file2 = new File(base + "/SoS_Extension/" + "HyperparameterAnalysis_Case5.csv");  // TODO Which Case? -> File Name Change
+                File file2 = new File(base + "/SoS_Extension/" + "HyperparameterAnalysis_temp.csv");  // TODO Which Case? -> File Name Change
                 try {
                     FileWriter writer = new FileWriter(file2, true);
                     String ret = "";
@@ -267,6 +270,7 @@ public class Main {
                                     clustering.addTraceCase5(im, c_simlr, c_delay, c_len);
                                 }
                                 // Clustering Finalize Optimization
+                                clustering.ClusterMerge(m_simlr, m_delay, m_len);
                                 clustering.ClusteringFinalize(simlr_threshold, delay_threshold, lcs_min_len_threshold);
                                 number_of_clusters = clustering.clusterSize();
                                 // Oracle-based Evaluation Score
@@ -285,7 +289,7 @@ public class Main {
             } // Single run with an optimized Hyperparameter setting
             else {
                 Clustering clustering = new Clustering();
-                simlr_threshold = 0.71;
+                simlr_threshold = 0.73;
                 delay_threshold = 0.8;
                 lcs_min_len_threshold = 16;
 
@@ -293,17 +297,18 @@ public class Main {
                     clustering.addTraceCase5(im, simlr_threshold, delay_threshold, lcs_min_len_threshold);
 //                clustering.addTraceBaseLCS(im, delay_threshold, lcs_min_len_threshold);
                 }
-                simlr_threshold = 0.8;
+                clustering.printCluster();
+                simlr_threshold = 0.40;
                 delay_threshold = 0.1;
                 lcs_min_len_threshold = 11;
-//                clustering.ClusteringFinalize(simlr_threshold, delay_threshold, lcs_min_len_threshold);
+                clustering.ClusteringFinalize(simlr_threshold, delay_threshold, lcs_min_len_threshold);
+//                clustering.printCluster();
 //                evaluation_score = clustering.EvaluateClusteringResult(oracle, oracleGenerator.getIndex());
 //                clustering.testOracleClusterGenerate(oracle);
-                clustering.printCluster();
-//                evaluation_score = clustering.EvaluateF1P(oracle, oracleGenerator.getIndex());
+                f1p_ev_score = clustering.EvaluateF1P(oracle, oracleGenerator.getIndex());
 //                evaluation_score = clustering.EvaluateF1P(oracle, oracle, oracleGenerator.getIndex());
                 number_of_clusters = clustering.clusterSize();
-//                System.out.println("Clustering Evaluation Score: " + evaluation_score + ", Cluster Size: " + number_of_clusters);
+                System.out.println(simlr_threshold + ", " + delay_threshold + ", " + lcs_min_len_threshold + "," + " Clustering Evaluation Score: " + f1p_ev_score.get(2) + ", F_C_O: " + f1p_ev_score.get(0) + ", F_O_C: " + f1p_ev_score.get(1) + ", Cluster Size: " + number_of_clusters);
             }
         }
     }
