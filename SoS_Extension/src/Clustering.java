@@ -612,16 +612,16 @@ public class Clustering {
         ArrayList<Message> lcs_lcs;
         ArrayList<ArrayList<Message>> lcs_lcses = new ArrayList<>();
 
-        for(int i = 0; i < cluster.size(); i++) {
-            if(merged.contains(i)) continue;
-            for(int j = i+1; j < cluster.size(); j++) {
+        for (int i = 0; i < cluster.size(); i++) {
+            if (merged.contains(i)) continue;
+            for (int j = i + 1; j < cluster.size(); j++) {
                 lcs_lcses.clear();
-                if(cluster.get(i).size() > 1 && cluster.get(j).size() >1) {
+                if (cluster.get(i).size() > 1 && cluster.get(j).size() > 1) {
                     lcs_lcs = LCSExtractorWithDelay(centroidLCS.get(i), centroidLCS.get(j), delay_threshold);
-                    if(lcs_lcs == null) continue;
+                    if (lcs_lcs == null) continue;
                     Collections.reverse(lcs_lcs);
                     temp = similarityChecker(centroidLCS.get(i), lcs_lcs, delay_threshold);
-//                    temp = similarityChecker(centroidLCS.get(i), centroidLCS.get(j), delay_threshold); TODO Similarity: Cent vs Cent / Cent vs LCS_LCS ??
+//                  temp = similarityChecker(centroidLCS.get(i), centroidLCS.get(j), delay_threshold); TODO Similarity: Cent vs Cent / Cent vs LCS_LCS ??
                     if (temp >= simlr_threshold) {
                         for (InterplayModel IM : cluster.get(j)) {
                             if (!cluster.get(i).contains(IM)) {
@@ -629,23 +629,23 @@ public class Clustering {
                             }
                         }
                         centroidLCS.set(i, lcs_lcs);
-                        if(!merged.contains(j)) merged.add(j);
+                        if (!merged.contains(j)) merged.add(j);
                     }
                 } else {
-                    for(int k = 0; k < startingTime.size(); k++) {
+                    for (int k = 0; k < startingTime.size(); k++) {
                         lcs_lcses.add(LCSExtractorWithDelay(IMSlicer(startingTime.get(k), centroidLCS.get(i)),
                                 centroidLCS.get(j), delay_threshold));
                         if (lcs_lcses.get(k) != null) Collections.reverse(lcs_lcses.get(k));
                     }
-                    for(int k = 0; k < startingTime.size(); k++) {
-                        if(lcs_lcses.get(k) != null && (lcs_lcses.get(k).size() > lcs_min_len_threshold)) {
+                    for (int k = 0; k < startingTime.size(); k++) {
+                        if (lcs_lcses.get(k) != null && (lcs_lcses.get(k).size() > lcs_min_len_threshold)) {
                             for (InterplayModel IM : cluster.get(j)) {
                                 if (!cluster.get(i).contains(IM)) {
                                     cluster.get(i).add(IM);
                                 }
                             }
                             centroidLCS.set(i, lcs_lcses.get(k));
-                            if(!merged.contains(j)) merged.add(j);
+                            if (!merged.contains(j)) merged.add(j);
                             break;
                         }
                     }
@@ -654,10 +654,11 @@ public class Clustering {
         }
         Collections.sort(merged);
         int key = -1;
-        for(int i = merged.size()-1; i >=0 ; i--) {
-//            System.out.println(merged.get(i));
-            cluster.remove((int)merged.get(i));
+        for (int i = merged.size() - 1; i >= 0; i--) {
+//          System.out.println(merged.get(i));
+            cluster.remove((int) merged.get(i));
         }
+        merged.clear();
     }
 
     public void ClusteringFinalize(double simlr_threshold, double delay_threshold, int lcs_min_len_threshold) {         // TODO Clustering Finalize Concurrent Modification Exception

@@ -73,7 +73,7 @@ public class Main {
             String base = System.getProperty("user.dir");
             System.out.println(System.getProperty("user.dir"));
             int matchingtxts = 0;
-            String currentdir = base + "/SoS_Extension/logs/oracle_temp/";
+            String currentdir = base + "/SoS_Extension/logs/";
             System.out.print("Current Working Directory : " + currentdir + "\n");
             File f = new File(currentdir);
             Boolean result;
@@ -234,7 +234,7 @@ public class Main {
             int lcs_min_len_threshold;
             ArrayList<Double> f1p_ev_score;
             int number_of_clusters;
-            boolean single = true;
+            boolean single = false;
 
             double c_simlr = 0.73;
             double c_delay = 0.8;
@@ -250,7 +250,7 @@ public class Main {
             ArrayList<ArrayList<String>> oracle = oracleGenerator.getOracle();
 
             if (isClustering && !single) {
-                File file2 = new File(base + "/SoS_Extension/" + "HyperparameterAnalysis_temp.csv");  // TODO Which Case? -> File Name Change
+                File file2 = new File(base + "/SoS_Extension/" + "HyperparameterAnalysis_Case5.csv");  // TODO Which Case? -> File Name Change
                 try {
                     FileWriter writer = new FileWriter(file2, true);
                     String ret = "";
@@ -265,13 +265,18 @@ public class Main {
                                 for (InterplayModel im : IMs) {
                                     // 대조군 Clustering Algorithm
 //                                    clustering.addTraceBaseLCS(im, delay_threshold, lcs_min_len_threshold);
-//                                    clustering.addTraceCase5(im, simlr_threshold, delay_threshold, lcs_min_len_threshold);
-                                    // For Finalizing Optimization
-                                    clustering.addTraceCase5(im, c_simlr, c_delay, c_len);
+                                    clustering.addTraceCase5(im, simlr_threshold, delay_threshold, lcs_min_len_threshold);
+                                    // For Merging&Finalizing Optimization
+//                                    clustering.addTraceCase5(im, c_simlr, c_delay, c_len);
                                 }
+
+                                // Clustering Merge Optimization
+//                                clustering.ClusterMerge(simlr_threshold, delay_threshold, lcs_min_len_threshold);
+
                                 // Clustering Finalize Optimization
-                                clustering.ClusterMerge(m_simlr, m_delay, m_len);
-                                clustering.ClusteringFinalize(simlr_threshold, delay_threshold, lcs_min_len_threshold);
+//                                clustering.ClusterMerge(m_simlr, m_delay, m_len);
+//                                clustering.ClusteringFinalize(simlr_threshold, delay_threshold, lcs_min_len_threshold);
+                                
                                 number_of_clusters = clustering.clusterSize();
                                 // Oracle-based Evaluation Score
                                 f1p_ev_score = clustering.EvaluateF1P(oracle, oracleGenerator.getIndex()); // 0: F_C_O, 1: F_O_C, 2: Evaluation Score
