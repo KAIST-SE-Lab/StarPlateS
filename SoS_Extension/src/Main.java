@@ -250,7 +250,7 @@ public class Main {
             ArrayList<ArrayList<String>> oracle = oracleGenerator.getOracle();
 
             if (isClustering && !single) {
-                File file2 = new File(base + "/SoS_Extension/" + "HyperparameterAnalysis_Case5.csv");  // TODO Which Case? -> File Name Change
+                File file2 = new File(base + "/SoS_Extension/" + "F1P - HyperparameterAnalysis_Base.csv");  // TODO Which Case? -> File Name Change
                 try {
                     FileWriter writer = new FileWriter(file2, true);
                     String ret = "";
@@ -264,8 +264,10 @@ public class Main {
 
                                 for (InterplayModel im : IMs) {
                                     // 대조군 Clustering Algorithm
-//                                    clustering.addTraceBaseLCS(im, delay_threshold, lcs_min_len_threshold);
-                                    clustering.addTraceCase5(im, simlr_threshold, delay_threshold, lcs_min_len_threshold);
+                                    clustering.addTraceBaseLCS(im, delay_threshold, lcs_min_len_threshold);
+
+//                                    clustering.addTraceCase5(im, simlr_threshold, delay_threshold, lcs_min_len_threshold);
+
                                     // For Merging&Finalizing Optimization
 //                                    clustering.addTraceCase5(im, c_simlr, c_delay, c_len);
                                 }
@@ -276,7 +278,7 @@ public class Main {
                                 // Clustering Finalize Optimization
 //                                clustering.ClusterMerge(m_simlr, m_delay, m_len);
 //                                clustering.ClusteringFinalize(simlr_threshold, delay_threshold, lcs_min_len_threshold);
-                                
+
                                 number_of_clusters = clustering.clusterSize();
                                 // Oracle-based Evaluation Score
                                 f1p_ev_score = clustering.EvaluateF1P(oracle, oracleGenerator.getIndex()); // 0: F_C_O, 1: F_O_C, 2: Evaluation Score
