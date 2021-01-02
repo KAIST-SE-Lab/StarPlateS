@@ -236,9 +236,9 @@ public class Main {
             int number_of_clusters;
             boolean single = false;
 
-            double c_simlr = 0.73;
-            double c_delay = 0.8;
-            int c_len = 16;
+            double c_simlr = 0.6;
+            double c_delay = 1;
+            int c_len = 9;
 
             double m_simlr = 0.86;
             double m_delay = 1;
@@ -250,7 +250,7 @@ public class Main {
             ArrayList<ArrayList<String>> oracle = oracleGenerator.getOracle();
 
             if (isClustering && !single) {
-                File file2 = new File(base + "/SoS_Extension/" + "F1P - HyperparameterAnalysis_Base.csv");  // TODO Which Case? -> File Name Change
+                File file2 = new File(base + "/SoS_Extension/" + "F1P - 2) HyperparameterAnalysis_Case5.csv");  // TODO Which Case? -> File Name Change
                 try {
                     FileWriter writer = new FileWriter(file2, true);
                     String ret = "";
@@ -264,16 +264,16 @@ public class Main {
 
                                 for (InterplayModel im : IMs) {
                                     // 대조군 Clustering Algorithm
-                                    clustering.addTraceBaseLCS(im, delay_threshold, lcs_min_len_threshold);
+//                                    clustering.addTraceBaseLCS(im, delay_threshold, lcs_min_len_threshold);
 
 //                                    clustering.addTraceCase5(im, simlr_threshold, delay_threshold, lcs_min_len_threshold);
 
                                     // For Merging&Finalizing Optimization
-//                                    clustering.addTraceCase5(im, c_simlr, c_delay, c_len);
+                                    clustering.addTraceCase5(im, c_simlr, c_delay, c_len);
                                 }
 
                                 // Clustering Merge Optimization
-//                                clustering.ClusterMerge(simlr_threshold, delay_threshold, lcs_min_len_threshold);
+                                clustering.ClusterMerge(simlr_threshold, delay_threshold, lcs_min_len_threshold);
 
                                 // Clustering Finalize Optimization
 //                                clustering.ClusterMerge(m_simlr, m_delay, m_len);
@@ -296,19 +296,19 @@ public class Main {
             } // Single run with an optimized Hyperparameter setting
             else {
                 Clustering clustering = new Clustering();
-                simlr_threshold = 0.73;
-                delay_threshold = 0.8;
-                lcs_min_len_threshold = 16;
+                simlr_threshold = 0.6;
+                delay_threshold = 1;
+                lcs_min_len_threshold = 9;
 
                 for (InterplayModel im : IMs) {
                     clustering.addTraceCase5(im, simlr_threshold, delay_threshold, lcs_min_len_threshold);
 //                clustering.addTraceBaseLCS(im, delay_threshold, lcs_min_len_threshold);
                 }
                 clustering.printCluster();
-                simlr_threshold = 0.40;
-                delay_threshold = 0.1;
-                lcs_min_len_threshold = 11;
-                clustering.ClusteringFinalize(simlr_threshold, delay_threshold, lcs_min_len_threshold);
+//                simlr_threshold = 0.40;
+//                delay_threshold = 0.1;
+//                lcs_min_len_threshold = 11;
+//                clustering.ClusteringFinalize(simlr_threshold, delay_threshold, lcs_min_len_threshold);
 //                clustering.printCluster();
 //                evaluation_score = clustering.EvaluateClusteringResult(oracle, oracleGenerator.getIndex());
 //                clustering.testOracleClusterGenerate(oracle);
