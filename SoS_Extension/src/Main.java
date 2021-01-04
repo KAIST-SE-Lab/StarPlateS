@@ -250,7 +250,7 @@ public class Main {
             ArrayList<ArrayList<String>> oracle = oracleGenerator.getOracle();
 
             if (isClustering && !single) {
-                File file2 = new File(base + "/SoS_Extension/" + "F1P - 1) HyperparameterAnalysis_Case5_MINLen.csv");  // TODO Which Case? -> File Name Change
+                File file2 = new File(base + "/SoS_Extension/" + "F1P - 1) HyperparameterAnalysis_Case6_MINLen.csv");  // TODO Which Case? -> File Name Change
                 try {
                     FileWriter writer = new FileWriter(file2, true);
                     String ret = "";
@@ -259,14 +259,14 @@ public class Main {
                         simlr_threshold = (double) simlr_counter / 100;
                         for (int delay_counter = 10; delay_counter <= 100; delay_counter += 10) {
                             delay_threshold = (double) delay_counter / 100;
-                            for (lcs_min_len_threshold = 5; lcs_min_len_threshold <= 20; lcs_min_len_threshold++) {
+                            for (lcs_min_len_threshold = 2; lcs_min_len_threshold <= 10; lcs_min_len_threshold++) {
                                 Clustering clustering = new Clustering();
 
                                 for (InterplayModel im : IMs) {
                                     // 대조군 Clustering Algorithm
 //                                    clustering.addTraceBaseLCS(im, delay_threshold, lcs_min_len_threshold);
 
-                                    clustering.addTraceCase5(im, simlr_threshold, delay_threshold, lcs_min_len_threshold);
+                                    clustering.addTraceCase6(im, simlr_threshold, delay_threshold, lcs_min_len_threshold);
 
                                     // For Merging&Finalizing Optimization
 //                                    clustering.addTraceCase5(im, c_simlr, c_delay, c_len);
