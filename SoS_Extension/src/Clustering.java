@@ -261,16 +261,17 @@ public class Clustering {
                                                                                                                         // 를 넘는지 확인함
                     if (temp >= simlr_threshold) {                                                                      // simlr_threshold를 넘는 경우, centroidLCS를 업데이트
                         assignFlag = true;
-                        if(lcs_index == -1) {
-                            centroidLCS.set(i, generatedLCS.get(j));
-                            lcs_index = j;
-                        }
-                        else {
-                            if(generatedLCS.get(j).size() > generatedLCS.get(lcs_index).size()) {                         //길이가 더 긴 경우가 있다면 추가로 업데이트
-                                centroidLCS.set(i, generatedLCS.get(lcs_index));
+                        if(generatedLCS.get(j).size() > lcs_min_len_threshold) {
+                            if (lcs_index == -1) {
+                                centroidLCS.set(i, generatedLCS.get(j));
+                                lcs_index = j;
+                            } else {
+                                if (generatedLCS.get(j).size() > generatedLCS.get(lcs_index).size()) {                         //길이가 더 긴 경우가 있다면 추가로 업데이트
+                                    centroidLCS.set(i, generatedLCS.get(lcs_index));
+                                }
                             }
                         }
-                        if(!cluster.get(i).contains(im_trace)) cluster.get(i).add(im_trace);                              // im_trace가 중복으로 cluster에 입력되는 거 방지
+                        if (!cluster.get(i).contains(im_trace)) cluster.get(i).add(im_trace);                        // im_trace가 중복으로 cluster에 입력되는 거 방지
                     }
                 }
             } else {                                                                                                    // Cluster에 1개의 IM만 존재할때는 해당 IM 과의 LCS가 존재하는지 여부를 이용하여 해당 Cluster에 포함가능한지를 확인함
@@ -351,16 +352,18 @@ public class Clustering {
                                                                                                                         // 를 넘는지 확인함
                     if (temp >= simlr_threshold) {                                                                      // simlr_threshold를 넘는 경우, centroidLCS를 업데이트
                         assignFlag = true;
-                        if(lcs_index == -1) {
-                            centroidLCS.set(i, generatedLCS.get(j));
-                            lcs_index = j;
-                        }
-                        else {
-                            if(generatedLCS.get(j).size() > generatedLCS.get(lcs_index).size()) {                         //길이가 더 긴 경우가 있다면 추가로 업데이트
-                                centroidLCS.set(i, generatedLCS.get(lcs_index));
+                        if(generatedLCS.get(j).size() > lcs_min_len_threshold) {
+                            if (lcs_index == -1) {
+                                centroidLCS.set(i, generatedLCS.get(j));
+                                lcs_index = j;
+                            } else {
+                                if (generatedLCS.get(j).size() > generatedLCS.get(lcs_index).size()) {                         //길이가 더 긴 경우가 있다면 추가로 업데이트
+                                    centroidLCS.set(i, generatedLCS.get(lcs_index));
+                                }
                             }
                         }
-                        if(!cluster.get(i).contains(im_trace)) cluster.get(i).add(im_trace);                              // im_trace가 중복으로 cluster에 입력되는 거 방지
+                        if (!cluster.get(i).contains(im_trace)) cluster.get(i).add(im_trace);
+                        // im_trace가 중복으로 cluster에 입력되는 거 방지
                     }
                 }
             } else {                                                                                                    // Cluster에 1개의 IM만 존재할때는 해당 IM 과의 LCS가 존재하는지 여부를 이용하여 해당 Cluster에 포함가능한지를 확인함
@@ -430,16 +433,17 @@ public class Clustering {
                                                                                                                         // 를 넘는지 확인함
                     if (temp >= simlr_threshold) {                                                                      // simlr_threshold를 넘는 경우, centroidLCS를 업데이트
                         assignFlag = true;
-                        if(lcs_index == -1) {
-                            centroidLCS.set(i, generatedLCS.get(j));
-                            lcs_index = j;
-                        }
-                        else {
-                            if(generatedLCS.get(j).size() > generatedLCS.get(lcs_index).size()) {                         //길이가 더 긴 경우가 있다면 추가로 업데이트
-                                centroidLCS.set(i, generatedLCS.get(lcs_index));
+                        if(generatedLCS.get(j).size() > lcs_min_len_threshold) {
+                            if (lcs_index == -1) {
+                                centroidLCS.set(i, generatedLCS.get(j));
+                                lcs_index = j;
+                            } else {
+                                if (generatedLCS.get(j).size() > generatedLCS.get(lcs_index).size()) {                         //길이가 더 긴 경우가 있다면 추가로 업데이트
+                                    centroidLCS.set(i, generatedLCS.get(lcs_index));
+                                }
                             }
                         }
-                        if(!cluster.get(i).contains(im_trace)) cluster.get(i).add(im_trace);                              // im_trace가 중복으로 cluster에 입력되는 거 방지
+                        if (!cluster.get(i).contains(im_trace)) cluster.get(i).add(im_trace);                           // im_trace가 중복으로 cluster에 입력되는 거 방지
                     }
                 }
             } else {                                                                                                    // Cluster에 1개의 IM만 존재할때는 해당 IM 과의 LCS가 존재하는지 여부를 이용하여 해당 Cluster에 포함가능한지를 확인함
