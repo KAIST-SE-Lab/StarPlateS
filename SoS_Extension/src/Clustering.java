@@ -321,6 +321,16 @@ public class Clustering {
             return;
         }
 
+        Random random = new Random();
+        Random random_index = new Random();
+
+        if(random.nextFloat() < 0.1) {
+            int rand_i = random_index.nextInt(cluster.size());
+            if (cluster.get(rand_i).size() > 1) {
+                RandomSplit(rand_i, delay_threshold);
+            }
+        }
+
         // Given IM이 어떤 Cluster에 속하는지를 확인하는 과정: IM은 Failed tag를 가진다는 것을 가정함 / 여러 클러스터에 중복으로 할당 가능
         for(int i = 0; i < cluster.size(); i++) {
             generatedLCS.clear();
@@ -510,6 +520,42 @@ public class Clustering {
             }
 //            LCSRedundancyAnalyzer(i, 20); // TODO Threshold: the number of repetition of the same sync messages threshold
         }
+    }
+
+    private void RandomSplit(int index, double delay_threshold) {
+        ArrayList<Double> simlr_value = new ArrayList<>();
+        HashMap<Double, Integer> hashMap = new HashMap<>();
+
+        for(int i = 0; i < cluster.get(index).size(); i++) {
+            double simlr = similarityChecker(centroidLCS.get(index), cluster.get(index).get(i).getMsgSequence(), delay_threshold);
+            simlr_value.add(simlr);
+            hashMap.put(simlr, i);
+        }
+
+        Collections.sort(simlr_value);
+
+        ArrayList<InterplayModel> ims = new ArrayList<>();
+        for(int i = 0; i < cluster.get(index).size()/2; i++) {
+            ims.add(cluster.get(index).get(hashMap.get(simlr_value.get(i))));
+        }
+
+        ArrayList<Message> lcs = LCSExtractorWithDelay(ims.get(0).getMsgSequence(), ims.get(1).getMsgSequence(), delay_threshold);
+        for(int i = 2; i < ims.size(); i++) {
+            lcs = LCSExtractorWithDelay(lcs, ims.get(i).getMsgSequence(), delay_threshold);
+        }
+
+        cluster.add(ims);
+        centroidLCS.add(lcs);
+
+        for(int i = 0; i < ims.size(); i++) {
+            cluster.get(index).remove(hashMap.get(simlr_value.get(i)));
+        }
+
+        ArrayList<Message> lcs2 = LCSExtractorWithDelay(cluster.get(index).get(0).getMsgSequence(), cluster.get(index).get(1).getMsgSequence(), delay_threshold);
+        for(int i = 2; i < cluster.size(); i++) {
+            lcs2 = LCSExtractorWithDelay(lcs2, cluster.get(index).get(i).getMsgSequence(), delay_threshold);
+        }
+        centroidLCS.set(index, lcs2);
     }
 
     private ArrayList<Message> IMSlicer(float starting_time, ArrayList<Message> IM_msg) {
