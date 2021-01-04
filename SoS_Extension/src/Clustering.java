@@ -594,15 +594,15 @@ public class Clustering {
             System.out.println("Cluster " + i + "=================");
             System.out.println("Representative LCS:");
 
-//            for(int j = 0; j < centroidLCS.get(i).size(); j++) {
-//                temp = centroidLCS.get(i).get(j);
-//                System.out.println(j + " " + temp.time + ": " + temp.commandSent + " from " + temp.senderPltId + " to " + temp.receiverId);
-//            }
-
-            System.out.println("Clustered IMs:");
-            for(int j = 0; j < cluster.get(i).size(); j++) {
-                System.out.println((j+1) + ": IM_" + cluster.get(i).get(j).getId());
+            for(int j = 0; j < centroidLCS.get(i).size(); j++) {
+                temp = centroidLCS.get(i).get(j);
+                System.out.println(j + " " + temp.time + ": " + temp.commandSent + " from " + temp.senderPltId + " to " + temp.receiverId);
             }
+
+//            System.out.println("Clustered IMs:");
+//            for(int j = 0; j < cluster.get(i).size(); j++) {
+//                System.out.println((j+1) + ": IM_" + cluster.get(i).get(j).getId());
+//            }
         }
     }
 
