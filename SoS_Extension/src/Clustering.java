@@ -261,7 +261,10 @@ public class Clustering {
                                                                                                                         // 를 넘는지 확인함
                     if (temp >= simlr_threshold) {                                                                      // simlr_threshold를 넘는 경우, centroidLCS를 업데이트
                         assignFlag = true;
-                        if(lcs_index == -1) centroidLCS.set(i, generatedLCS.get(j));
+                        if(lcs_index == -1) {
+                            centroidLCS.set(i, generatedLCS.get(j));
+                            lcs_index = j;
+                        }
                         else {
                             if(generatedLCS.get(j).size() > generatedLCS.get(lcs_index).size()) {                         //길이가 더 긴 경우가 있다면 추가로 업데이트
                                 centroidLCS.set(i, generatedLCS.get(lcs_index));
@@ -348,7 +351,10 @@ public class Clustering {
                                                                                                                         // 를 넘는지 확인함
                     if (temp >= simlr_threshold) {                                                                      // simlr_threshold를 넘는 경우, centroidLCS를 업데이트
                         assignFlag = true;
-                        if(lcs_index == -1) centroidLCS.set(i, generatedLCS.get(j));
+                        if(lcs_index == -1) {
+                            centroidLCS.set(i, generatedLCS.get(j));
+                            lcs_index = j;
+                        }
                         else {
                             if(generatedLCS.get(j).size() > generatedLCS.get(lcs_index).size()) {                         //길이가 더 긴 경우가 있다면 추가로 업데이트
                                 centroidLCS.set(i, generatedLCS.get(lcs_index));
@@ -424,7 +430,10 @@ public class Clustering {
                                                                                                                         // 를 넘는지 확인함
                     if (temp >= simlr_threshold) {                                                                      // simlr_threshold를 넘는 경우, centroidLCS를 업데이트
                         assignFlag = true;
-                        if(lcs_index == -1) centroidLCS.set(i, generatedLCS.get(j));
+                        if(lcs_index == -1) {
+                            centroidLCS.set(i, generatedLCS.get(j));
+                            lcs_index = j;
+                        }
                         else {
                             if(generatedLCS.get(j).size() > generatedLCS.get(lcs_index).size()) {                         //길이가 더 긴 경우가 있다면 추가로 업데이트
                                 centroidLCS.set(i, generatedLCS.get(lcs_index));
