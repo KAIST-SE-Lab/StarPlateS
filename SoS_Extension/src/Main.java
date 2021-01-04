@@ -266,7 +266,7 @@ public class Main {
                                     // 대조군 Clustering Algorithm
 //                                    clustering.addTraceBaseLCS(im, delay_threshold, lcs_min_len_threshold);
 
-                                    clustering.addTraceCase6(im, simlr_threshold, delay_threshold, lcs_min_len_threshold);
+                                    clustering.addTraceCase4(im, simlr_threshold, delay_threshold, lcs_min_len_threshold);
 
                                     // For Merging&Finalizing Optimization
 //                                    clustering.addTraceCase5(im, c_simlr, c_delay, c_len);
