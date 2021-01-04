@@ -324,7 +324,7 @@ public class Clustering {
             return;
         }
 
-        Random random = new Random();
+/*        Random random = new Random();
         Random random_index = new Random();
 
         if(random.nextFloat() < 0.1) {
@@ -332,7 +332,7 @@ public class Clustering {
             if (cluster.get(rand_i).size() > 1) {
                 RandomSplit(rand_i, delay_threshold);
             }
-        }
+        }*/
 
         // Given IM이 어떤 Cluster에 속하는지를 확인하는 과정: IM은 Failed tag를 가진다는 것을 가정함 / 여러 클러스터에 중복으로 할당 가능
         for(int i = 0; i < cluster.size(); i++) {
