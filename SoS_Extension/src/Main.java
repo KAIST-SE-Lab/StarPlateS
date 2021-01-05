@@ -250,7 +250,7 @@ public class Main {
             ArrayList<ArrayList<String>> oracle = oracleGenerator.getOracle();
 
             if (isClustering && !single) {
-                File file2 = new File(base + "/SoS_Extension/results/" + "F1P - 1) HyperparameterAnalysis_Case5.csv");  // TODO Which Case? -> File Name Change
+                File file2 = new File(base + "/SoS_Extension/results/" + "F1P - 1) HyperparameterAnalysis_Case5_MINLEN.csv");  // TODO Which Case? -> File Name Change
                 try {
                     FileWriter writer = new FileWriter(file2, true);
                     String ret = "";
