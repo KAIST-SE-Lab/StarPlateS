@@ -250,7 +250,7 @@ public class Main {
             ArrayList<ArrayList<String>> oracle = oracleGenerator.getOracle();
 
             if (isClustering && !single) {
-                File file2 = new File(base + "/SoS_Extension/results/" + "F1P - 2) HyperparameterAnalysis_Case6.csv");  // TODO Which Case? -> File Name Change
+                File file2 = new File(base + "/SoS_Extension/results/" + "F1P - 2-2) HyperparameterAnalysis_Case6.csv");  // TODO Which Case? -> File Name Change
                 try {
                     FileWriter writer = new FileWriter(file2, true);
                     String ret = "";
@@ -277,7 +277,7 @@ public class Main {
 
                                 // Clustering Finalize Optimization
 //                                clustering.ClusterMerge(m_simlr, m_delay, m_len);
-//                                clustering.ClusteringFinalize(simlr_threshold, delay_threshold, lcs_min_len_threshold);
+                                clustering.ClusteringFinalize(simlr_threshold, delay_threshold, lcs_min_len_threshold);
 
                                 number_of_clusters = clustering.clusterSize();
                                 // Oracle-based Evaluation Score
