@@ -266,10 +266,10 @@ public class Main {
                                     // 대조군 Clustering Algorithm
 //                                    clustering.addTraceBaseLCS(im, delay_threshold, lcs_min_len_threshold);
 
-                                    clustering.addTraceCase5(im, simlr_threshold, delay_threshold, lcs_min_len_threshold);
+//                                    clustering.addTraceCase5(im, simlr_threshold, delay_threshold, lcs_min_len_threshold);
 
                                     // For Merging&Finalizing Optimization
-//                                    clustering.addTraceCase6(im, c_simlr, c_delay, c_len);
+                                    clustering.addTraceCase6(im, c_simlr, c_delay, c_len);
                                 }
 
                                 // Clustering Merge Optimization
@@ -277,7 +277,7 @@ public class Main {
 
                                 // Clustering Finalize Optimization
 //                                clustering.ClusterMerge(m_simlr, m_delay, m_len);
-                                clustering.ClusteringFinalize(simlr_threshold, delay_threshold, lcs_min_len_threshold);
+//                                clustering.ClusteringFinalize(simlr_threshold, delay_threshold, lcs_min_len_threshold);
 
                                 number_of_clusters = clustering.clusterSize();
                                 // Oracle-based Evaluation Score
