@@ -234,7 +234,7 @@ public class Main {
             int lcs_min_len_threshold;
             ArrayList<Double> f1p_ev_score;
             int number_of_clusters;
-            boolean single = false;
+            boolean single = true;
 
             double c_simlr = 0.6;
             double c_delay = 0.1;
@@ -250,7 +250,7 @@ public class Main {
             ArrayList<ArrayList<String>> oracle = oracleGenerator.getOracle();
 
             if (isClustering && !single) {
-                File file2 = new File(base + "/SoS_Extension/results/" + "F1P - 2) HyperparameterAnalysis_Case6_ML.csv");  // TODO Which Case? -> File Name Change
+                File file2 = new File(base + "/SoS_Extension/results/" + "F1P - 2) HyperparameterAnalysis_Case6_2.csv");  // TODO Which Case? -> File Name Change
                 try {
                     FileWriter writer = new FileWriter(file2, true);
                     String ret = "";
@@ -296,19 +296,20 @@ public class Main {
             } // Single run with an optimized Hyperparameter setting
             else {
                 Clustering clustering = new Clustering();
-                simlr_threshold = 0.6;
-                delay_threshold = 1;
-                lcs_min_len_threshold = 9;
+                simlr_threshold = 0.73;
+                delay_threshold = 0.1;
+                lcs_min_len_threshold = 8;
 
                 for (InterplayModel im : IMs) {
-                    clustering.addTraceCase5(im, simlr_threshold, delay_threshold, lcs_min_len_threshold);
+                    clustering.addTraceCase6(im, simlr_threshold, delay_threshold, lcs_min_len_threshold);
 //                clustering.addTraceBaseLCS(im, delay_threshold, lcs_min_len_threshold);
                 }
+                clustering.ClusterMerge(simlr_threshold, delay_threshold, lcs_min_len_threshold);
                 clustering.printCluster();
-                simlr_threshold = 0.6;
-                delay_threshold = 0.4;
-                lcs_min_len_threshold = 5;
-                clustering.ClusteringFinalize(simlr_threshold, delay_threshold, lcs_min_len_threshold);
+//                simlr_threshold = 0.6;
+//                delay_threshold = 0.4;
+//                lcs_min_len_threshold = 5;
+//                clustering.ClusteringFinalize(simlr_threshold, delay_threshold, lcs_min_len_threshold);
                 f1p_ev_score = clustering.EvaluateF1P(oracle, oracleGenerator.getIndex());
                 number_of_clusters = clustering.clusterSize();
                 System.out.println(simlr_threshold + ", " + delay_threshold + ", " + lcs_min_len_threshold + "," + " Clustering Evaluation Score: " + f1p_ev_score.get(2) + ", F_C_O: " + f1p_ev_score.get(0) + ", F_O_C: " + f1p_ev_score.get(1) + ", Cluster Size: " + number_of_clusters);

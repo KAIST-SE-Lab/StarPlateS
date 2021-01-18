@@ -1128,7 +1128,7 @@ public class Clustering {
             F_C_O += mat;
         }
         F_C_O /= bestMatches_cl.size();
-        F_C_O *= (1 / 0.9); // TODO # clusters
+        F_C_O *= (1 / 0.7); // TODO # categories
         ret.add(F_C_O);
 //        System.out.println(F_C_O);
 
@@ -1155,7 +1155,7 @@ public class Clustering {
             F_O_C += mat;
         }
         F_O_C /= bestMatches_or.size();
-        F_O_C *= (1 / 0.9); // TODO # of clusters
+        F_O_C *= (1 / 0.7); // TODO # of categories
         ret.add(F_O_C);
 //        System.out.println(F_O_C);
 
