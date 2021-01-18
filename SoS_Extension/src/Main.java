@@ -234,7 +234,7 @@ public class Main {
             int lcs_min_len_threshold;
             ArrayList<Double> f1p_ev_score;
             int number_of_clusters;
-            boolean single = true;
+            boolean single = false;
 
             double c_simlr = 0.6;
             double c_delay = 0.1;
@@ -250,7 +250,7 @@ public class Main {
             ArrayList<ArrayList<String>> oracle = oracleGenerator.getOracle();
 
             if (isClustering && !single) {
-                File file2 = new File(base + "/SoS_Extension/results/" + "F1P - 2) HyperparameterAnalysis_Case6_2.csv");  // TODO Which Case? -> File Name Change
+                File file2 = new File(base + "/SoS_Extension/results/" + "F1P - 2) HyperparameterAnalysis_Case6_MINLEN.csv");  // TODO Which Case? -> File Name Change
                 try {
                     FileWriter writer = new FileWriter(file2, true);
                     String ret = "";

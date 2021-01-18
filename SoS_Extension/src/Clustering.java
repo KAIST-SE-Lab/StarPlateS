@@ -444,7 +444,7 @@ public class Clustering {
                     // 를 넘는지 확인함
                     if (temp >= simlr_threshold) {                                                                      // simlr_threshold를 넘는 경우, centroidLCS를 업데이트
                         assignFlag = true;
-//                        if (generatedLCS.get(j).size() > lcs_min_len_threshold) {
+                        if (generatedLCS.get(j).size() > lcs_min_len_threshold) {
                             if (lcs_index == -1) {
                                 centroidLCS.set(i, generatedLCS.get(j));
                                 lcs_index = j;
@@ -453,7 +453,7 @@ public class Clustering {
                                     centroidLCS.set(i, generatedLCS.get(lcs_index));
                                 }
                             }
-//                        }
+                        }
                         if (!cluster.get(i).contains(im_trace))
                             cluster.get(i).add(im_trace);                           // im_trace가 중복으로 cluster에 입력되는 거 방지
                     }
