@@ -672,10 +672,10 @@ public class Clustering {
                 System.out.println(j + " " + temp.time + ": " + temp.commandSent + " from " + temp.senderPltId + " to " + temp.receiverId);
             }
 
-            System.out.println("Clustered IMs:");
-            for(int j = 0; j < cluster.get(i).size(); j++) {
-                System.out.println((j+1) + ": IM_" + cluster.get(i).get(j).getId());
-            }
+//            System.out.println("Clustered IMs:");
+//            for(int j = 0; j < cluster.get(i).size(); j++) {
+//                System.out.println((j+1) + ": IM_" + cluster.get(i).get(j).getId());
+//            }
         }
     }
 
@@ -701,7 +701,7 @@ public class Clustering {
                                 cluster.get(i).add(IM);
                             }
                         }
-                        centroidLCS.set(i, lcs_lcs);
+                        if(lcs_lcs.size() > lcs_min_len_threshold) centroidLCS.set(i, lcs_lcs);
                         if (!merged.contains(j)) merged.add(j);
                     }
                 } else {
@@ -762,7 +762,7 @@ public class Clustering {
                             if (temp >= simlr_threshold) {                                                                      // simlr_threshold를 넘는 경우, centroidLCS를 업데이트
                                 if (!cluster.get(j).contains(IM)) {
                                     cluster.get(j).add(IM);
-                                    centroidLCS.set(j, generatedLCS.get(k));
+                                    if(generatedLCS.get(k).size() > lcs_min_len_threshold) centroidLCS.set(j, generatedLCS.get(k));
                                     break;
                                 }
                             }
