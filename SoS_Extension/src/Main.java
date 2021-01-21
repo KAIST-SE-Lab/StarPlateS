@@ -80,6 +80,7 @@ public class Main {
             matchingtxts = 0;
 
             ArrayList<InterplayModel> IMs = new ArrayList<>();
+            ArrayList<InterplayModel> PIMs = new ArrayList<>();
 
             if (f.exists()) {
                 int numoffiles = f.listFiles().length;
@@ -116,6 +117,9 @@ public class Main {
                                         e.printStackTrace();
                                     }
                                 }*/
+                            } else {
+                                InterplayModel interplayModel = new InterplayModel(i, 0);
+                                PIMs.add(interplayModel);
                             }
                         }
 //                        for (int thshold2 : thresholds2){
@@ -234,7 +238,7 @@ public class Main {
             int lcs_min_len_threshold;
             ArrayList<Double> f1p_ev_score;
             int number_of_clusters;
-            boolean single = false;
+            boolean single = true;
 
             double c_simlr = 0.6;
             double c_delay = 0.1;
@@ -296,20 +300,35 @@ public class Main {
             } // Single run with an optimized Hyperparameter setting
             else {
                 Clustering clustering = new Clustering();
-                simlr_threshold = 0.72;
+                simlr_threshold = 0.6;
                 delay_threshold = 0.1;
-                lcs_min_len_threshold = 8;
+                lcs_min_len_threshold = 5;
 
                 for (InterplayModel im : IMs) {
-                    clustering.addTraceCase6(im, simlr_threshold, delay_threshold, lcs_min_len_threshold);
-//                clustering.addTraceBaseLCS(im, delay_threshold, lcs_min_len_threshold);
+//                    clustering.addTraceCase6(im, simlr_threshold, delay_threshold, lcs_min_len_threshold);
+                    clustering.addTraceBaseLCS(im, delay_threshold, lcs_min_len_threshold);
                 }
-                clustering.ClusterMerge(simlr_threshold, delay_threshold, lcs_min_len_threshold);
-                clustering.ClusteringFinalize(simlr_threshold, delay_threshold, lcs_min_len_threshold);
+//                clustering.ClusterMerge(simlr_threshold, delay_threshold, lcs_min_len_threshold);
+//                clustering.ClusteringFinalize(simlr_threshold, delay_threshold, lcs_min_len_threshold);
                 clustering.printCluster();
                 f1p_ev_score = clustering.EvaluateF1P(oracle, oracleGenerator.getIndex());
                 number_of_clusters = clustering.clusterSize();
                 System.out.println(simlr_threshold + ", " + delay_threshold + ", " + lcs_min_len_threshold + "," + " Clustering Evaluation Score: " + f1p_ev_score.get(2) + ", F_C_O: " + f1p_ev_score.get(0) + ", F_O_C: " + f1p_ev_score.get(1) + ", Cluster Size: " + number_of_clusters);
+
+                ArrayList<Double> simWithPassed = new ArrayList<>();
+                simWithPassed = clustering.patternSimilarityChecker(PIMs, delay_threshold);
+                File file3 = new File(base + "/SoS_Extension/results/" + "PatternSimAnalysis_Base.csv");
+                String ret = "";
+                try {
+                    FileWriter writer = new FileWriter(file3);
+                    for(int i = 0; i < simWithPassed.size(); i++) {
+                        ret += simWithPassed.get(i) + ",\n";
+                    }
+                    writer.write(ret);
+                    writer.close();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         }
     }
