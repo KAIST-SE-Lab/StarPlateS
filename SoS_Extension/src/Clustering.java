@@ -510,6 +510,7 @@ public class Clustering {
             cluster.add(new ArrayList<>());
             centroidLCS.add(new ArrayList<>());
             cluster.get(0).add(im_trace);
+            centroidLCS.set(0, im_trace.getMsgSequence());
             return;
         }
 
@@ -517,7 +518,8 @@ public class Clustering {
             generatedLCS = LCSExtractorWithoutDelayBase(cluster.get(i).get(0).getMsgSequence(), im_trace.getMsgSequence());      // Cluster에 1개의 IM만 존재할때는 해당 IM 과의 LCS가 존재하는지
             if (generatedLCS != null && generatedLCS.size() > lcs_min_len_threshold) {                               // 여부를 이용하여 해당 Cluster에 포함가능한지를 확인함
                 cluster.get(i).add(im_trace);
-                updatedCluster.set(i, 1);
+                centroidLCS.set(i, generatedLCS);
+//                updatedCluster.set(i, 1);
                 assignFlag = true;
             }
         }
@@ -529,22 +531,8 @@ public class Clustering {
             return;
         }
 
-        // Updated cluster에 대해 Representative LCS (Centroid)를 업데이트하는 과정
         for (int i = 0; i < cluster.size(); i++) {
-            if (updatedCluster.get(i) == 1) {
-                int j = 1;
-//                Collections.shuffle(cluster.get(i));  // TODO Choose whether to use the shuffle in LCS generation for generating appropriate LCS among multiple IMs
-                generatedLCS = (ArrayList) cluster.get(i).get(0).getMsgSequence().clone();
-                while (j <= cluster.get(i).size() - 1) {
-                    generatedLCS = LCSExtractorWithoutDelay(generatedLCS, cluster.get(i).get(j).getMsgSequence());
-                    if (generatedLCS == null) break;
-                    Collections.reverse(generatedLCS);
-                    j++;
-                }
-                updatedCluster.set(i, 0);
-                centroidLCS.set(i, generatedLCS);
-            }
-//            LCSRedundancyAnalyzer(i, 20); // TODO Threshold: the number of repetition of the same sync messages threshold
+            LCSRedundancyAnalyzer(i, 5); // TODO Threshold: the number of repetition of the same sync messages threshold
         }
     }
 
@@ -672,7 +660,7 @@ public class Clustering {
                 System.out.println(j + " " + temp.time + ": " + temp.commandSent + " from " + temp.senderPltId + " to " + temp.receiverId);
             }
 
-//            System.out.println("Clustered IMs:");
+            System.out.println("Clustered IMs: " + cluster.get(i).size());
 //            for(int j = 0; j < cluster.get(i).size(); j++) {
 //                System.out.println((j+1) + ": IM_" + cluster.get(i).get(j).getId());
 //            }
@@ -1390,5 +1378,31 @@ public class Clustering {
         }
 
         cluster = (ArrayList) new_cluster.clone();
+    }
+
+    public ArrayList<Double> patternSimilarityChecker(ArrayList<InterplayModel> PIMs, double delay_threshold) {
+        ArrayList<ArrayList<Message>> generatedLCS = new ArrayList<>();
+        ArrayList<Double> ret = new ArrayList<>();
+        double max = 0;
+
+        for (int i = 0; i < centroidLCS.size(); i++) {
+            generatedLCS.clear();
+            for(int j = 0; j < PIMs.size(); j++) {
+                for (int k = 0; k < startingTime.size(); k++) {
+                    generatedLCS.add(LCSExtractorWithoutDelay(centroidLCS.get(i), //cluster.get(i).get(0).getMsgSequence()
+                            IMSlicer(startingTime.get(k), PIMs.get(j).getMsgSequence())));
+                    if (generatedLCS.get(k) != null) Collections.reverse(generatedLCS.get(k));
+                }
+                max = 0;
+                for(int k = 0; k < startingTime.size(); k++) {
+                    if (generatedLCS.get(k) == null)
+                        continue;
+                    double temp = similarityChecker(centroidLCS.get(i), generatedLCS.get(k), delay_threshold);
+                    if (temp > max) max = temp;
+                }
+                ret.add(max);
+            }
+        }
+        return ret;
     }
 }
