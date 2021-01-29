@@ -250,7 +250,7 @@ public class Main {
 
             OracleGenerator oracleGenerator = new OracleGenerator();
             oracleGenerator.oracleGeneration(IMs);
-            oracleGenerator.printOracle();
+//            oracleGenerator.printOracle();
             ArrayList<ArrayList<String>> oracle = oracleGenerator.getOracle();
 
             if (isClustering && !single) {
@@ -300,13 +300,13 @@ public class Main {
             } // Single run with an optimized Hyperparameter setting
             else {
                 Clustering clustering = new Clustering();
-                simlr_threshold = 0.6;
+                simlr_threshold = 0.73;
                 delay_threshold = 0.1;
-                lcs_min_len_threshold = 5;
+                lcs_min_len_threshold = 8;
 
                 for (InterplayModel im : IMs) {
-//                    clustering.addTraceCase6(im, simlr_threshold, delay_threshold, lcs_min_len_threshold);
-                    clustering.addTraceBaseLCS(im, delay_threshold, lcs_min_len_threshold);
+                    clustering.addTraceCase6(im, simlr_threshold, delay_threshold, lcs_min_len_threshold);
+//                    clustering.addTraceBaseLCS(im, delay_threshold, lcs_min_len_threshold);
                 }
 //                clustering.ClusterMerge(simlr_threshold, delay_threshold, lcs_min_len_threshold);
 //                clustering.ClusteringFinalize(simlr_threshold, delay_threshold, lcs_min_len_threshold);
@@ -315,9 +315,9 @@ public class Main {
                 number_of_clusters = clustering.clusterSize();
                 System.out.println(simlr_threshold + ", " + delay_threshold + ", " + lcs_min_len_threshold + "," + " Clustering Evaluation Score: " + f1p_ev_score.get(2) + ", F_C_O: " + f1p_ev_score.get(0) + ", F_O_C: " + f1p_ev_score.get(1) + ", Cluster Size: " + number_of_clusters);
 
-                ArrayList<Double> simWithPassed = new ArrayList<>();
+                ArrayList<Double> simWithPassed;
                 simWithPassed = clustering.patternSimilarityChecker(PIMs, delay_threshold);
-                File file3 = new File(base + "/SoS_Extension/results/" + "PatternSimAnalysis_Base.csv");
+                File file3 = new File(base + "/SoS_Extension/results/" + "PatternSimAnalysis_Case6-5.csv");
                 String ret = "";
                 try {
                     FileWriter writer = new FileWriter(file3);

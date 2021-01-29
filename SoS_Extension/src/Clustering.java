@@ -518,6 +518,7 @@ public class Clustering {
             generatedLCS = LCSExtractorWithoutDelayBase(cluster.get(i).get(0).getMsgSequence(), im_trace.getMsgSequence());      // Cluster에 1개의 IM만 존재할때는 해당 IM 과의 LCS가 존재하는지
             if (generatedLCS != null && generatedLCS.size() > lcs_min_len_threshold) {                               // 여부를 이용하여 해당 Cluster에 포함가능한지를 확인함
                 cluster.get(i).add(im_trace);
+                Collections.reverse(generatedLCS);
                 centroidLCS.set(i, generatedLCS);
 //                updatedCluster.set(i, 1);
                 assignFlag = true;
@@ -1386,19 +1387,24 @@ public class Clustering {
         double max = 0;
 
         for (int i = 0; i < centroidLCS.size(); i++) {
-            generatedLCS.clear();
+            if(i == 0 || i == 1 || i == 5 || i == 6) continue;
             for(int j = 0; j < PIMs.size(); j++) {
-                for (int k = 0; k < startingTime.size(); k++) {
-                    generatedLCS.add(LCSExtractorWithoutDelay(centroidLCS.get(i), //cluster.get(i).get(0).getMsgSequence()
-                            IMSlicer(startingTime.get(k), PIMs.get(j).getMsgSequence())));
-                    if (generatedLCS.get(k) != null) Collections.reverse(generatedLCS.get(k));
-                }
+//                generatedLCS.clear();
+//                for (int k = 0; k < startingTime.size(); k++) {
+//                    generatedLCS.add(LCSExtractorWithoutDelay(centroidLCS.get(i), //cluster.get(i).get(0).getMsgSequence()
+//                            IMSlicer(startingTime.get(k), PIMs.get(j).getMsgSequence())));
+//                    if (generatedLCS.get(k) != null) Collections.reverse(generatedLCS.get(k));
+//                }
                 max = 0;
                 for(int k = 0; k < startingTime.size(); k++) {
-                    if (generatedLCS.get(k) == null)
-                        continue;
-                    double temp = similarityChecker(centroidLCS.get(i), generatedLCS.get(k), delay_threshold);
+//                    if (generatedLCS.get(k) == null)
+//                        continue;
+//                    double temp = similarityChecker(centroidLCS.get(i), generatedLCS.get(k), delay_threshold);
+                    double temp = similarityChecker(centroidLCS.get(i),IMSlicer(startingTime.get(k), PIMs.get(j).getMsgSequence()), delay_threshold);
                     if (temp > max) max = temp;
+                }
+                if(max > 0.8) {
+                    System.out.println(i);
                 }
                 ret.add(max);
             }
