@@ -1,4 +1,4 @@
-# Platooning SoS Benchmark for Testing & Fault Diagnosis
+# Platooning CPSoS Benchmark for Testing & Fault Diagnosis
 
 The framework is to effectively verify the existing Platooning management system, VENTOS for the case study of applying fault localization and diagnosis technique on the CPS. The remaining part contains 1) Installation of the StarPlateS framework (ver. DEC 2020).
 
