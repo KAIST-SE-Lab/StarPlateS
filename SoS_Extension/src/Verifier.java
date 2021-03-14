@@ -34,11 +34,12 @@ public class Verifier {
                 ret = operationSuccessRateVerification(txtdir, threshold);
 
                 // CSV generation for tendency analysis of the verification property success rate
-//                File file = new File(System.getProperty("user.dir") + "/SoS_Extension/Verification_Results" + "_" + threshold + ".csv"); #TODO 윈도우에서 출력 형식 에러?
+//                File file = new File(System.getProperty("user.dir") + "/SoS_Extension/Verification_Results" + "_" + threshold + ".csv");
 //                FileWriter writer = null;
 //                try {
 //                    writer = new FileWriter(file, true);
-//                    writer.write(txtdir.replace(System.getProperty("user.dir") + "/SoS_Extension/logs", "") + "," + Boolean.toString(ret) + "\n");
+//                    String log_id = txtdir.replace(System.getProperty("user.dir") + "/SoS_Extension/logs/", "");
+//                    writer.write(log_id+ "," + Boolean.toString(ret) + "\n");
 //                    writer.flush();
 //                } catch(IOException e) {
 //                    e.printStackTrace();
