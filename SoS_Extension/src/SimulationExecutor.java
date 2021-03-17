@@ -1,4 +1,6 @@
 import java.io.*;
+import java.nio.channels.FileChannel;
+import java.nio.file.Files;
 import java.util.Random;
 
 public class SimulationExecutor {
@@ -9,7 +11,7 @@ public class SimulationExecutor {
 
         PrintStream origin = System.out;
 
-        for(int i = 0; i < numScenario; i++) { // TODO i = k for executing scenarios from k
+        for(int i = 1095; i < numScenario; i++) { // TODO i = k for executing scenarios from k
             try {
                 BufferedReader reader = new BufferedReader(new FileReader(omnetConf));
 
@@ -99,21 +101,35 @@ public class SimulationExecutor {
                 File emissionData = new File("./examples/platoon_SoS/results/000_vehicleEmission.txt");
                 File vehData = new File("./examples/platoon_SoS/results/000_vehicleData.txt");
 
+
+
                 // boolean isTracePassed=false; //TODO #REFACTOR tag the simulation result
                 // issue 1 insert fault vehicle?
-                if (isSMBFL)
+                if (isSMBFL);
 //                    smbfl.structureModelOverlapping(false, 1, 0);
                 if (isBMBFL);
 //                  bmbfl.
                 if (isIMBFL);
 //                    imbfl.addFailedLog(true, 1, 0);
 
-                System.out.println(plnConfig.renameTo(new File("./examples/platoon_SoS/results/" + i + "_" + j +"plnConfig.txt")));
-                plnData.renameTo(new File("./examples/platoon_SoS/results/" + i + "_" + j +"plnData.txt"));
-                emissionData.renameTo(new File("./examples/platoon_SoS/results/" + i + "_" + j +"emissionData.txt"));
-                vehData.renameTo(new File("./examples/platoon_SoS/results/" + i + "_" + j +"vehicleData.txt"));
+                System.out.println(plnConfig.renameTo(new File("./examples/platoon_SoS/results/" + (i+1526) + "_" + j +"plnConfig.txt")));
+                plnData.renameTo(new File("./examples/platoon_SoS/results/" + (i+1526) + "_" + j +"plnData.txt"));
+                emissionData.renameTo(new File("./examples/platoon_SoS/results/" + (i+1526) + "_" + j +"emissionData.txt"));
+                vehData.renameTo(new File("./examples/platoon_SoS/results/" + (i+1526) + "_" + j +"vehicleData.txt"));
 
                 System.setOut(origin);
+            }
+
+            File consoleLog = new File("./examples/platoon_SoS/results/consoleLog.txt");
+            File iConsoleLog = new File("./examples/platoon_SoS/results/" + (i+1526) + "_" + 0 +"consoleLog.txt");
+            try {
+                if(iConsoleLog.createNewFile()) {
+                    FileChannel src = new FileInputStream(consoleLog).getChannel();
+                    FileChannel dest = new FileOutputStream(iConsoleLog).getChannel();
+                    dest.transferFrom(src, 0, src.size());
+                }
+            }catch(Exception e){
+                System.out.println(e);
             }
         }
     }
