@@ -11,7 +11,7 @@ public class SimulationExecutor {
 
         PrintStream origin = System.out;
 
-        for(int i = 1095; i < numScenario; i++) { // TODO i = k for executing scenarios from k
+        for(int i = 0; i < numScenario; i++) { // TODO i = k for executing scenarios from k
             try {
                 BufferedReader reader = new BufferedReader(new FileReader(omnetConf));
 
