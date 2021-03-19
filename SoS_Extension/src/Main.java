@@ -85,7 +85,7 @@ public class Main {
             if (f.exists()) {
                 int numoffiles = f.listFiles().length;
                 System.out.println("and it has " + numoffiles + " files.");
-                for (int i = 0; i < 1512; i++) {    // TODO the number of input log files
+                for (int i = 0; i < 2400; i++) {    // TODO the number of input log files
                     String txtdir = currentdir + i + "_0plnData.txt";
                     File temptxt = new File(txtdir);
                     if (temptxt.exists()) {
@@ -250,7 +250,8 @@ public class Main {
 
             OracleGenerator oracleGenerator = new OracleGenerator();
             oracleGenerator.oracleGeneration(IMs);
-//            oracleGenerator.printOracle();
+            oracleGenerator.printOracle();
+            oracleGenerator.getOracleCSV();
             ArrayList<ArrayList<String>> oracle = oracleGenerator.getOracle();
 
             if (isClustering && !single) {

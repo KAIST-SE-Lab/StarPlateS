@@ -1,3 +1,6 @@
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 
@@ -180,5 +183,33 @@ public class OracleGenerator {
 
     public ArrayList<String> getIndex() {
         return IM_index;
+    }
+
+    public void getOracleCSV() {
+        File file2 = new File(System.getProperty("user.dir") + "/SoS_Extension/oracle.csv");
+        System.out.println(System.getProperty("user.dir") + "/SoS_Extension/oracle.csv");
+        FileWriter writer2 = null;
+        try {
+            writer2 = new FileWriter(file2);
+//          writer.write("operationSuccessRate for " + txtdir.replace(System.getProperty("user.dir") + "/StarPlateS/SoS_Extension/", "") + " is " + Boolean.toString(ret) + "\n");
+            String tempStr = "";
+            for(int i = 0; i < oracle.size(); i++) {
+                tempStr += "CASE " + (i+1) + ", ";
+                for(String eachString: oracle.get(i)) {
+                    tempStr += eachString + ",";
+                }
+                writer2.write(tempStr+"\n");
+                tempStr = "";
+            }
+            writer2.flush();
+        } catch(IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if(writer2 != null) writer2.close();
+            } catch(IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }
