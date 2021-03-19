@@ -1,4 +1,6 @@
 import java.io.*;
+import java.lang.reflect.Array;
+import java.sql.Struct;
 import java.util.*;
 
 public class Verifier {
@@ -51,27 +53,36 @@ public class Verifier {
 //                    }
 //                }
                 break;
+        }
 
+        return ret;
+    }
+
+    public Boolean verifyLog(String txtdir, String txtdir_veh, String property) {
+        boolean ret = false;
+        String analysisResult = "";
+
+        switch(property) {
             case "collision":
                 ret = collisionDetection(txtdir);
+                if (!ret) analysisResult = collisionAnalysis(txtdir_veh);
                 File file = new File(System.getProperty("user.dir") + "/SoS_Extension/Verification_Results_Collision.csv");
                 FileWriter writer = null;
                 try {
                     writer = new FileWriter(file, true);
                     String log_id = txtdir.replace(System.getProperty("user.dir") + "/SoS_Extension/logs/", "");
-                    writer.write(log_id+ "," + Boolean.toString(ret) + "\n");
+                    writer.write(log_id + "," + Boolean.toString(ret) + "," + analysisResult + "\n");
                     writer.flush();
-                } catch(IOException e) {
+                } catch (IOException e) {
                     e.printStackTrace();
                 } finally {
                     try {
-                        if(writer != null) writer.close();
-                    } catch(IOException e) {
+                        if (writer != null) writer.close();
+                    } catch (IOException e) {
                         e.printStackTrace();
                     }
                 }
                 break;
-
         }
 
         return ret;
@@ -92,6 +103,89 @@ public class Verifier {
             System.out.println(e);
         }
         return ret;
+    }
+
+    private String collisionAnalysis(String txtdir_veh) {
+        String ret = "";
+        BufferedReader reader;
+        boolean missingFlag;
+        float colLanePos = -1;
+        String colLane = "";
+
+        ArrayList<collisionLog> prevList = new ArrayList<>();
+        ArrayList<collisionLog> curntList = new ArrayList<>();
+        try {
+            String line;
+            reader = new BufferedReader(new FileReader(new File(txtdir_veh)));
+            while ((line = reader.readLine()) != null) {
+                missingFlag = false;
+                StringTokenizer st = new StringTokenizer(line, "\t ");
+
+                if(st.countTokens() == 10) {
+                    collisionLog tempLog = new collisionLog();
+                    String temp = st.nextToken();
+                    if(temp.equals("index")) continue;
+                    tempLog.time = Float.valueOf(st.nextToken());
+                    tempLog.vehId = st.nextToken();
+                    tempLog.lane = st.nextToken();//lane
+                    tempLog.lanePos = Float.valueOf(st.nextToken());//lanepos
+//                    st.nextToken();//speed
+//                    st.nextToken();//timegapsetting
+//                    st.nextToken();//timegap
+                    curntList.add(tempLog);
+                } else if (curntList.size() != 0) {
+                    if (prevList.size() != 0) {
+                        for (collisionLog log : prevList) {
+                            boolean matchingFlag = false;
+                            for (collisionLog curntLog : curntList) {
+                                if (log.vehId.equals(curntLog.vehId)) { // prev와 비교하였을때, vehData.txt 에서 사라진 차량 발견
+                                    matchingFlag = true;
+                                    break;
+                                }
+                            }
+                            if (!matchingFlag) { // 사라진 차량의 정보 저장
+                                missingFlag = true;
+                                ret = log.vehId;
+                                colLanePos = log.lanePos;
+                                colLane = log.lane;
+                            }
+                        }
+                    }
+
+                    if (missingFlag) { // prevLog에서 해당 차량과 가장 근접한 거리에 있는 다른 차량 선정 후 저장
+                        float difference = -1;
+                        String minVehId = "";
+                        for (collisionLog log : prevList) {
+                            if (difference == -1 && colLane.equals(log.lane)) {
+                                difference = Math.abs(colLanePos - log.lanePos);
+                                minVehId = log.vehId;
+                            } else {
+                                if (colLanePos - log.lanePos == 0) continue;
+                                if (difference > Math.abs(colLanePos - log.lanePos) && colLane.equals(log.lane)) {
+                                    difference = Math.abs(colLanePos - log.lanePos);
+                                    minVehId = log.vehId;
+                                }
+                            }
+                        }
+                        ret += "," + minVehId;
+                    }
+
+                    prevList.clear();
+                    prevList = (ArrayList) curntList.clone();
+                    curntList.clear();
+                }
+            }
+        } catch(Exception e) {
+            System.out.println(e);
+        }
+        return ret;
+    }
+
+    class collisionLog {
+        float time;
+        String vehId;
+        String lane;
+        float lanePos;
     }
 
     /**

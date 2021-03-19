@@ -14,6 +14,7 @@ public class Main {
         boolean onlySim = false;
         boolean DistanceChecker = false;
         boolean CollisionChecker = false;
+        boolean BasicVerifierProperty = false;
 
         if (args.length == 0) {
             System.out.println("Usage: java main <switch> <withSim> [<file>]");
@@ -29,14 +30,22 @@ public class Main {
             System.exit(1);
         }
 
-        if (args[0].equals("-structure") || args[0].equals("-smbfl"))
+        if (args[0].equals("-structure") || args[0].equals("-smbfl")) {
             isSMBFL = true;
-        else if (args[0].equals("-behavior") || args[0].equals("-bmbfl"))
+            BasicVerifierProperty = true;
+        }
+        else if (args[0].equals("-behavior") || args[0].equals("-bmbfl")) {
             isBMBFL = true;
-        else if (args[0].equals("-interplay") || args[0].equals("-imbfl"))
+            BasicVerifierProperty = true;
+        }
+        else if (args[0].equals("-interplay") || args[0].equals("-imbfl")) {
             isIMBFL = true;
-        else if (args[0].equals("-clustering") || args[0].equals("-cl"))
+            BasicVerifierProperty = true;
+        }
+        else if (args[0].equals("-clustering") || args[0].equals("-cl")) {
             isClustering = true;
+            BasicVerifierProperty = true;
+        }
         else if (args[0].equals("-distance") || args[0].equals("-dsch"))
             DistanceChecker = true;
         else if (args[0].equals("-collision") || args[0].equals("coll"))
@@ -47,6 +56,7 @@ public class Main {
             isIMBFL = true;
             isClustering = true;
             DistanceChecker = true;
+            BasicVerifierProperty = true;
         }
 
         if (args[1].equals("-simoff")) {
@@ -85,20 +95,21 @@ public class Main {
             ArrayList<InterplayModel> IMs = new ArrayList<>();
             ArrayList<InterplayModel> PIMs = new ArrayList<>();
 
-            if (f.exists()) {
-                int numoffiles = f.listFiles().length;
-                System.out.println("and it has " + numoffiles + " files.");
-                for (int i = 0; i < 2400; i++) {    // TODO the number of input log files
-                    String txtdir = currentdir + i + "_0plnData.txt";
-                    File temptxt = new File(txtdir);
-                    if (temptxt.exists()) {
-                        matchingtxts++;
-                        for (int thshold : thresholds) {
-                            result = verifier.verifyLog(txtdir, "operationSuccessRate", thshold);  // TODO operationSuccessRate or operationTime
-                            if (!result) {
-                                InterplayModel interplayModel = new InterplayModel(i, 0); // TODO r_index = 0 로 설정해놓음
-                                IMs.add(interplayModel);
-                                // Structure & Interplay model ".txt" file exporting part
+            if(BasicVerifierProperty) {
+                if (f.exists()) {
+                    int numoffiles = f.listFiles().length;
+                    System.out.println("and it has " + numoffiles + " files.");
+                    for (int i = 0; i < 2400; i++) {    // TODO the number of input log files
+                        String txtdir = currentdir + i + "_0plnData.txt";
+                        File temptxt = new File(txtdir);
+                        if (temptxt.exists()) {
+                            matchingtxts++;
+                            for (int thshold : thresholds) {
+                                result = verifier.verifyLog(txtdir, "operationSuccessRate", thshold);  // TODO operationSuccessRate or operationTime
+                                if (!result) {
+                                    InterplayModel interplayModel = new InterplayModel(i, 0); // TODO r_index = 0 로 설정해놓음
+                                    IMs.add(interplayModel);
+                                    // Structure & Interplay model ".txt" file exporting part
                                 /*
                                 StructureModel structureModel = new StructureModel(i,0);
                                 File exportTxt = new File(currentdir + Integer.toString(i) + "_S_I_Model.txt");
@@ -120,11 +131,11 @@ public class Main {
                                         e.printStackTrace();
                                     }
                                 }*/
-                            } else {
-                                InterplayModel interplayModel = new InterplayModel(i, 0);
-                                PIMs.add(interplayModel);
+                                } else {
+                                    InterplayModel interplayModel = new InterplayModel(i, 0);
+                                    PIMs.add(interplayModel);
+                                }
                             }
-                        }
 //                        for (int thshold2 : thresholds2){
 //                            result = verifier.verifyLog(txtdir, "operationTime", thshold2);
 ////                            smbfl.structureModelOverlapping(results, i, 0);
@@ -156,13 +167,14 @@ public class Main {
 //                                }
 //                            }
 //                        }
+                        }
                     }
-                }
 
-            } else {
-                System.out.println("There is no such directory");
+                } else {
+                    System.out.println("There is no such directory");
+                }
+                System.out.println("There were " + matchingtxts + " platooning text files");
             }
-            System.out.println("There were " + matchingtxts + " platooning text files");
 
             // TODO Check the input parameter whether distance checker should be processed
             if(DistanceChecker) {
@@ -191,9 +203,10 @@ public class Main {
                     System.out.println("and it has " + numoffiles + " files.");
                     for (int i = 0; i < numoffiles; i++) {
                         String txtdir_console = currentdir + Integer.toString(i) + "_0consoleLog.txt";
+                        String txtdir_vehData = currentdir + Integer.toString(i) + "_0vehicleData.txt";
                         File temptxt = new File(txtdir_console);
                         if(temptxt.exists()) {
-                            result = verifier.verifyLog(txtdir_console, "collision", 1);
+                            result = verifier.verifyLog(txtdir_console, txtdir_vehData, "collision");
                         }
                     }
                 }
