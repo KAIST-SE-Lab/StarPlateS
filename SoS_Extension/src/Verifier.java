@@ -50,9 +50,47 @@ public class Verifier {
 //                        e.printStackTrace();
 //                    }
 //                }
-//                break;
+                break;
+
+            case "collision":
+                ret = collisionDetection(txtdir);
+                File file = new File(System.getProperty("user.dir") + "/SoS_Extension/Verification_Results_Collision.csv");
+                FileWriter writer = null;
+                try {
+                    writer = new FileWriter(file, true);
+                    String log_id = txtdir.replace(System.getProperty("user.dir") + "/SoS_Extension/logs/", "");
+                    writer.write(log_id+ "," + Boolean.toString(ret) + "\n");
+                    writer.flush();
+                } catch(IOException e) {
+                    e.printStackTrace();
+                } finally {
+                    try {
+                        if(writer != null) writer.close();
+                    } catch(IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+                break;
+
         }
 
+        return ret;
+    }
+
+    private Boolean collisionDetection(String txtdir) {
+        boolean ret = true;
+        BufferedReader reader = null;
+        try {
+            String line;
+            reader = new BufferedReader(new FileReader(new File(txtdir)));
+            while ((line = reader.readLine()) != null) {
+                if(line.contains("Collisions")) {
+                    ret = false;
+                }
+            }
+        } catch(Exception e) {
+            System.out.println(e);
+        }
         return ret;
     }
 
