@@ -284,7 +284,7 @@ public class Main {
             ArrayList<ArrayList<String>> oracle = oracleGenerator.getOracle();
 
             if (isClustering) {
-                if (single) {
+                if (!single) {
                     File file2 = new File(base + "/SoS_Extension/results/" + "F1P - 2-2) HyperparameterAnalysis_Case6_MINLEN2.csv");  // TODO Which Case? -> File Name Change
                     try {
                         FileWriter writer = new FileWriter(file2, true);
@@ -360,6 +360,7 @@ public class Main {
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
+                    clustering.codeLocalizer(base + "/src/nodes/vehicle/05_PlatoonMg.cc");
                 }
             }
         }

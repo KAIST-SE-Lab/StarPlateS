@@ -1,4 +1,7 @@
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
 import java.lang.reflect.Array;
 import java.util.*;
 
@@ -1408,6 +1411,79 @@ public class Clustering {
                 }
                 ret.add(max);
             }
+        }
+        return ret;
+    }
+
+    public ArrayList<HashMap<Integer, Integer>> codeLocalizer(String filepath) {
+        ArrayList<HashMap<Integer, Integer>> ret = new ArrayList<>();
+        File pltSource = new File(filepath);
+        BufferedReader reader = null;
+        ArrayList<String> source = new ArrayList<>();
+
+        // Get the code of Platoon Operation Management Protocol
+        try {
+            reader = new BufferedReader(new FileReader(pltSource));
+            String line;
+            while ((line = reader.readLine()) != null) {
+                source.add(line);
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+
+        for(int i = 0; i < this.centroidLCS.size(); i++) {
+            HashMap<Integer, Integer> tempMap = new HashMap<>();
+            for(int j = 0; j < this.centroidLCS.get(i).size(); j++) {
+                ArrayList<Integer> ranges = new ArrayList<>();
+                for(int k = 0; k < source.size(); k++) {
+                    if(source.get(k).contains(this.centroidLCS.get(i).get(j).commandSent)) {
+                        if(source.get(k).contains("//")) continue;
+                        if(source.get(k).contains("if")) {
+                            for (int p = k + 1; p < source.size(); p++) {
+                                if (source.get(p).contains("{")) {
+                                    ranges.add(p + 1);
+                                    break;
+                                }
+                            }
+                            int count = 0;
+                            for(int p = k + 1; p < source.size(); p++) {
+                                if (source.get(p).contains("{")) count += 1;
+                                else if (source.get(p).contains("}")) {
+                                    if(--count == 0) {
+                                        ranges.add(p + 1);
+                                        break;
+                                    }
+                                }
+                            }
+                        } else {
+                            for (int p = k; p > 0; p--) {
+                                if (source.get(p).contains("{")) {
+                                    ranges.add(p + 1);
+                                    break;
+                                }
+                            }
+                            int count = 1;
+                            for(int p = k + 1; p < source.size(); p++) {
+                                if (source.get(p).contains("{")) count += 1;
+                                else if (source.get(p).contains("}")) {
+                                    if(--count == 0) {
+                                        ranges.add(p + 1);
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                for(int k = 0; k < ranges.size(); k+=2) {
+                    for(int p = ranges.get(k); p <=ranges.get(k+1); p++) {
+                        if(tempMap.containsKey(p)) tempMap.put(p, tempMap.get(p)+1);
+                        else tempMap.put(p, 1);
+                    }
+                }
+            }
+            ret.add(tempMap);
         }
         return ret;
     }
