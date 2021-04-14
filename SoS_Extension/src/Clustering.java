@@ -2,6 +2,7 @@
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.lang.reflect.Array;
 import java.util.*;
 
@@ -1415,9 +1416,8 @@ public class Clustering {
         return ret;
     }
 
-    public ArrayList<HashMap<Integer, Integer>> codeLocalizer(String filepath) {
-        ArrayList<HashMap<Integer, Integer>> ret = new ArrayList<>();
-        File pltSource = new File(filepath);
+    public void codeLocalizer(String base, String filepath) {
+        File pltSource = new File(base + filepath);
         BufferedReader reader = null;
         ArrayList<String> source = new ArrayList<>();
 
@@ -1432,59 +1432,142 @@ public class Clustering {
             System.out.println(e);
         }
 
-        for(int i = 0; i < this.centroidLCS.size(); i++) {
-            HashMap<Integer, Integer> tempMap = new HashMap<>();
-            for(int j = 0; j < this.centroidLCS.get(i).size(); j++) {
-                ArrayList<Integer> ranges = new ArrayList<>();
-                for(int k = 0; k < source.size(); k++) {
-                    if(source.get(k).contains(this.centroidLCS.get(i).get(j).commandSent)) {
-                        if(source.get(k).contains("//")) continue;
-                        if(source.get(k).contains("if")) {
-                            for (int p = k + 1; p < source.size(); p++) {
-                                if (source.get(p).contains("{")) {
+        File file2 = new File(base + "/SoS_Extension/results/" + "CodeScopeReductionRate.csv");
+        try {
+            FileWriter writer = new FileWriter(file2);
+            writer.write("Cluster/IM, Code Inspection Scope, Reduction Rate\n");
+            int flag = 0; // 0 : normal, 1 : first time in log
+            for(int i = 0; i < this.centroidLCS.size(); i++) {
+                HashMap<Integer, Integer> patternScope = new HashMap<>();
+                for(int j = 0; j < this.centroidLCS.get(i).size(); j++) {
+                    String command = this.centroidLCS.get(i).get(j).commandSent;
+                    setCodeInspectionScope(source, command, patternScope, flag);
+                }
+                String tempWriter = "";
+                tempWriter += "Cluster " + i + "," + patternScope.size() + "\n";
+                for(InterplayModel im : this.cluster.get(i)) {
+                    flag = 1;
+                    HashMap<Integer, Integer> logScope = new HashMap<>();
+                    for(Message m : im.msgSequence) {
+                        setCodeInspectionScope(source, m.commandSent, logScope, flag);
+                        if(flag==1) flag = 0;
+                    }
+                    tempWriter += im.id + "," + logScope.size() + "," + ((double)patternScope.size() / (double)logScope.size()) + "\n";
+                    writer.write(tempWriter);
+                }
+            }
+            writer.close();
+        } catch(Exception e) {
+            System.out.println(e);
+        }
+    }
+
+    private void setCodeInspectionScope(ArrayList<String> source, String command, HashMap<Integer, Integer> tempMap, int flag) {
+        ArrayList<Integer> ranges = new ArrayList<>();
+            if(command.equals("MERGE_REQ")) {
+                ranges.add(727);
+                ranges.add(745);
+            } else if(command.equals("MERGE_DONE")) {
+                ranges.add(746);
+                ranges.add(799);
+                ranges.add(808);
+                ranges.add(877);
+                ranges.add(1064);
+                ranges.add(1083);
+                ranges.add(1086);
+                ranges.add(1109);
+            } else if (command.equals("SPLIT_REQ")) {
+                ranges.add(1116);
+                ranges.add(1140);
+            } else if (command.equals("GAP_CREATED")) {
+                ranges.add(1143);
+                ranges.add(1204);
+                ranges.add(1485);
+                ranges.add(1504);
+                ranges.add(1507);
+                ranges.add(1533);
+            } else if (command.equals("VOTE_LEADER")) {
+                ranges.add(1540);
+                ranges.add(1554);
+            } else if (command.equals("LEAVE_REQ")) {
+                ranges.add(1642);
+                ranges.add(1682);
+            }
+
+            if(flag == 1) {
+                ranges.add(28);
+                ranges.add(167);
+                ranges.add(177);
+                ranges.add(181);
+                ranges.add(184);
+                ranges.add(210);
+                ranges.add(213);
+                ranges.add(228);
+                ranges.add(231);
+                ranges.add(235);
+                ranges.add(238);
+                ranges.add(250);
+                ranges.add(253);
+                ranges.add(296);
+                ranges.add(301);
+                ranges.add(322);
+                ranges.add(325);
+                ranges.add(352);
+                ranges.add(355);
+                ranges.add(393);
+                ranges.add(396);
+                ranges.add(403);
+                ranges.add(406);
+                ranges.add(413);
+                ranges.add(421);
+                ranges.add(448);
+                ranges.add(452);
+                ranges.add(489);
+                ranges.add(492);
+                ranges.add(563);
+                ranges.add(603);
+                ranges.add(643);
+            }
+            for(int k = 0; k < source.size(); k++) {
+                if(source.get(k).contains(command)) {
+                    if(source.get(k).contains("//")) continue;
+                    if(source.get(k).contains("if")) {
+                        ranges.add(k+1);
+                        int count = 0;
+                        for(int p = k + 1; p < source.size(); p++) {
+                            if (source.get(p).contains("{")) count += 1;
+                            else if (source.get(p).contains("}")) {
+                                if(--count == 0) {
                                     ranges.add(p + 1);
                                     break;
                                 }
                             }
-                            int count = 0;
-                            for(int p = k + 1; p < source.size(); p++) {
-                                if (source.get(p).contains("{")) count += 1;
-                                else if (source.get(p).contains("}")) {
-                                    if(--count == 0) {
-                                        ranges.add(p + 1);
-                                        break;
-                                    }
-                                }
+                        }
+                    } else {
+                        for (int p = k; p > 0; p--) {
+                            if (source.get(p).contains("{")) {
+                                ranges.add(p);
+                                break;
                             }
-                        } else {
-                            for (int p = k; p > 0; p--) {
-                                if (source.get(p).contains("{")) {
+                        }
+                        int count = 1;
+                        for(int p = k + 1; p < source.size(); p++) {
+                            if (source.get(p).contains("{")) count += 1;
+                            else if (source.get(p).contains("}")) {
+                                if(--count == 0) {
                                     ranges.add(p + 1);
                                     break;
-                                }
-                            }
-                            int count = 1;
-                            for(int p = k + 1; p < source.size(); p++) {
-                                if (source.get(p).contains("{")) count += 1;
-                                else if (source.get(p).contains("}")) {
-                                    if(--count == 0) {
-                                        ranges.add(p + 1);
-                                        break;
-                                    }
                                 }
                             }
                         }
                     }
                 }
-                for(int k = 0; k < ranges.size(); k+=2) {
-                    for(int p = ranges.get(k); p <=ranges.get(k+1); p++) {
-                        if(tempMap.containsKey(p)) tempMap.put(p, tempMap.get(p)+1);
-                        else tempMap.put(p, 1);
-                    }
-                }
             }
-            ret.add(tempMap);
+        for(int k = 0; k < ranges.size(); k+=2) {
+            for(int p = ranges.get(k); p <=ranges.get(k+1); p++) {
+                if(tempMap.containsKey(p)) tempMap.put(p, tempMap.get(p)+1);
+                else tempMap.put(p, 1);
+            }
         }
-        return ret;
     }
 }
