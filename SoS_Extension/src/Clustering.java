@@ -1453,8 +1453,8 @@ public class Clustering {
                         if(flag==1) flag = 0;
                     }
                     tempWriter += im.id + "," + logScope.size() + "," + ((double)patternScope.size() / (double)logScope.size()) + "\n";
-                    writer.write(tempWriter);
                 }
+                writer.write(tempWriter);
             }
             writer.close();
         } catch(Exception e) {
@@ -1493,7 +1493,6 @@ public class Clustering {
                 ranges.add(1642);
                 ranges.add(1682);
             }
-
             if(flag == 1) {
                 ranges.add(28);
                 ranges.add(167);
