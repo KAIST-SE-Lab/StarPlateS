@@ -346,21 +346,21 @@ public class Main {
                     number_of_clusters = clustering.clusterSize();
                     System.out.println(simlr_threshold + ", " + delay_threshold + ", " + lcs_min_len_threshold + "," + " Clustering Evaluation Score: " + f1p_ev_score.get(2) + ", F_C_O: " + f1p_ev_score.get(0) + ", F_O_C: " + f1p_ev_score.get(1) + ", Cluster Size: " + number_of_clusters);
 
-                    ArrayList<Double> simWithPassed;
-                    simWithPassed = clustering.patternSimilarityChecker(PIMs, delay_threshold);
-                    File file3 = new File(base + "/SoS_Extension/results/" + "PatternSimAnalysis_Case6-5.csv");
-                    String ret = "";
-                    try {
-                        FileWriter writer = new FileWriter(file3);
-                        for (int i = 0; i < simWithPassed.size(); i++) {
-                            ret += simWithPassed.get(i) + ",\n";
-                        }
-                        writer.write(ret);
-                        writer.close();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                    clustering.codeLocalizer(base + "/src/nodes/vehicle/05_PlatoonMg.cc");
+//                    ArrayList<Double> simWithPassed;
+//                    simWithPassed = clustering.patternSimilarityChecker(PIMs, delay_threshold);
+//                    File file3 = new File(base + "/SoS_Extension/results/" + "PatternSimAnalysis_Case6-5.csv");
+//                    String ret = "";
+//                    try {
+//                        FileWriter writer = new FileWriter(file3);
+//                        for (int i = 0; i < simWithPassed.size(); i++) {
+//                            ret += simWithPassed.get(i) + ",\n";
+//                        }
+//                        writer.write(ret);
+//                        writer.close();
+//                    } catch (Exception e) {
+//                        e.printStackTrace();
+//                    }
+                    clustering.codeLocalizer(base,"/src/nodes/vehicle/05_PlatoonMg.cc");
                 }
             }
         }
