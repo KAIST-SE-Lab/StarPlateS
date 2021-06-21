@@ -174,6 +174,7 @@ public class ScenarioGenerator {
                 bw.newLine();
                 bw.newLine();
 
+                int simulScenarioTag = 0;
                 for(int i = 0; i < numScenario; i++) {
                     // Generate addNode.xml
                     nodeAssign(i);
@@ -198,24 +199,28 @@ public class ScenarioGenerator {
                             continue;
                         }
 
-//                        String selectedEvent;
-//
-//                        // Select random event and check availability
-//                        if(r.nextInt(100) < 80)
-//                            selectedEvent = plEvents_.get(r.nextInt(plEvents_.size()));
-//                        else
-//                            selectedEvent = "speed";
-//
-//                        if (!availabilityCheck(selectedEvent)) continue;
-//                        System.out.println(selectedEvent);
-//
-//                        ret = assignEvent(bw, selectedEvent, t, r, "");
-//                        rets = ret.split("/");
-//                        System.out.println(ret);
-//
-//                        updateConditions(rets[0], selectedEvent, rets[1]);
-//                        System.out.println(conditions_);
-                        addSimultaneousScenarios(bw, t);
+                        if(r.nextInt(100) < 50 && simulScenarioTag == 0) {
+                            addSimultaneousScenarios(bw, t);
+                            simulScenarioTag = 1;
+                        }
+                        String selectedEvent;
+
+                        // Select random event and check availability
+                        if(r.nextInt(100) < 80)
+                            selectedEvent = plEvents_.get(r.nextInt(plEvents_.size()));
+                        else
+                            selectedEvent = "speed";
+
+                        if (!availabilityCheck(selectedEvent)) continue;
+                        System.out.println(selectedEvent);
+
+                        ret = assignEvent(bw, selectedEvent, t, r, "");
+                        rets = ret.split("/");
+                        System.out.println(ret);
+
+                        updateConditions(rets[0], selectedEvent, rets[1]);
+                        System.out.println(conditions_);
+
                     }
 
                     bw.write("\n</trafficControl>\n\n");
