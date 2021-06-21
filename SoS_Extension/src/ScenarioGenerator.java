@@ -30,7 +30,6 @@ public class ScenarioGenerator {
         plEvents_.add("pltMerge");
         plEvents_.add("pltLeave");
         plEvents_.add("pltSplit");
-
     }
 
     public void generateRandomScenario(int num) {
@@ -199,23 +198,24 @@ public class ScenarioGenerator {
                             continue;
                         }
 
-                        String selectedEvent;
-
-                        // Select random event and check availability
-                        if(r.nextInt(100) < 80)
-                            selectedEvent = plEvents_.get(r.nextInt(plEvents_.size()));
-                        else
-                            selectedEvent = "speed";
-
-                        if (!availabilityCheck(selectedEvent)) continue;
-                        System.out.println(selectedEvent);
-
-                        ret = assignEvent(bw, selectedEvent, t, r);
-                        rets = ret.split("/");
-                        System.out.println(ret);
-
-                        updateConditions(rets[0], selectedEvent, rets[1]);
-                        System.out.println(conditions_);
+//                        String selectedEvent;
+//
+//                        // Select random event and check availability
+//                        if(r.nextInt(100) < 80)
+//                            selectedEvent = plEvents_.get(r.nextInt(plEvents_.size()));
+//                        else
+//                            selectedEvent = "speed";
+//
+//                        if (!availabilityCheck(selectedEvent)) continue;
+//                        System.out.println(selectedEvent);
+//
+//                        ret = assignEvent(bw, selectedEvent, t, r, "");
+//                        rets = ret.split("/");
+//                        System.out.println(ret);
+//
+//                        updateConditions(rets[0], selectedEvent, rets[1]);
+//                        System.out.println(conditions_);
+                        addSimultaneousScenarios(bw, t);
                     }
 
                     bw.write("\n</trafficControl>\n\n");
@@ -230,6 +230,131 @@ public class ScenarioGenerator {
                 } catch (IOException e) {
                 }
             }
+    }
+
+    private void addSimultaneousScenarios(BufferedWriter bw, int t) {
+        ArrayList<Integer> Plt0s = new ArrayList<>();
+        ArrayList<String> Plt0IDs = new ArrayList<>();
+        int sum0s = 0;
+        ArrayList<Integer> Plt1s = new ArrayList<>();
+        ArrayList<String> Plt1IDs = new ArrayList<>();
+        int sum1s = 0;
+
+        int opNum = -1;
+        int targetVehTypes = -1;
+        Random r = new Random();
+
+        for(String key : conditions_.keySet()) {
+            if(key.equals("veh") || key.contains("veh.")) {
+                Plt0s.add(Integer.parseInt(conditions_.get(key)));
+                Plt0IDs.add(key);
+                sum0s+=Integer.parseInt(conditions_.get(key));
+            }
+            if(key.contains("veh1")) {
+                Plt1s.add(Integer.parseInt(conditions_.get(key)));
+                Plt1IDs.add(key);
+                sum1s+=Integer.parseInt(conditions_.get(key));
+            }
+        }
+
+        if(Plt0s.size() < 2 && Plt1s.size() < 2) return;
+
+        while(opNum == -1) {
+            int tempRand = r.nextInt(3); // 0: Merge-Merge, 1: Merge-Split, 2:Merge-Leave
+            if(tempRand == 0 && (Plt0s.size() < 3 && Plt1s.size() <3)) continue;
+
+            if(tempRand == 0) {
+                if(Plt0s.size() >= 3) targetVehTypes = 0;
+                else targetVehTypes = 1;
+            } else {
+                if(sum0s > sum1s) targetVehTypes = 0;
+                else targetVehTypes = 1;
+            }
+            opNum = tempRand;
+        }
+
+        Collections.sort(Plt0IDs);
+        Collections.sort(Plt1IDs);
+
+        ArrayList<String> simRet = new ArrayList<>();
+        String firstSV = "";
+        String secondSV = "";
+        switch(opNum) {
+            case 0: // Simultaneous Merge & Merge
+                if(targetVehTypes == 0) {
+                    simRet.add(assignEvent(bw,"pltMerge",t,r,Plt0IDs.get(Plt0IDs.size()-1)));
+                    simRet.add(assignEvent(bw,"pltMerge",t,r,Plt0IDs.get(Plt0IDs.size()-2)));
+                } else {
+                    simRet.add(assignEvent(bw,"pltMerge",t,r,Plt0IDs.get(Plt1IDs.size()-1)));
+                    simRet.add(assignEvent(bw,"pltMerge",t,r,Plt0IDs.get(Plt1IDs.size()-2)));
+                }
+                for(String ret : simRet) {
+                    String[] rets = ret.split("/");
+                    System.out.println(ret);
+
+                    updateConditions(rets[0], "pltMerge", rets[1]);
+                    System.out.println(conditions_);
+                }
+                break;
+            case 1: // Simultaneous Merge & Split
+                if(targetVehTypes == 0) {
+                    simRet.add(assignEvent(bw,"pltMerge",t,r,Plt0IDs.get(Plt0IDs.size()-1)));
+                    simRet.add(assignEvent(bw,"pltSplit",t,r,Plt0IDs.get(Plt0IDs.size()-2)));
+                } else {
+                    simRet.add(assignEvent(bw,"pltMerge",t,r,Plt0IDs.get(Plt1IDs.size()-1)));
+                    simRet.add(assignEvent(bw,"pltSplit",t,r,Plt0IDs.get(Plt1IDs.size()-2)));
+                }
+                for(int i = 0; i < simRet.size(); i++) {
+                    String ret = simRet.get(i);
+                    String[] rets = ret.split("/");
+                    System.out.println(ret);
+
+                    if(i == 0) {
+                        updateConditions(rets[0], "pltMerge", rets[1]);
+                        System.out.println(conditions_);
+                    } else {
+                        updateConditions(rets[0], "pltSplit", rets[1]);
+                        System.out.println(conditions_);
+                    }
+                }
+                break;
+            case 2: // Simultaneous Merge & Leave
+                if(targetVehTypes == 0) {
+                    simRet.add(assignEvent(bw,"pltMerge",t,r,Plt0IDs.get(Plt0IDs.size()-1)));
+                    simRet.add(assignEvent(bw,"pltLeave",t,r,Plt0IDs.get(Plt0IDs.size()-2)));
+                } else {
+                    simRet.add(assignEvent(bw,"pltMerge",t,r,Plt0IDs.get(Plt1IDs.size()-1)));
+                    simRet.add(assignEvent(bw,"pltLeave",t,r,Plt0IDs.get(Plt1IDs.size()-2)));
+                }
+                for(int i = 0; i < simRet.size(); i++) {
+                    String ret = simRet.get(i);
+                    String[] rets = ret.split("/");
+                    System.out.println(ret);
+
+                    if(i == 0) {
+                        updateConditions(rets[0], "pltMerge", rets[1]);
+                        System.out.println(conditions_);
+                    } else {
+                        updateConditions(rets[0], "pltLeave", rets[1]);
+                        System.out.println(conditions_);
+                    }
+                }
+                break;
+        }
+
+    }
+
+    private ArrayList<String> getSV(int target) {
+        ArrayList<String> ret = new ArrayList<>();
+        ArrayList<String> temp = new ArrayList<>();
+
+        if(target == 0) {
+            for(String key: conditions_.keySet()) {
+                if(key.equals("veh") || key.contains("veh.")) temp.add(key);
+            }
+        }
+
+        return ret;
     }
 
     private void updateConditions(String id, String event, String attr) {
@@ -247,7 +372,7 @@ public class ScenarioGenerator {
                         conditions_.replace(key, attr);
                         conditions_.put("veh1." + attr, String.valueOf(orgSize - Integer.parseInt(attr)));
                     }
-                    else if (key.contains("veh") && Integer.parseInt(conditions_.get(key)) > Integer.parseInt(attr)) {
+                    else if ((key.equals("veh") || key.contains("veh.")) && Integer.parseInt(conditions_.get(key)) > Integer.parseInt(attr)) {
                         int orgSize = Integer.parseInt(conditions_.get(key));
                         //System.out.println("veh1 optSize");
 
@@ -372,9 +497,8 @@ public class ScenarioGenerator {
         return ret;
     }
 
-    private String assignEvent(BufferedWriter bw, String event, int begin, Random r) {
+    private String assignEvent(BufferedWriter bw, String event, int begin, Random r, String sV) {
 
-        String sV = "";
         int splitIndex = 0;
 
         try {
@@ -391,7 +515,7 @@ public class ScenarioGenerator {
                     for(String key : conditions_.keySet()) {
                         if(key.contains("veh.") || key.contains("veh1.")) vehs.add(key);
                     }
-                    sV = vehs.get(r.nextInt(vehs.size()));
+                    if(sV.equals("")) sV = vehs.get(r.nextInt(vehs.size()));
                     bw.write("<pltMerge pltId=\"" + sV + "\" begin=\"" + begin + "\" />\n");
                     return sV + "/ ";
                 }
@@ -400,7 +524,7 @@ public class ScenarioGenerator {
                     for(String key : conditions_.keySet()) {
                         if(key.contains("veh") && Integer.parseInt(conditions_.get(key)) > 1) vehs.add(key);
                     }
-                    sV = vehs.get(r.nextInt(vehs.size()));
+                    if(sV.equals("")) sV = vehs.get(r.nextInt(vehs.size()));
                     String[] values = sV.split(".");
 
                     boolean t_f = true;
@@ -425,7 +549,7 @@ public class ScenarioGenerator {
                     for(String key : conditions_.keySet()) {
                         if(key.contains("veh") && Integer.parseInt(conditions_.get(key)) > 1) vehs.add(key);
                     }
-                    sV = vehs.get(r.nextInt(vehs.size()));
+                    if(sV.equals("")) sV = vehs.get(r.nextInt(vehs.size()));
                     splitIndex = 1 + r.nextInt(Integer.parseInt(conditions_.get(sV))-1);
                     //sV += "." + r.nextInt(Integer.parseInt(conditions_.get(sV)));
                     //bw.write("<pltSplit splitVehId=\"" + sV + "\" begin=\"" + begin + "\" /> \n");
@@ -439,7 +563,7 @@ public class ScenarioGenerator {
                     for(String key : conditions_.keySet()) {
                         if(key.contains("veh") || key.contains("veh1")) vehs.add(key);
                     }
-                    sV = vehs.get(r.nextInt(vehs.size()));
+                    if(sV.equals("")) sV = vehs.get(r.nextInt(vehs.size()));
 
                     bw.write("<speed id=\"" + sV + "\" begin=\"" + begin + "\" value=\""+
                             (r.nextInt(31)+10)+"\" />  ");
