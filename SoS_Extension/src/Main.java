@@ -2,6 +2,7 @@ import java.io.*;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 
 public class Main {
 
@@ -285,7 +286,7 @@ public class Main {
 
             if (isClustering) {
                 if (!single) {
-                    File file2 = new File(base + "/SoS_Extension/results/" + "F1P - 2-2) HyperparameterAnalysis_Case6_MINLEN2.csv");  // TODO Which Case? -> File Name Change
+                    File file2 = new File(base + "/SoS_Extension/results/" + "F1P - 2-2) HyperparameterAnalysis_Case6_ML_withTime_additional_logs.csv");  // TODO Which Case? -> File Name Change
                     try {
                         FileWriter writer = new FileWriter(file2, true);
                         String ret = "";
@@ -296,6 +297,7 @@ public class Main {
                                 delay_threshold = (double) delay_counter / 100;
                                 for (lcs_min_len_threshold = 2; lcs_min_len_threshold <= 15; lcs_min_len_threshold++) {
                                     Clustering clustering = new Clustering();
+                                    long startTime = System.currentTimeMillis();
 
                                     for (InterplayModel im : IMs) {
                                         // 대조군 Clustering Algorithm
@@ -313,13 +315,13 @@ public class Main {
                                     // Clustering Finalize Optimization
 //                                clustering.ClusterMerge(m_simlr, m_delay, m_len);
                                     clustering.ClusteringFinalize(simlr_threshold, delay_threshold, lcs_min_len_threshold);
-
+                                    long endTime = System.currentTimeMillis();
                                     number_of_clusters = clustering.clusterSize();
                                     // Oracle-based Evaluation Score
                                     f1p_ev_score = clustering.EvaluateF1P(oracle, oracleGenerator.getIndex()); // 0: F_C_O, 1: F_O_C, 2: Evaluation Score
 //                                evaluation_score = clustering.EvaluateClusteringResult(oracle, oracleGenerator.getIndex());
-                                    System.out.println(simlr_threshold + ", " + delay_threshold + ", " + lcs_min_len_threshold + "," + " Clustering Evaluation Score: " + f1p_ev_score.get(2) + ", F_C_O: " + f1p_ev_score.get(0) + ", F_O_C: " + f1p_ev_score.get(1) + ", Cluster Size: " + number_of_clusters);
-                                    ret += simlr_threshold + "," + delay_threshold + "," + lcs_min_len_threshold + "," + f1p_ev_score.get(2) + "," + f1p_ev_score.get(0) + "," + f1p_ev_score.get(1) + "," + number_of_clusters + "\n";
+                                    System.out.println(simlr_threshold + ", " + delay_threshold + ", " + lcs_min_len_threshold + "," + " Clustering Evaluation Score: " + f1p_ev_score.get(2) + ", F_C_O: " + f1p_ev_score.get(0) + ", F_O_C: " + f1p_ev_score.get(1) + ", Cluster Size: " + number_of_clusters + ", Time(ms): " + (endTime-startTime));
+                                    ret += simlr_threshold + "," + delay_threshold + "," + lcs_min_len_threshold + "," + f1p_ev_score.get(2) + "," + f1p_ev_score.get(0) + "," + f1p_ev_score.get(1) + "," + number_of_clusters + ", Time(ms): ," + (endTime-startTime) + "\n";
                                 }
                             }
                         }
@@ -331,20 +333,21 @@ public class Main {
                 } // Single run with an optimized Hyperparameter setting
                 else {
                     Clustering clustering = new Clustering();
-                    simlr_threshold = 0.73;
-                    delay_threshold = 0.1;
-                    lcs_min_len_threshold = 8;
-
+                    simlr_threshold = 0.83;
+                    delay_threshold = 0.9;
+                    lcs_min_len_threshold = 3;
+                    long startTime = System.currentTimeMillis();
                     for (InterplayModel im : IMs) {
                         clustering.addTraceCase6(im, simlr_threshold, delay_threshold, lcs_min_len_threshold);
 //                    clustering.addTraceBaseLCS(im, delay_threshold, lcs_min_len_threshold);
                     }
-//                clustering.ClusterMerge(simlr_threshold, delay_threshold, lcs_min_len_threshold);
-//                clustering.ClusteringFinalize(simlr_threshold, delay_threshold, lcs_min_len_threshold);
+                    clustering.ClusterMerge(simlr_threshold, delay_threshold, lcs_min_len_threshold);
+                    clustering.ClusteringFinalize(simlr_threshold, delay_threshold, lcs_min_len_threshold);
+                    long endTime = System.currentTimeMillis();
                     clustering.printCluster();
                     f1p_ev_score = clustering.EvaluateF1P(oracle, oracleGenerator.getIndex());
                     number_of_clusters = clustering.clusterSize();
-                    System.out.println(simlr_threshold + ", " + delay_threshold + ", " + lcs_min_len_threshold + "," + " Clustering Evaluation Score: " + f1p_ev_score.get(2) + ", F_C_O: " + f1p_ev_score.get(0) + ", F_O_C: " + f1p_ev_score.get(1) + ", Cluster Size: " + number_of_clusters);
+                    System.out.println(simlr_threshold + ", " + delay_threshold + ", " + lcs_min_len_threshold + "," + " Clustering Evaluation Score: " + f1p_ev_score.get(2) + ", F_C_O: " + f1p_ev_score.get(0) + ", F_O_C: " + f1p_ev_score.get(1) + ", Cluster Size: " + number_of_clusters + ", Time(ms): " + (endTime-startTime));
 
 //                    ArrayList<Double> simWithPassed;
 //                    simWithPassed = clustering.patternSimilarityChecker(PIMs, delay_threshold);

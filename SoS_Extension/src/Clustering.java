@@ -1432,7 +1432,7 @@ public class Clustering {
             System.out.println(e);
         }
 
-        File file2 = new File(base + "/SoS_Extension/results/" + "CodeScopeReductionRate.csv");
+        File file2 = new File(base + "/SoS_Extension/results/" + "CodeScopeReductionRate_bestOption.csv");
         try {
             FileWriter writer = new FileWriter(file2);
             writer.write("Cluster/IM, Code Inspection Scope, Reduction Rate\n");
@@ -1518,12 +1518,12 @@ public class Clustering {
                 ranges.add(403);
                 ranges.add(406);
                 ranges.add(413);
-                ranges.add(421);
-                ranges.add(448);
-                ranges.add(452);
-                ranges.add(489);
-                ranges.add(492);
-                ranges.add(563);
+//                ranges.add(421);
+//                ranges.add(448);
+//                ranges.add(452);
+//                ranges.add(489);
+//                ranges.add(492);
+//                ranges.add(563);
                 ranges.add(603);
                 ranges.add(643);
             }
