@@ -66,7 +66,7 @@ public class Main {
             onlySim = true;
         }
 
-        int numScenario = 2000;                                          // TODO The number of scenarios generated
+        int numScenario = 1000;                                          // TODO The number of scenarios generated
         int numRepeat = 1;                                              // TODO The number of repetition of the same scenario for statistical model checking
 
         StructureModelBasedFaultLocalization smbfl = new StructureModelBasedFaultLocalization();
@@ -75,8 +75,8 @@ public class Main {
 
         if (withSim) {
             // Generate Random Scenario with Scenario Generation Module
-            ScenarioGenerator scenarioGenerator = new ScenarioGenerator();
-            scenarioGenerator.generateRandomScenario(numScenario);      // TODO Call the scenario generation module with the number of scenarios
+//            ScenarioGenerator scenarioGenerator = new ScenarioGenerator();
+//            scenarioGenerator.generateRandomScenario(numScenario);      // TODO Call the scenario generation module with the number of scenarios
 
             SimulationExecutor simulationExecutor = new SimulationExecutor();
             simulationExecutor.run(numScenario, numRepeat, isSMBFL, isBMBFL, isIMBFL, smbfl, imbfl); // TODO add more configuration params, eventDuration, etc
