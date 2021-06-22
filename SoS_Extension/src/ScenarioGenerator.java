@@ -202,6 +202,7 @@ public class ScenarioGenerator {
                         if(r.nextInt(100) < 50 && simulScenarioTag == 0) {
                             addSimultaneousScenarios(bw, t);
                             simulScenarioTag = 1;
+                            continue;
                         }
                         String selectedEvent;
 
@@ -290,8 +291,8 @@ public class ScenarioGenerator {
                     simRet.add(assignEvent(bw,"pltMerge",t,r,Plt0IDs.get(Plt0IDs.size()-1)));
                     simRet.add(assignEvent(bw,"pltMerge",t,r,Plt0IDs.get(Plt0IDs.size()-2)));
                 } else {
-                    simRet.add(assignEvent(bw,"pltMerge",t,r,Plt0IDs.get(Plt1IDs.size()-1)));
-                    simRet.add(assignEvent(bw,"pltMerge",t,r,Plt0IDs.get(Plt1IDs.size()-2)));
+                    simRet.add(assignEvent(bw,"pltMerge",t,r,Plt1IDs.get(Plt1IDs.size()-1)));
+                    simRet.add(assignEvent(bw,"pltMerge",t,r,Plt1IDs.get(Plt1IDs.size()-2)));
                 }
                 for(String ret : simRet) {
                     String[] rets = ret.split("/");
@@ -306,8 +307,8 @@ public class ScenarioGenerator {
                     simRet.add(assignEvent(bw,"pltMerge",t,r,Plt0IDs.get(Plt0IDs.size()-1)));
                     simRet.add(assignEvent(bw,"pltSplit",t,r,Plt0IDs.get(Plt0IDs.size()-2)));
                 } else {
-                    simRet.add(assignEvent(bw,"pltMerge",t,r,Plt0IDs.get(Plt1IDs.size()-1)));
-                    simRet.add(assignEvent(bw,"pltSplit",t,r,Plt0IDs.get(Plt1IDs.size()-2)));
+                    simRet.add(assignEvent(bw,"pltMerge",t,r,Plt1IDs.get(Plt1IDs.size()-1)));
+                    simRet.add(assignEvent(bw,"pltSplit",t,r,Plt1IDs.get(Plt1IDs.size()-2)));
                 }
                 for(int i = 0; i < simRet.size(); i++) {
                     String ret = simRet.get(i);
@@ -328,8 +329,8 @@ public class ScenarioGenerator {
                     simRet.add(assignEvent(bw,"pltMerge",t,r,Plt0IDs.get(Plt0IDs.size()-1)));
                     simRet.add(assignEvent(bw,"pltLeave",t,r,Plt0IDs.get(Plt0IDs.size()-2)));
                 } else {
-                    simRet.add(assignEvent(bw,"pltMerge",t,r,Plt0IDs.get(Plt1IDs.size()-1)));
-                    simRet.add(assignEvent(bw,"pltLeave",t,r,Plt0IDs.get(Plt1IDs.size()-2)));
+                    simRet.add(assignEvent(bw,"pltMerge",t,r,Plt1IDs.get(Plt1IDs.size()-1)));
+                    simRet.add(assignEvent(bw,"pltLeave",t,r,Plt1IDs.get(Plt1IDs.size()-2)));
                 }
                 for(int i = 0; i < simRet.size(); i++) {
                     String ret = simRet.get(i);
