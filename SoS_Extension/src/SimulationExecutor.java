@@ -112,16 +112,16 @@ public class SimulationExecutor {
                 if (isIMBFL);
 //                    imbfl.addFailedLog(true, 1, 0);
 
-                System.out.println(plnConfig.renameTo(new File("./examples/platoon_SoS/results/" + (i+1526) + "_" + j +"plnConfig.txt")));
-                plnData.renameTo(new File("./examples/platoon_SoS/results/" + (i+1526) + "_" + j +"plnData.txt"));
-                emissionData.renameTo(new File("./examples/platoon_SoS/results/" + (i+1526) + "_" + j +"emissionData.txt"));
-                vehData.renameTo(new File("./examples/platoon_SoS/results/" + (i+1526) + "_" + j +"vehicleData.txt"));
+                System.out.println(plnConfig.renameTo(new File("./examples/platoon_SoS/results/" + (i+3526) + "_" + j +"plnConfig.txt")));
+                plnData.renameTo(new File("./examples/platoon_SoS/results/" + (i+3526) + "_" + j +"plnData.txt"));
+                emissionData.renameTo(new File("./examples/platoon_SoS/results/" + (i+3526) + "_" + j +"emissionData.txt"));
+                vehData.renameTo(new File("./examples/platoon_SoS/results/" + (i+3526) + "_" + j +"vehicleData.txt"));
 
                 System.setOut(origin);
             }
 
             File consoleLog = new File("./examples/platoon_SoS/results/consoleLog.txt");
-            File iConsoleLog = new File("./examples/platoon_SoS/results/" + (i+1526) + "_" + 0 +"consoleLog.txt");
+            File iConsoleLog = new File("./examples/platoon_SoS/results/" + (i+3526) + "_" + 0 +"consoleLog.txt");
             try {
                 if(iConsoleLog.createNewFile()) {
                     FileChannel src = new FileInputStream(consoleLog).getChannel();
