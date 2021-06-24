@@ -541,6 +541,102 @@ public class Clustering {
         }
     }
 
+    public void addTraceClusterNoise(InterplayModel im_trace, double delay_threshold, int lcs_min_len_threshold) {
+        ArrayList<ArrayList<Message>> generatedLCS = new ArrayList<>();
+        HashMap<String,Double> MaxSim = new HashMap<>();
+        ArrayList<ArrayList<Message>> MaxSimLCS = new ArrayList<>();
+        Boolean assignFlag = false;
+        int lcs_index;
+
+        if (cluster.size() == 0) {
+            cluster.add(new ArrayList<>());
+            centroidLCS.add(new ArrayList<>());
+            cluster.get(0).add(im_trace);
+            centroidLCS.set(0, im_trace.getMsgSequence());
+            return;
+        }
+
+        for (int i = 0; i < cluster.size(); i++) {
+            lcs_index = -1;
+            double simlrValue = -1;
+            ArrayList<Message> maxLCS = new ArrayList<>();
+            if (cluster.get(i).size() > 1) {                                                                             // Cluster에 2개 이상의 IM이 존재하는 경우, representative lcs 와 given IM 사이의 LCS를 생성하여 Similarity 비교
+                for (int j = 0; j < startingTime.size(); j++) {
+                    generatedLCS.add(LCSExtractorWithoutDelay(centroidLCS.get(i), //cluster.get(i).get(0).getMsgSequence()
+                            IMSlicer(startingTime.get(j), im_trace.getMsgSequence())));
+                    if (generatedLCS.get(j) != null) Collections.reverse(generatedLCS.get(j));
+                }
+
+                for (int j = 0; j < startingTime.size(); j++) {                                                         // Starting time에 따라 slicing 된 given IM에 대해 생성된
+                    if (generatedLCS.get(j) == null)
+                        continue;                                                                                       // generated_LCS (lcs between centroid_lcs and given IM)
+                    double temp = similarityChecker(centroidLCS.get(i), generatedLCS.get(j), delay_threshold);          // 와 기존 centroid_lcs와의 size를 비교하여 simlr_threshold
+                    if (temp > simlrValue) {
+                        simlrValue = temp;
+                        maxLCS = generatedLCS.get(j);
+                    }
+                }
+                MaxSim.put(Integer.toString(i),1-simlrValue);
+                MaxSimLCS.add(maxLCS);
+            } else {
+                for (int j = 0; j < startingTime.size(); j++) {
+                    generatedLCS.add(LCSExtractorWithDelay(IMSlicer(startingTime.get(j), im_trace.getMsgSequence()),                  // Starting time에 따라 given IM을 slicing 하여
+                            centroidLCS.get(i), delay_threshold));                                                       // 중간에 중요 사건의 sequence가 시작하는 경우의 예외 처리 진행
+                    if (generatedLCS.get(j) != null) Collections.reverse(generatedLCS.get(j));
+                }
+
+                int best_message_type_num = 0;
+                int lcs_length = 0;
+                int current_message_type_num = 0;
+                for (ArrayList<Message> lcs : generatedLCS) {                                                            // Starting time에 따른 IM_Sliced로 생성된 generated LCS
+                    if (lcs == null) continue;                                                                           // 중 가장 최적의 LCS를 선택하는 프로세스
+                    current_message_type_num = LCSPatternAnalyzer(lcs);
+                    if (best_message_type_num < current_message_type_num) {                                                // 1번 조건: LCS를 구성하는 Message type의 갯수
+                        lcs_index = generatedLCS.indexOf(lcs);                                                            // Ex) Merge_request로만 구성 vs Merge_request + Split_request
+                        lcs_length = lcs.size();                                                                          // 후자 선택
+                        best_message_type_num = current_message_type_num;
+                    } else if (best_message_type_num == current_message_type_num) {                                       // 2번 조건: LCS의 길이
+                        if (lcs_length < lcs.size()) {                                                                     // 같은 Message type의 갯수를 가지는 경우, LCS의 길이가 긴쪽 선택
+                            lcs_index = generatedLCS.indexOf(lcs);
+                            lcs_length = lcs.size();
+                            best_message_type_num = current_message_type_num;
+                        }
+                    }
+                }
+
+                if (lcs_index != -1 && generatedLCS.get(lcs_index).size() > lcs_min_len_threshold) {                  // TODO Length Threshold
+                    cluster.get(i).add(im_trace);
+                    centroidLCS.set(i, generatedLCS.get(lcs_index));
+                    MaxSim.put(Integer.toString(i),-1.0);                                                                                    // Min_Length를 넘으면 바로 삽입 진행.
+                } else {
+                    MaxSim.put(Integer.toString(i),1.0);                                                                                    // Min_Length를 넘지 못하는 경우에는 add하지 않음.
+                }
+            }
+        }
+
+        double createCost = 1/((double)cluster.size()+1);
+//        boolean addList[] = new boolean[cluster.size()];
+//        Arrays.fill(addList,false);
+
+        ArrayList<Integer> selected = new ArrayList<>();
+        for(int j = 0; j <MaxSim.size(); j++) {
+            if(MaxSim.get(Integer.toString(j)) < createCost && MaxSim.get(Integer.toString(j))!= -1) selected.add(j);
+        }
+
+        if(selected.size() == 0) {
+            cluster.add(new ArrayList<>());
+            centroidLCS.add(new ArrayList<>());
+            cluster.get(cluster.size() - 1).add(im_trace);
+        } else {
+            for(int i = 0; i < selected.size(); i++) {
+                int selectedIndex = selected.get(i);
+                cluster.get(selectedIndex).add(im_trace);
+                centroidLCS.set(selectedIndex, MaxSimLCS.get(selectedIndex));
+            }
+        }
+    }
+
+
     private void RandomSplit(int index, double delay_threshold) {
         ArrayList<Double> simlr_value = new ArrayList<>();
         HashMap<Double, Integer> hashMap = new HashMap<>();
