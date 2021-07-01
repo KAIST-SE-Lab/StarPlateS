@@ -557,9 +557,11 @@ public class Clustering {
         }
 
         for (int i = 0; i < cluster.size(); i++) {
+            generatedLCS.clear();
             lcs_index = -1;
             double simlrValue = -1;
             ArrayList<Message> maxLCS = new ArrayList<>();
+
             if (cluster.get(i).size() > 1) {                                                                             // Cluster에 2개 이상의 IM이 존재하는 경우, representative lcs 와 given IM 사이의 LCS를 생성하여 Similarity 비교
                 for (int j = 0; j < startingTime.size(); j++) {
                     generatedLCS.add(LCSExtractorWithoutDelay(centroidLCS.get(i), //cluster.get(i).get(0).getMsgSequence()
@@ -573,7 +575,8 @@ public class Clustering {
                     double temp = similarityChecker(centroidLCS.get(i), generatedLCS.get(j), delay_threshold);          // 와 기존 centroid_lcs와의 size를 비교하여 simlr_threshold
                     if (temp > simlrValue) {
                         simlrValue = temp;
-                        maxLCS = generatedLCS.get(j);
+                        if(generatedLCS.get(j).size() > lcs_min_len_threshold) maxLCS = generatedLCS.get(j);
+                        else maxLCS = centroidLCS.get(i);
                     }
                 }
                 MaxSim.put(Integer.toString(i),1-simlrValue);
@@ -627,6 +630,7 @@ public class Clustering {
             cluster.add(new ArrayList<>());
             centroidLCS.add(new ArrayList<>());
             cluster.get(cluster.size() - 1).add(im_trace);
+            centroidLCS.set(centroidLCS.size() - 1, im_trace.getMsgSequence());
         } else {
             for(int i = 0; i < selected.size(); i++) {
                 int selectedIndex = selected.get(i);
@@ -635,7 +639,6 @@ public class Clustering {
             }
         }
     }
-
 
     private void RandomSplit(int index, double delay_threshold) {
         ArrayList<Double> simlr_value = new ArrayList<>();
