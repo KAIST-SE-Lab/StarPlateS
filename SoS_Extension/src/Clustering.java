@@ -893,9 +893,9 @@ public class Clustering {
                                         }
                                     }
                                 }
-                                if(lcs_index != -1) centroidLCS.set(i, generatedLCS.get(lcs_index));
-                                if (!cluster.get(i).contains(IM))
-                                    cluster.get(i).add(IM);
+                                if(lcs_index != -1) centroidLCS.set(j, generatedLCS.get(lcs_index));
+                                if (!cluster.get(j).contains(IM))
+                                    cluster.get(j).add(IM);
                             }
                         }
                     } else {                                                                                                    // Cluster에 1개의 IM만 존재할때는 해당 IM 과의 LCS가 존재하는지 여부를 이용하여 해당 Cluster에 포함가능한지를 확인함
