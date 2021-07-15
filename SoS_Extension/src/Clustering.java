@@ -433,6 +433,9 @@ public class Clustering {
         for (int i = 0; i < cluster.size(); i++) {
             generatedLCS.clear();
             lcs_index = -1;
+            int best_message_type_num = 0;
+            int lcs_length = 0;
+            int current_message_type_num = 0;
 
             if (cluster.get(i).size() > 1) {                                                                             // Cluster에 2개 이상의 IM이 존재하는 경우, representative lcs 와 given IM 사이의 LCS를 생성하여 Similarity 비교
                 for (int j = 0; j < startingTime.size(); j++) {
@@ -449,15 +452,20 @@ public class Clustering {
                     if (temp >= simlr_threshold) {                                                                      // simlr_threshold를 넘는 경우, centroidLCS를 업데이트
                         assignFlag = true;
                         if (generatedLCS.get(j).size() > lcs_min_len_threshold) {
-                            if (lcs_index == -1) {
-                                centroidLCS.set(i, generatedLCS.get(j));
-                                lcs_index = j;
-                            } else {
-                                if (generatedLCS.get(j).size() > generatedLCS.get(lcs_index).size()) {                         //길이가 더 긴 경우가 있다면 추가로 업데이트
-                                    centroidLCS.set(i, generatedLCS.get(lcs_index));
+                            current_message_type_num = LCSPatternAnalyzer(generatedLCS.get(j));
+                            if(best_message_type_num < current_message_type_num) {                                                // 1번 조건: LCS를 구성하는 Message type의 갯수
+                                lcs_index = generatedLCS.indexOf(generatedLCS.get(j));                                                            // Ex) Merge_request로만 구성 vs Merge_request + Split_request
+                                lcs_length = generatedLCS.get(j).size();                                                                          // 후자 선택
+                                best_message_type_num = current_message_type_num;
+                            } else if (best_message_type_num == current_message_type_num) {                                       // 2번 조건: LCS의 길이
+                                if (lcs_length < generatedLCS.get(j).size()) {                                                                     // 같은 Message type의 갯수를 가지는 경우, LCS의 길이가 긴쪽 선택
+                                    lcs_index = generatedLCS.indexOf(generatedLCS.get(j));
+                                    lcs_length = generatedLCS.get(j).size();
+                                    best_message_type_num = current_message_type_num;
                                 }
                             }
                         }
+                        if(lcs_index != -1) centroidLCS.set(i, generatedLCS.get(lcs_index));
                         if (!cluster.get(i).contains(im_trace))
                             cluster.get(i).add(im_trace);                           // im_trace가 중복으로 cluster에 입력되는 거 방지
                     }
@@ -469,14 +477,11 @@ public class Clustering {
                     if (generatedLCS.get(j) != null) Collections.reverse(generatedLCS.get(j));
                 }
 
-                int best_message_type_num = 0;
-                int lcs_length = 0;
-                int current_message_type_num = 0;
                 for (ArrayList<Message> lcs : generatedLCS) {                                                            // Starting time에 따른 IM_Sliced로 생성된 generated LCS
                     if (lcs == null)
                         continue;                                                                           // 중 가장 최적의 LCS를 선택하는 프로세스
                     current_message_type_num = LCSPatternAnalyzer(lcs);
-                    if (best_message_type_num < current_message_type_num) {                                                // 1번 조건: LCS를 구성하는 Message type의 갯수
+                    if(best_message_type_num < current_message_type_num) {                                                // 1번 조건: LCS를 구성하는 Message type의 갯수
                         lcs_index = generatedLCS.indexOf(lcs);                                                            // Ex) Merge_request로만 구성 vs Merge_request + Split_request
                         lcs_length = lcs.size();                                                                          // 후자 선택
                         best_message_type_num = current_message_type_num;
