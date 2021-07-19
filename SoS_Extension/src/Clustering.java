@@ -1573,6 +1573,7 @@ public class Clustering {
             writer.write("Cluster/IM, Code Inspection Scope, Reduction Rate\n");
             int flag = 0; // 0 : normal, 1 : first time in log
             for(int i = 0; i < this.centroidLCS.size(); i++) {
+                File file3 = new File(base + "/SoS_Extension/results/" + "SuspiciousOrders_" + i + ".csv");
                 HashMap<Integer, Integer> patternScope = new HashMap<>();
                 for(int j = 0; j < this.centroidLCS.get(i).size(); j++) {
                     String command = this.centroidLCS.get(i).get(j).commandSent;
@@ -1590,6 +1591,14 @@ public class Clustering {
                     tempWriter += im.id + "," + logScope.size() + "," + ((double)patternScope.size() / (double)logScope.size()) + "\n";
                 }
                 writer.write(tempWriter);
+                tempWriter = "";
+                FileWriter writer2 = new FileWriter(file3);
+                writer2.write("CodeLines, Overlaps\n");
+                for(Integer key : patternScope.keySet()) {
+                    tempWriter += key + "," + patternScope.get(key) + "\n";
+                }
+                writer2.write(tempWriter);
+                writer2.close();
             }
             writer.close();
         } catch(Exception e) {
