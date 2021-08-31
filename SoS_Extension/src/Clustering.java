@@ -433,6 +433,9 @@ public class Clustering {
         for (int i = 0; i < cluster.size(); i++) {
             generatedLCS.clear();
             lcs_index = -1;
+            int best_message_type_num = 0;
+            int lcs_length = 0;
+            int current_message_type_num = 0;
 
             if (cluster.get(i).size() > 1) {                                                                             // Cluster에 2개 이상의 IM이 존재하는 경우, representative lcs 와 given IM 사이의 LCS를 생성하여 Similarity 비교
                 for (int j = 0; j < startingTime.size(); j++) {
@@ -449,18 +452,37 @@ public class Clustering {
                     if (temp >= simlr_threshold) {                                                                      // simlr_threshold를 넘는 경우, centroidLCS를 업데이트
                         assignFlag = true;
                         if (generatedLCS.get(j).size() > lcs_min_len_threshold) {
-                            if (lcs_index == -1) {
-                                centroidLCS.set(i, generatedLCS.get(j));
-                                lcs_index = j;
-                            } else {
-                                if (generatedLCS.get(j).size() > generatedLCS.get(lcs_index).size()) {                         //길이가 더 긴 경우가 있다면 추가로 업데이트
-                                    centroidLCS.set(i, generatedLCS.get(lcs_index));
+                            current_message_type_num = LCSPatternAnalyzer(generatedLCS.get(j));
+                            if(best_message_type_num < current_message_type_num) {                                                // 1번 조건: LCS를 구성하는 Message type의 갯수
+                                lcs_index = j;                                                            // Ex) Merge_request로만 구성 vs Merge_request + Split_request
+                                lcs_length = generatedLCS.get(j).size();                                                                          // 후자 선택
+                                best_message_type_num = current_message_type_num;
+                            } else if (best_message_type_num == current_message_type_num) {                                       // 2번 조건: LCS의 길이
+                                if (lcs_length < generatedLCS.get(j).size()) {                                                                     // 같은 Message type의 갯수를 가지는 경우, LCS의 길이가 긴쪽 선택
+                                    lcs_index = j;
+                                    lcs_length = generatedLCS.get(j).size();
+                                    best_message_type_num = current_message_type_num;
                                 }
                             }
                         }
+                        if(lcs_index != -1) centroidLCS.set(i, generatedLCS.get(lcs_index));
                         if (!cluster.get(i).contains(im_trace))
                             cluster.get(i).add(im_trace);                           // im_trace가 중복으로 cluster에 입력되는 거 방지
                     }
+
+//                        if (generatedLCS.get(j).size() > lcs_min_len_threshold) {
+//                            if (lcs_index == -1) {
+//                                centroidLCS.set(i, generatedLCS.get(j));
+//                                lcs_index = j;
+//                            } else {
+//                                if (generatedLCS.get(j).size() > generatedLCS.get(lcs_index).size()) {                         //길이가 더 긴 경우가 있다면 추가로 업데이트
+//                                    centroidLCS.set(i, generatedLCS.get(lcs_index));
+//                                }
+//                            }
+//                        }
+//                        if (!cluster.get(i).contains(im_trace))
+//                            cluster.get(i).add(im_trace);                           // im_trace가 중복으로 cluster에 입력되는 거 방지
+//                    }
                 }
             } else {                                                                                                    // Cluster에 1개의 IM만 존재할때는 해당 IM 과의 LCS가 존재하는지 여부를 이용하여 해당 Cluster에 포함가능한지를 확인함
                 for (int j = 0; j < startingTime.size(); j++) {
@@ -469,14 +491,11 @@ public class Clustering {
                     if (generatedLCS.get(j) != null) Collections.reverse(generatedLCS.get(j));
                 }
 
-                int best_message_type_num = 0;
-                int lcs_length = 0;
-                int current_message_type_num = 0;
                 for (ArrayList<Message> lcs : generatedLCS) {                                                            // Starting time에 따른 IM_Sliced로 생성된 generated LCS
                     if (lcs == null)
                         continue;                                                                           // 중 가장 최적의 LCS를 선택하는 프로세스
                     current_message_type_num = LCSPatternAnalyzer(lcs);
-                    if (best_message_type_num < current_message_type_num) {                                                // 1번 조건: LCS를 구성하는 Message type의 갯수
+                    if(best_message_type_num < current_message_type_num) {                                                // 1번 조건: LCS를 구성하는 Message type의 갯수
                         lcs_index = generatedLCS.indexOf(lcs);                                                            // Ex) Merge_request로만 구성 vs Merge_request + Split_request
                         lcs_length = lcs.size();                                                                          // 후자 선택
                         best_message_type_num = current_message_type_num;
@@ -557,9 +576,11 @@ public class Clustering {
         }
 
         for (int i = 0; i < cluster.size(); i++) {
+            generatedLCS.clear();
             lcs_index = -1;
             double simlrValue = -1;
             ArrayList<Message> maxLCS = new ArrayList<>();
+
             if (cluster.get(i).size() > 1) {                                                                             // Cluster에 2개 이상의 IM이 존재하는 경우, representative lcs 와 given IM 사이의 LCS를 생성하여 Similarity 비교
                 for (int j = 0; j < startingTime.size(); j++) {
                     generatedLCS.add(LCSExtractorWithoutDelay(centroidLCS.get(i), //cluster.get(i).get(0).getMsgSequence()
@@ -573,7 +594,8 @@ public class Clustering {
                     double temp = similarityChecker(centroidLCS.get(i), generatedLCS.get(j), delay_threshold);          // 와 기존 centroid_lcs와의 size를 비교하여 simlr_threshold
                     if (temp > simlrValue) {
                         simlrValue = temp;
-                        maxLCS = generatedLCS.get(j);
+                        if(generatedLCS.get(j).size() > lcs_min_len_threshold) maxLCS = generatedLCS.get(j);
+                        else maxLCS = centroidLCS.get(i);
                     }
                 }
                 MaxSim.put(Integer.toString(i),1-simlrValue);
@@ -627,6 +649,7 @@ public class Clustering {
             cluster.add(new ArrayList<>());
             centroidLCS.add(new ArrayList<>());
             cluster.get(cluster.size() - 1).add(im_trace);
+            centroidLCS.set(centroidLCS.size() - 1, im_trace.getMsgSequence());
         } else {
             for(int i = 0; i < selected.size(); i++) {
                 int selectedIndex = selected.get(i);
@@ -635,7 +658,6 @@ public class Clustering {
             }
         }
     }
-
 
     private void RandomSplit(int index, double delay_threshold) {
         ArrayList<Double> simlr_value = new ArrayList<>();
@@ -833,6 +855,9 @@ public class Clustering {
         for (int i = 0; i < cluster.size(); i++) {
             for (InterplayModel IM : cluster.get(i)) {
                 for (int j = 0; j < cluster.size(); j++) {
+                    int best_message_type_num = 0;
+                    int lcs_length = 0;
+                    int current_message_type_num = 0;
                     if (i == j) continue;
                     generatedLCS.clear();
                     lcs_index = -1;
@@ -849,17 +874,31 @@ public class Clustering {
                             double temp = similarityChecker(centroidLCS.get(j), generatedLCS.get(k), delay_threshold);          // 와 기존 centroid_lcs와의 size를 비교하여 simlr_threshold
                             // 를 넘는지 확인함
                             if (temp >= simlr_threshold) {                                                                      // simlr_threshold를 넘는 경우, centroidLCS를 업데이트
-                                if (!cluster.get(j).contains(IM)) {
-                                    cluster.get(j).add(IM);
-                                    if(generatedLCS.get(k).size() > lcs_min_len_threshold) centroidLCS.set(j, generatedLCS.get(k));
-                                    break;
+//                                if (!cluster.get(j).contains(IM)) {
+//                                    cluster.get(j).add(IM);
+//                                    if(generatedLCS.get(k).size() > lcs_min_len_threshold) centroidLCS.set(j, generatedLCS.get(k));
+//                                    break;
+//                                }
+                                if (generatedLCS.get(k).size() > lcs_min_len_threshold) {
+                                    current_message_type_num = LCSPatternAnalyzer(generatedLCS.get(k));
+                                    if(best_message_type_num < current_message_type_num) {                                                // 1번 조건: LCS를 구성하는 Message type의 갯수
+                                        lcs_index = k;                                                            // Ex) Merge_request로만 구성 vs Merge_request + Split_request
+                                        lcs_length = generatedLCS.get(k).size();                                                                          // 후자 선택
+                                        best_message_type_num = current_message_type_num;
+                                    } else if (best_message_type_num == current_message_type_num) {                                       // 2번 조건: LCS의 길이
+                                        if (lcs_length < generatedLCS.get(k).size()) {                                                                     // 같은 Message type의 갯수를 가지는 경우, LCS의 길이가 긴쪽 선택
+                                            lcs_index = k;
+                                            lcs_length = generatedLCS.get(k).size();
+                                            best_message_type_num = current_message_type_num;
+                                        }
+                                    }
                                 }
+                                if(lcs_index != -1) centroidLCS.set(j, generatedLCS.get(lcs_index));
+                                if (!cluster.get(j).contains(IM))
+                                    cluster.get(j).add(IM);
                             }
                         }
                     } else {                                                                                                    // Cluster에 1개의 IM만 존재할때는 해당 IM 과의 LCS가 존재하는지 여부를 이용하여 해당 Cluster에 포함가능한지를 확인함
-                        int best_message_type_num = 0;
-                        int lcs_length = 0;
-                        int current_message_type_num = 0;
                         for (ArrayList<Message> lcs : generatedLCS) {                                                            // Starting time에 따른 IM_Sliced로 생성된 generated LCS
                             if (lcs == null)
                                 continue;                                                                           // 중 가장 최적의 LCS를 선택하는 프로세스
@@ -1534,6 +1573,7 @@ public class Clustering {
             writer.write("Cluster/IM, Code Inspection Scope, Reduction Rate\n");
             int flag = 0; // 0 : normal, 1 : first time in log
             for(int i = 0; i < this.centroidLCS.size(); i++) {
+                File file3 = new File(base + "/SoS_Extension/results/" + "SuspiciousOrders_" + i + ".csv");
                 HashMap<Integer, Integer> patternScope = new HashMap<>();
                 for(int j = 0; j < this.centroidLCS.get(i).size(); j++) {
                     String command = this.centroidLCS.get(i).get(j).commandSent;
@@ -1551,6 +1591,14 @@ public class Clustering {
                     tempWriter += im.id + "," + logScope.size() + "," + ((double)patternScope.size() / (double)logScope.size()) + "\n";
                 }
                 writer.write(tempWriter);
+                tempWriter = "";
+                FileWriter writer2 = new FileWriter(file3);
+                writer2.write("CodeLines, Overlaps\n");
+                for(Integer key : patternScope.keySet()) {
+                    tempWriter += key + "," + patternScope.get(key) + "\n";
+                }
+                writer2.write(tempWriter);
+                writer2.close();
             }
             writer.close();
         } catch(Exception e) {

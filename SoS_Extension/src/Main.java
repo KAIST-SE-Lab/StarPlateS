@@ -100,7 +100,7 @@ public class Main {
                 if (f.exists()) {
                     int numoffiles = f.listFiles().length;
                     System.out.println("and it has " + numoffiles + " files.");
-                    for (int i = 0; i < 2400; i++) {    // TODO the number of input log files
+                    for (int i = 0; i < 13000; i++) {    // TODO the number of input log files
                         String txtdir = currentdir + i + "_0plnData.txt";
                         File temptxt = new File(txtdir);
                         if (temptxt.exists()) {
@@ -268,7 +268,7 @@ public class Main {
             int lcs_min_len_threshold;
             ArrayList<Double> f1p_ev_score;
             int number_of_clusters;
-            boolean single = true;
+            boolean single = false;
 
             double c_simlr = 0.6;
             double c_delay = 0.1;
@@ -286,7 +286,8 @@ public class Main {
 
             if (isClustering) {
                 if (!single) {
-                    File file2 = new File(base + "/SoS_Extension/results/" + "F1P - 2-2) HyperparameterAnalysis_Case6_ML_withTime_additional_logs.csv");  // TODO Which Case? -> File Name Change
+                    File file2 = new File(base + "/SoS_Extension/results/" + "F1P - 2-2) HyperparameterAnalysis_Case6_ML_withTime.csv");  // TODO Which Case? -> File Name Change
+//                    File file2 = new File(base + "/SoS_Extension/results/" + "F1P - Base HyperparameterAnalysis_withTime_03_19.csv");
                     try {
                         FileWriter writer = new FileWriter(file2, true);
                         String ret = "";
@@ -333,16 +334,17 @@ public class Main {
                 } // Single run with an optimized Hyperparameter setting
                 else {
                     Clustering clustering = new Clustering();
-                    simlr_threshold = 0.83;
-                    delay_threshold = 0.9;
+                    simlr_threshold = 0.7;
+                    delay_threshold = 1;
                     lcs_min_len_threshold = 3;
                     long startTime = System.currentTimeMillis();
                     for (InterplayModel im : IMs) {
+//                        clustering.addTraceClusterNoise(im, delay_threshold, lcs_min_len_threshold);
                         clustering.addTraceCase6(im, simlr_threshold, delay_threshold, lcs_min_len_threshold);
 //                    clustering.addTraceBaseLCS(im, delay_threshold, lcs_min_len_threshold);
                     }
-                    clustering.ClusterMerge(simlr_threshold, delay_threshold, lcs_min_len_threshold);
-                    clustering.ClusteringFinalize(simlr_threshold, delay_threshold, lcs_min_len_threshold);
+//                    clustering.ClusterMerge(simlr_threshold, delay_threshold, lcs_min_len_threshold);
+//                    clustering.ClusteringFinalize(simlr_threshold, delay_threshold, lcs_min_len_threshold);
                     long endTime = System.currentTimeMillis();
                     clustering.printCluster();
                     f1p_ev_score = clustering.EvaluateF1P(oracle, oracleGenerator.getIndex());
