@@ -101,6 +101,81 @@ public class InterplayModel {
         }
     }
 
+    public InterplayModel(File pltConfig) {
+
+        msgSequence = new ArrayList<>();
+        vehRole = new ArrayList<>();
+
+        try {
+            FileReader filereader = new FileReader(pltConfig);
+            BufferedReader bufReader = new BufferedReader(filereader);
+            String line="";
+            StringTokenizer stringTokenizer;
+
+            Float t_time;
+            String temp;
+            String t_command;
+            String vehID;
+
+            while((line = bufReader.readLine()) != null) {
+                stringTokenizer = new StringTokenizer(line," ");
+
+                if(stringTokenizer.countTokens() != 9) continue;
+
+                temp = stringTokenizer.nextToken();
+                if(temp.equals("timeStep")) {
+                    continue;
+                } else {
+                    t_time = Float.valueOf(temp);
+                }
+
+                vehID = stringTokenizer.nextToken();
+                for(int i = 0; i < 2; i++) stringTokenizer.nextToken();
+
+                temp = stringTokenizer.nextToken();
+                if(temp.equals("-")) {
+                    continue;
+                }
+                else {
+                    t_command = temp;
+                }
+
+                Message msg = new Message();
+                msg.time = t_time;
+                msg.vehID = vehID;
+                msg.commandSent = t_command;
+                msg.receiverId = stringTokenizer.nextToken();
+                msg.senderPltId = stringTokenizer.nextToken();
+                msg.receiverPltId = stringTokenizer.nextToken(); //TODO Consider ManueverStartEnd ?? ex) Split_Start
+
+                temp = stringTokenizer.nextToken();
+                if(temp.contains("Leave_Start") || temp.contains("Leave_Request")) {
+                    vehRole.add(vehID);
+                }
+
+                if(vehRole.contains(msg.senderPltId)) {
+                    if (vehRole.contains(msg.receiverId)) {
+                        msg.senderRole = "None";
+                        msg.receiverRole = "None";
+                    } else {
+                        msg.senderRole = "None";
+                        msg.receiverRole = "Leader";
+                    }
+                } else if (vehRole.contains(msg.receiverId)) {
+                    msg.senderRole = "Leader";
+                    msg.receiverRole = "None";
+                } else {
+                    msg.senderRole = "Leader";
+                    msg.receiverRole = "Leader";
+                }
+
+                msgSequence.add(msg);
+            }
+        } catch(Exception e) {
+            System.out.println(e);
+        }
+    }
+
     public String printSequence() {
         String ret = "";
         Message temp;
