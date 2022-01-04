@@ -107,7 +107,6 @@ public class Main {
                         matchingtxts++;
                         for (int thshold : thresholds) {
                             result = verifier.verifyLog(txtdir.getPath(), "operationSuccessRate", thshold);
-                            System.out.println(txtdir.getName());
                             InterplayModel interplayModel = new InterplayModel(Integer.parseInt(txtdir.getName().split("_")[0]), 0); // TODO r_index = 0 로 설정해놓음
                             if (!result) {
                                 IMs.add(interplayModel);
