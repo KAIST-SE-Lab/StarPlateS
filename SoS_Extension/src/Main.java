@@ -339,8 +339,9 @@ public class Main {
 //                                    // Oracle-based Evaluation Score
 //                                    f1p_ev_score = clustering.EvaluateF1P(oracle, oracleGenerator.getIndex()); // 0: F_C_O, 1: F_O_C, 2: Evaluation Score
 ////                                evaluation_score = clustering.EvaluateClusteringResult(oracle, oracleGenerator.getIndex());
-//                                    System.out.println(simlr_threshold + ", " + delay_threshold + ", " + lcs_min_len_threshold + "," + " Clustering Evaluation Score: " + f1p_ev_score.get(2) + ", F_C_O: " + f1p_ev_score.get(0) + ", F_O_C: " + f1p_ev_score.get(1) + ", Cluster Size: " + number_of_clusters + ", Time(ms): " + (endTime-startTime));
-//                                    ret += simlr_threshold + "," + delay_threshold + "," + lcs_min_len_threshold + "," + f1p_ev_score.get(2) + "," + f1p_ev_score.get(0) + "," + f1p_ev_score.get(1) + "," + number_of_clusters + ", Time(ms): ," + (endTime-startTime) + "\n";
+//                                    float pattern_identity_score = clustering.PatternIdentityChecker(delay_threshold);
+//                                    System.out.println(simlr_threshold + ", " + delay_threshold + ", " + lcs_min_len_threshold + "," + " Clustering Evaluation Score: " + f1p_ev_score.get(2) + ", F_C_O: " + f1p_ev_score.get(0) + ", F_O_C: " + f1p_ev_score.get(1) + ", Cluster Size: " + number_of_clusters + ", PIT value: " + pattern_identity_score + ", Time(ms): " + (endTime-startTime));
+//                                    ret += simlr_threshold + "," + delay_threshold + "," + lcs_min_len_threshold + "," + f1p_ev_score.get(2) + "," + f1p_ev_score.get(0) + "," + f1p_ev_score.get(1) + "," + number_of_clusters + "," + pattern_identity_score + ", Time(ms): ," + (endTime-startTime) + "\n";
 //                                }
 //                            }
 //                        }
@@ -367,7 +368,8 @@ public class Main {
 //                    clustering.printCluster();
 //                    f1p_ev_score = clustering.EvaluateF1P(oracle, oracleGenerator.getIndex());
 //                    number_of_clusters = clustering.clusterSize();
-//                    System.out.println(simlr_threshold + ", " + delay_threshold + ", " + lcs_min_len_threshold + "," + " Clustering Evaluation Score: " + f1p_ev_score.get(2) + ", F_C_O: " + f1p_ev_score.get(0) + ", F_O_C: " + f1p_ev_score.get(1) + ", Cluster Size: " + number_of_clusters + ", Time(ms): " + (endTime-startTime));
+//                    float pattern_identity_score = clustering.PatternIdentityChecker(delay_threshold);
+//                    System.out.println(simlr_threshold + ", " + delay_threshold + ", " + lcs_min_len_threshold + "," + " Clustering Evaluation Score: " + f1p_ev_score.get(2) + ", F_C_O: " + f1p_ev_score.get(0) + ", F_O_C: " + f1p_ev_score.get(1) + ", Cluster Size: " + number_of_clusters + ", PIT value: " + pattern_identity_score + ", Time(ms): " + (endTime-startTime));
 //
 ////                    ArrayList<Double> simWithPassed;
 ////                    simWithPassed = clustering.patternSimilarityChecker(PIMs, delay_threshold);
