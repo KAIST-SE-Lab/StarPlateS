@@ -1,8 +1,5 @@
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
+import java.io.*;
 import java.lang.reflect.Array;
 import java.util.*;
 
@@ -1738,6 +1735,36 @@ public class Clustering {
             for(int p = ranges.get(k); p <=ranges.get(k+1); p++) {
                 if(tempMap.containsKey(p)) tempMap.put(p, tempMap.get(p)+1);
                 else tempMap.put(p, 1);
+            }
+        }
+    }
+
+    public void PatternTxt(File folder) {
+        File file = null;
+        for(int i = 0; i < centroidLCS.size(); i++) {
+            file = new File(folder.getPath() + "/" + i + ".txt");
+            ArrayList<Message> pattern = centroidLCS.get(i);
+
+            FileWriter writer2 = null;
+            try {
+                writer2 = new FileWriter(file);
+                String tempStr = "";
+                for(int j = 0; j < pattern.size(); j++) {
+                    tempStr += pattern.get(j).time + "\t" + pattern.get(j).vehID + "\t" + "-\t-\t"
+                            + pattern.get(j).commandSent + "\t" + pattern.get(j).receiverId + "\t" + pattern.get(j).senderPltId
+                            + "\t" + pattern.get(j).receiverPltId + "\t" + "-";
+                    writer2.write(tempStr+"\n");
+                    tempStr = "";
+                }
+                writer2.flush();
+            } catch(IOException e) {
+                e.printStackTrace();
+            } finally {
+                try {
+                    if(writer2 != null) writer2.close();
+                } catch(IOException e) {
+                    e.printStackTrace();
+                }
             }
         }
     }
