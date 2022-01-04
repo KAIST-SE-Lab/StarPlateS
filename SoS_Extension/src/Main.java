@@ -87,20 +87,20 @@ public class Main {
             String base = System.getProperty("user.dir");
             System.out.println(System.getProperty("user.dir"));
             int matchingtxts = 0;
-            String currentdir = base + "/SoS_Extension/logs/";
+            String currentdir = base + "/SoS_Extension/logs_full/";
             System.out.print("Current Working Directory : " + currentdir + "\n");
             File f = new File(currentdir);
             Boolean result;
             matchingtxts = 0;
 
             ArrayList<InterplayModel> IMs = new ArrayList<>();
-            ArrayList<InterplayModel> PIMs = new ArrayList<>();
+            ArrayList<InterplayModel> PIMs = new ArrayList<>(); // Passed IMs
 
             if(BasicVerifierProperty) {
                 if (f.exists()) {
                     int numoffiles = f.listFiles().length;
                     System.out.println("and it has " + numoffiles + " files.");
-                    for (int i = 0; i < 13000; i++) {    // TODO the number of input log files
+                    for (int i = 0; i < 8000; i++) {    // TODO the number of input log files
                         String txtdir = currentdir + i + "_0plnData.txt";
                         File temptxt = new File(txtdir);
                         if (temptxt.exists()) {
@@ -268,7 +268,7 @@ public class Main {
             int lcs_min_len_threshold;
             ArrayList<Double> f1p_ev_score;
             int number_of_clusters;
-            boolean single = false;
+            boolean single = true;
 
             double c_simlr = 0.6;
             double c_delay = 0.1;
@@ -281,93 +281,93 @@ public class Main {
             OracleGenerator oracleGenerator = new OracleGenerator();
             oracleGenerator.oracleGeneration(IMs);
             oracleGenerator.printOracle();
-//            oracleGenerator.getOracleCSV();
+            oracleGenerator.getOracleCSV();
             ArrayList<ArrayList<String>> oracle = oracleGenerator.getOracle();
 
-            if (isClustering) {
-                if (!single) {
-                    File file2 = new File(base + "/SoS_Extension/results/" + "F1P - 2-2) HyperparameterAnalysis_Case6_ML_withTime.csv");  // TODO Which Case? -> File Name Change
-//                    File file2 = new File(base + "/SoS_Extension/results/" + "F1P - Base HyperparameterAnalysis_withTime_03_19.csv");
-                    try {
-                        FileWriter writer = new FileWriter(file2, true);
-                        String ret = "";
-                        // The code for Hyperparameter optimization of clustering algorithm
-                        for (int simlr_counter = 60; simlr_counter <= 90; simlr_counter++) {
-                            simlr_threshold = (double) simlr_counter / 100;
-                            for (int delay_counter = 10; delay_counter <= 100; delay_counter += 10) {
-                                delay_threshold = (double) delay_counter / 100;
-                                for (lcs_min_len_threshold = 2; lcs_min_len_threshold <= 15; lcs_min_len_threshold++) {
-                                    Clustering clustering = new Clustering();
-                                    long startTime = System.currentTimeMillis();
-
-                                    for (InterplayModel im : IMs) {
-                                        // 대조군 Clustering Algorithm
-//                                    clustering.addTraceBaseLCS(im, delay_threshold, lcs_min_len_threshold);
-
-                                        clustering.addTraceCase6(im, simlr_threshold, delay_threshold, lcs_min_len_threshold);
-
-                                        // For Merging&Finalizing Optimization
-//                                    clustering.addTraceCase6(im, c_simlr, c_delay, c_len);
-                                    }
-
-                                    // Clustering Merge Optimization
-                                    clustering.ClusterMerge(simlr_threshold, delay_threshold, lcs_min_len_threshold);
-
-                                    // Clustering Finalize Optimization
-//                                clustering.ClusterMerge(m_simlr, m_delay, m_len);
-                                    clustering.ClusteringFinalize(simlr_threshold, delay_threshold, lcs_min_len_threshold);
-                                    long endTime = System.currentTimeMillis();
-                                    number_of_clusters = clustering.clusterSize();
-                                    // Oracle-based Evaluation Score
-                                    f1p_ev_score = clustering.EvaluateF1P(oracle, oracleGenerator.getIndex()); // 0: F_C_O, 1: F_O_C, 2: Evaluation Score
-//                                evaluation_score = clustering.EvaluateClusteringResult(oracle, oracleGenerator.getIndex());
-                                    System.out.println(simlr_threshold + ", " + delay_threshold + ", " + lcs_min_len_threshold + "," + " Clustering Evaluation Score: " + f1p_ev_score.get(2) + ", F_C_O: " + f1p_ev_score.get(0) + ", F_O_C: " + f1p_ev_score.get(1) + ", Cluster Size: " + number_of_clusters + ", Time(ms): " + (endTime-startTime));
-                                    ret += simlr_threshold + "," + delay_threshold + "," + lcs_min_len_threshold + "," + f1p_ev_score.get(2) + "," + f1p_ev_score.get(0) + "," + f1p_ev_score.get(1) + "," + number_of_clusters + ", Time(ms): ," + (endTime-startTime) + "\n";
-                                }
-                            }
-                        }
-                        writer.write(ret);
-                        writer.close();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                } // Single run with an optimized Hyperparameter setting
-                else {
-                    Clustering clustering = new Clustering();
-                    simlr_threshold = 0.7;
-                    delay_threshold = 1;
-                    lcs_min_len_threshold = 3;
-                    long startTime = System.currentTimeMillis();
-                    for (InterplayModel im : IMs) {
-//                        clustering.addTraceClusterNoise(im, delay_threshold, lcs_min_len_threshold);
-                        clustering.addTraceCase6(im, simlr_threshold, delay_threshold, lcs_min_len_threshold);
-//                    clustering.addTraceBaseLCS(im, delay_threshold, lcs_min_len_threshold);
-                    }
-//                    clustering.ClusterMerge(simlr_threshold, delay_threshold, lcs_min_len_threshold);
-//                    clustering.ClusteringFinalize(simlr_threshold, delay_threshold, lcs_min_len_threshold);
-                    long endTime = System.currentTimeMillis();
-                    clustering.printCluster();
-                    f1p_ev_score = clustering.EvaluateF1P(oracle, oracleGenerator.getIndex());
-                    number_of_clusters = clustering.clusterSize();
-                    System.out.println(simlr_threshold + ", " + delay_threshold + ", " + lcs_min_len_threshold + "," + " Clustering Evaluation Score: " + f1p_ev_score.get(2) + ", F_C_O: " + f1p_ev_score.get(0) + ", F_O_C: " + f1p_ev_score.get(1) + ", Cluster Size: " + number_of_clusters + ", Time(ms): " + (endTime-startTime));
-
-//                    ArrayList<Double> simWithPassed;
-//                    simWithPassed = clustering.patternSimilarityChecker(PIMs, delay_threshold);
-//                    File file3 = new File(base + "/SoS_Extension/results/" + "PatternSimAnalysis_Case6-5.csv");
-//                    String ret = "";
+//            if (isClustering) {
+//                if (!single) {
+//                    File file2 = new File(base + "/SoS_Extension/results/" + "F1P - 2-2) HyperparameterAnalysis_Case6_ML_withTime.csv");  // TODO Which Case? -> File Name Change
+////                    File file2 = new File(base + "/SoS_Extension/results/" + "F1P - Base HyperparameterAnalysis_withTime_03_19.csv");
 //                    try {
-//                        FileWriter writer = new FileWriter(file3);
-//                        for (int i = 0; i < simWithPassed.size(); i++) {
-//                            ret += simWithPassed.get(i) + ",\n";
+//                        FileWriter writer = new FileWriter(file2, true);
+//                        String ret = "";
+//                        // The code for Hyperparameter optimization of clustering algorithm
+//                        for (int simlr_counter = 60; simlr_counter <= 90; simlr_counter++) {
+//                            simlr_threshold = (double) simlr_counter / 100;
+//                            for (int delay_counter = 10; delay_counter <= 100; delay_counter += 10) {
+//                                delay_threshold = (double) delay_counter / 100;
+//                                for (lcs_min_len_threshold = 2; lcs_min_len_threshold <= 15; lcs_min_len_threshold++) {
+//                                    Clustering clustering = new Clustering();
+//                                    long startTime = System.currentTimeMillis();
+//
+//                                    for (InterplayModel im : IMs) {
+//                                        // 대조군 Clustering Algorithm
+////                                    clustering.addTraceBaseLCS(im, delay_threshold, lcs_min_len_threshold);
+//
+//                                        clustering.addTraceCase6(im, simlr_threshold, delay_threshold, lcs_min_len_threshold);
+//
+//                                        // For Merging&Finalizing Optimization
+////                                    clustering.addTraceCase6(im, c_simlr, c_delay, c_len);
+//                                    }
+//
+//                                    // Clustering Merge Optimization
+//                                    clustering.ClusterMerge(simlr_threshold, delay_threshold, lcs_min_len_threshold);
+//
+//                                    // Clustering Finalize Optimization
+////                                clustering.ClusterMerge(m_simlr, m_delay, m_len);
+//                                    clustering.ClusteringFinalize(simlr_threshold, delay_threshold, lcs_min_len_threshold);
+//                                    long endTime = System.currentTimeMillis();
+//                                    number_of_clusters = clustering.clusterSize();
+//                                    // Oracle-based Evaluation Score
+//                                    f1p_ev_score = clustering.EvaluateF1P(oracle, oracleGenerator.getIndex()); // 0: F_C_O, 1: F_O_C, 2: Evaluation Score
+////                                evaluation_score = clustering.EvaluateClusteringResult(oracle, oracleGenerator.getIndex());
+//                                    System.out.println(simlr_threshold + ", " + delay_threshold + ", " + lcs_min_len_threshold + "," + " Clustering Evaluation Score: " + f1p_ev_score.get(2) + ", F_C_O: " + f1p_ev_score.get(0) + ", F_O_C: " + f1p_ev_score.get(1) + ", Cluster Size: " + number_of_clusters + ", Time(ms): " + (endTime-startTime));
+//                                    ret += simlr_threshold + "," + delay_threshold + "," + lcs_min_len_threshold + "," + f1p_ev_score.get(2) + "," + f1p_ev_score.get(0) + "," + f1p_ev_score.get(1) + "," + number_of_clusters + ", Time(ms): ," + (endTime-startTime) + "\n";
+//                                }
+//                            }
 //                        }
 //                        writer.write(ret);
 //                        writer.close();
 //                    } catch (Exception e) {
 //                        e.printStackTrace();
 //                    }
-                    clustering.codeLocalizer(base,"/src/nodes/vehicle/05_PlatoonMg.cc");
-                }
-            }
+//                } // Single run with an optimized Hyperparameter setting
+//                else {
+//                    Clustering clustering = new Clustering();
+//                    simlr_threshold = 0.71;
+//                    delay_threshold = 1;
+//                    lcs_min_len_threshold = 4;
+//                    long startTime = System.currentTimeMillis();
+//                    for (InterplayModel im : IMs) {
+////                        clustering.addTraceClusterNoise(im, delay_threshold, lcs_min_len_threshold);
+//                        clustering.addTraceCase6(im, simlr_threshold, delay_threshold, lcs_min_len_threshold);
+////                    clustering.addTraceBaseLCS(im, delay_threshold, lcs_min_len_threshold);
+//                    }
+////                    clustering.ClusterMerge(simlr_threshold, delay_threshold, lcs_min_len_threshold);
+////                    clustering.ClusteringFinalize(simlr_threshold, delay_threshold, lcs_min_len_threshold);
+//                    long endTime = System.currentTimeMillis();
+//                    clustering.printCluster();
+//                    f1p_ev_score = clustering.EvaluateF1P(oracle, oracleGenerator.getIndex());
+//                    number_of_clusters = clustering.clusterSize();
+//                    System.out.println(simlr_threshold + ", " + delay_threshold + ", " + lcs_min_len_threshold + "," + " Clustering Evaluation Score: " + f1p_ev_score.get(2) + ", F_C_O: " + f1p_ev_score.get(0) + ", F_O_C: " + f1p_ev_score.get(1) + ", Cluster Size: " + number_of_clusters + ", Time(ms): " + (endTime-startTime));
+//
+////                    ArrayList<Double> simWithPassed;
+////                    simWithPassed = clustering.patternSimilarityChecker(PIMs, delay_threshold);
+////                    File file3 = new File(base + "/SoS_Extension/results/" + "PatternSimAnalysis_Case6-5.csv");
+////                    String ret = "";
+////                    try {
+////                        FileWriter writer = new FileWriter(file3);
+////                        for (int i = 0; i < simWithPassed.size(); i++) {
+////                            ret += simWithPassed.get(i) + ",\n";
+////                        }
+////                        writer.write(ret);
+////                        writer.close();
+////                    } catch (Exception e) {
+////                        e.printStackTrace();
+////                    }
+//                    clustering.codeLocalizer(base,"/src/nodes/vehicle/05_PlatoonMg.cc");
+//                }
+//            }
         }
     }
 }

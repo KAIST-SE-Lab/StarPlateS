@@ -450,39 +450,39 @@ public class Clustering {
                     double temp = similarityChecker(centroidLCS.get(i), generatedLCS.get(j), delay_threshold);             // 와 기존 centroid_lcs와의 size를 비교하여 simlr_threshold
                     // 를 넘는지 확인함
                     if (temp >= simlr_threshold) {                                                                      // simlr_threshold를 넘는 경우, centroidLCS를 업데이트
-                        assignFlag = true;
-                        if (generatedLCS.get(j).size() > lcs_min_len_threshold) {
-                            current_message_type_num = LCSPatternAnalyzer(generatedLCS.get(j));
-                            if(best_message_type_num < current_message_type_num) {                                                // 1번 조건: LCS를 구성하는 Message type의 갯수
-                                lcs_index = j;                                                            // Ex) Merge_request로만 구성 vs Merge_request + Split_request
-                                lcs_length = generatedLCS.get(j).size();                                                                          // 후자 선택
-                                best_message_type_num = current_message_type_num;
-                            } else if (best_message_type_num == current_message_type_num) {                                       // 2번 조건: LCS의 길이
-                                if (lcs_length < generatedLCS.get(j).size()) {                                                                     // 같은 Message type의 갯수를 가지는 경우, LCS의 길이가 긴쪽 선택
-                                    lcs_index = j;
-                                    lcs_length = generatedLCS.get(j).size();
-                                    best_message_type_num = current_message_type_num;
-                                }
-                            }
-                        }
-                        if(lcs_index != -1) centroidLCS.set(i, generatedLCS.get(lcs_index));
-                        if (!cluster.get(i).contains(im_trace))
-                            cluster.get(i).add(im_trace);                           // im_trace가 중복으로 cluster에 입력되는 거 방지
-                    }
-
+//                        assignFlag = true;
 //                        if (generatedLCS.get(j).size() > lcs_min_len_threshold) {
-//                            if (lcs_index == -1) {
-//                                centroidLCS.set(i, generatedLCS.get(j));
-//                                lcs_index = j;
-//                            } else {
-//                                if (generatedLCS.get(j).size() > generatedLCS.get(lcs_index).size()) {                         //길이가 더 긴 경우가 있다면 추가로 업데이트
-//                                    centroidLCS.set(i, generatedLCS.get(lcs_index));
+//                            current_message_type_num = LCSPatternAnalyzer(generatedLCS.get(j));
+//                            if(best_message_type_num < current_message_type_num) {                                                // 1번 조건: LCS를 구성하는 Message type의 갯수
+//                                lcs_index = j;                                                            // Ex) Merge_request로만 구성 vs Merge_request + Split_request
+//                                lcs_length = generatedLCS.get(j).size();                                                                          // 후자 선택
+//                                best_message_type_num = current_message_type_num;
+//                            } else if (best_message_type_num == current_message_type_num) {                                       // 2번 조건: LCS의 길이
+//                                if (lcs_length < generatedLCS.get(j).size()) {                                                                     // 같은 Message type의 갯수를 가지는 경우, LCS의 길이가 긴쪽 선택
+//                                    lcs_index = j;
+//                                    lcs_length = generatedLCS.get(j).size();
+//                                    best_message_type_num = current_message_type_num;
 //                                }
 //                            }
 //                        }
+//                        if(lcs_index != -1) centroidLCS.set(i, generatedLCS.get(lcs_index));
 //                        if (!cluster.get(i).contains(im_trace))
 //                            cluster.get(i).add(im_trace);                           // im_trace가 중복으로 cluster에 입력되는 거 방지
 //                    }
+                        assignFlag=true;
+                        if (generatedLCS.get(j).size() > lcs_min_len_threshold) {
+                            if (lcs_index == -1) {
+                                centroidLCS.set(i, generatedLCS.get(j));
+                                lcs_index = j;
+                            } else {
+                                if (generatedLCS.get(j).size() > generatedLCS.get(lcs_index).size()) {                         //길이가 더 긴 경우가 있다면 추가로 업데이트
+                                    centroidLCS.set(i, generatedLCS.get(lcs_index));
+                                }
+                            }
+                        }
+                        if (!cluster.get(i).contains(im_trace))
+                            cluster.get(i).add(im_trace);                           // im_trace가 중복으로 cluster에 입력되는 거 방지
+                    }
                 }
             } else {                                                                                                    // Cluster에 1개의 IM만 존재할때는 해당 IM 과의 LCS가 존재하는지 여부를 이용하여 해당 Cluster에 포함가능한지를 확인함
                 for (int j = 0; j < startingTime.size(); j++) {
@@ -874,28 +874,28 @@ public class Clustering {
                             double temp = similarityChecker(centroidLCS.get(j), generatedLCS.get(k), delay_threshold);          // 와 기존 centroid_lcs와의 size를 비교하여 simlr_threshold
                             // 를 넘는지 확인함
                             if (temp >= simlr_threshold) {                                                                      // simlr_threshold를 넘는 경우, centroidLCS를 업데이트
-//                                if (!cluster.get(j).contains(IM)) {
-//                                    cluster.get(j).add(IM);
-//                                    if(generatedLCS.get(k).size() > lcs_min_len_threshold) centroidLCS.set(j, generatedLCS.get(k));
-//                                    break;
-//                                }
-                                if (generatedLCS.get(k).size() > lcs_min_len_threshold) {
-                                    current_message_type_num = LCSPatternAnalyzer(generatedLCS.get(k));
-                                    if(best_message_type_num < current_message_type_num) {                                                // 1번 조건: LCS를 구성하는 Message type의 갯수
-                                        lcs_index = k;                                                            // Ex) Merge_request로만 구성 vs Merge_request + Split_request
-                                        lcs_length = generatedLCS.get(k).size();                                                                          // 후자 선택
-                                        best_message_type_num = current_message_type_num;
-                                    } else if (best_message_type_num == current_message_type_num) {                                       // 2번 조건: LCS의 길이
-                                        if (lcs_length < generatedLCS.get(k).size()) {                                                                     // 같은 Message type의 갯수를 가지는 경우, LCS의 길이가 긴쪽 선택
-                                            lcs_index = k;
-                                            lcs_length = generatedLCS.get(k).size();
-                                            best_message_type_num = current_message_type_num;
-                                        }
-                                    }
-                                }
-                                if(lcs_index != -1) centroidLCS.set(j, generatedLCS.get(lcs_index));
-                                if (!cluster.get(j).contains(IM))
+                                if (!cluster.get(j).contains(IM)) {
                                     cluster.get(j).add(IM);
+                                    if(generatedLCS.get(k).size() > lcs_min_len_threshold) centroidLCS.set(j, generatedLCS.get(k));
+                                    break;
+                                }
+//                                if (generatedLCS.get(k).size() > lcs_min_len_threshold) {
+//                                    current_message_type_num = LCSPatternAnalyzer(generatedLCS.get(k));
+//                                    if(best_message_type_num < current_message_type_num) {                                                // 1번 조건: LCS를 구성하는 Message type의 갯수
+//                                        lcs_index = k;                                                            // Ex) Merge_request로만 구성 vs Merge_request + Split_request
+//                                        lcs_length = generatedLCS.get(k).size();                                                                          // 후자 선택
+//                                        best_message_type_num = current_message_type_num;
+//                                    } else if (best_message_type_num == current_message_type_num) {                                       // 2번 조건: LCS의 길이
+//                                        if (lcs_length < generatedLCS.get(k).size()) {                                                                     // 같은 Message type의 갯수를 가지는 경우, LCS의 길이가 긴쪽 선택
+//                                            lcs_index = k;
+//                                            lcs_length = generatedLCS.get(k).size();
+//                                            best_message_type_num = current_message_type_num;
+//                                        }
+//                                    }
+//                                }
+//                                if(lcs_index != -1) centroidLCS.set(j, generatedLCS.get(lcs_index));
+//                                if (!cluster.get(j).contains(IM))
+//                                    cluster.get(j).add(IM);
                             }
                         }
                     } else {                                                                                                    // Cluster에 1개의 IM만 존재할때는 해당 IM 과의 LCS가 존재하는지 여부를 이용하여 해당 Cluster에 포함가능한지를 확인함
@@ -1566,6 +1566,34 @@ public class Clustering {
         } catch (Exception e) {
             System.out.println(e);
         }
+        try {
+            File pltConfig = new File("./SoS_Extension/logs/generatedPatterns.txt");
+            FileReader filereader = new FileReader(pltConfig);
+            BufferedReader bufReader = new BufferedReader(filereader);
+            String line = "";
+            StringTokenizer stringTokenizer;
+            ArrayList<Message> msgSequence = new ArrayList<>();
+            centroidLCS.clear();
+
+            while((line = bufReader.readLine()) != null) {
+                stringTokenizer = new StringTokenizer(line, " ");
+                Message msg = new Message();
+                if(stringTokenizer.countTokens() == 3) {
+                    if(msgSequence.size() != 0) {
+                        centroidLCS.add((ArrayList)msgSequence.clone());
+                    }
+                    msgSequence = new ArrayList<>();
+                }
+
+                if(stringTokenizer.countTokens() != 7) continue;
+                stringTokenizer.nextToken();
+                stringTokenizer.nextToken();
+                msg.commandSent = stringTokenizer.nextToken();
+                msgSequence.add(msg);
+            }
+        } catch(Exception e){
+            System.out.println(e);
+        }
 
         File file2 = new File(base + "/SoS_Extension/results/" + "CodeScopeReductionRate_bestOption.csv");
         try {
@@ -1580,18 +1608,18 @@ public class Clustering {
                     setCodeInspectionScope(source, command, patternScope, flag);
                 }
                 String tempWriter = "";
-                tempWriter += "Cluster " + i + "," + patternScope.size() + "\n";
-                for(InterplayModel im : this.cluster.get(i)) {
-                    flag = 1;
-                    HashMap<Integer, Integer> logScope = new HashMap<>();
-                    for(Message m : im.msgSequence) {
-                        setCodeInspectionScope(source, m.commandSent, logScope, flag);
-                        if(flag==1) flag = 0;
-                    }
-                    tempWriter += im.id + "," + logScope.size() + "," + ((double)patternScope.size() / (double)logScope.size()) + "\n";
-                }
-                writer.write(tempWriter);
-                tempWriter = "";
+//                tempWriter += "Cluster " + i + "," + patternScope.size() + "\n";
+//                for(InterplayModel im : this.cluster.get(i)) {
+//                    flag = 1;
+//                    HashMap<Integer, Integer> logScope = new HashMap<>();
+//                    for(Message m : im.msgSequence) {
+//                        setCodeInspectionScope(source, m.commandSent, logScope, flag);
+//                        if(flag==1) flag = 0;
+//                    }
+//                    tempWriter += im.id + "," + logScope.size() + "," + ((double)patternScope.size() / (double)logScope.size()) + "\n";
+//                }
+//                writer.write(tempWriter);
+//                tempWriter = "";
                 FileWriter writer2 = new FileWriter(file3);
                 writer2.write("CodeLines, Overlaps\n");
                 for(Integer key : patternScope.keySet()) {

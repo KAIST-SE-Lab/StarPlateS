@@ -36,22 +36,23 @@ public class Verifier {
                 ret = operationSuccessRateVerification(txtdir, threshold);
 
                 // CSV generation for tendency analysis of the verification property success rate
-//                File file = new File(System.getProperty("user.dir") + "/SoS_Extension/Verification_Results" + "_" + threshold + ".csv");
-//                FileWriter writer = null;
-//                try {
-//                    writer = new FileWriter(file, true);
+                File file = new File(System.getProperty("user.dir") + "/SoS_Extension/Verification_Results" + "_" + threshold + ".csv");
+                FileWriter writer = null;
+                try {
+                    writer = new FileWriter(file, true);
 //                    String log_id = txtdir.replace(System.getProperty("user.dir") + "/SoS_Extension/logs/", "");
-//                    writer.write(log_id+ "," + Boolean.toString(ret) + "\n");
-//                    writer.flush();
-//                } catch(IOException e) {
-//                    e.printStackTrace();
-//                } finally {
-//                    try {
-//                        if(writer != null) writer.close();
-//                    } catch(IOException e) {
-//                        e.printStackTrace();
-//                    }
-//                }
+                    String log_id = "";
+                    writer.write(log_id+ "," + Boolean.toString(ret) + "\n");
+                    writer.flush();
+                } catch(IOException e) {
+                    e.printStackTrace();
+                } finally {
+                    try {
+                        if(writer != null) writer.close();
+                    } catch(IOException e) {
+                        e.printStackTrace();
+                    }
+                }
                 break;
         }
 
