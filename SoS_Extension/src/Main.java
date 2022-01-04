@@ -1,5 +1,6 @@
 import java.io.*;
 import java.nio.file.Files;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class Main {
@@ -282,6 +283,19 @@ public class Main {
             ArrayList<ArrayList<String>> oracle = oracleGenerator.getOracle();
 
 //            if (isClustering) {
+//                File folder1 = new File(base + "/SoS_Extension/results/patterns");
+//                if (!folder1.exists()) {
+//                    try{
+//                        folder1.mkdir();
+//                    } catch(Exception e) {
+//                        System.out.println(e);
+//                    }
+//                }
+//                Date date = new Date();
+//                SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy HH:mm");
+////              System.out.println(formatter.format(date));
+//                File folder2 = new File(base + "/SoS_Extension/results/patterns/" + formatter.format(date));
+//                folder2.mkdir();
 //                if (!single) {
 //                    File file2 = new File(base + "/SoS_Extension/results/" + "F1P - 2-2) HyperparameterAnalysis_Case6_ML_withTime.csv");  // TODO Which Case? -> File Name Change
 ////                    File file2 = new File(base + "/SoS_Extension/results/" + "F1P - Base HyperparameterAnalysis_withTime_03_19.csv");
@@ -314,6 +328,12 @@ public class Main {
 //                                    // Clustering Finalize Optimization
 ////                                clustering.ClusterMerge(m_simlr, m_delay, m_len);
 //                                    clustering.ClusteringFinalize(simlr_threshold, delay_threshold, lcs_min_len_threshold);
+//
+//                                    // Pattern Logging
+//                                    File folder3 = new File(base + "/SoS_Extension/results/patterns/" + formatter.format(date) + "/" + simlr_threshold + "_" + delay_threshold + "_" + lcs_min_len_threshold);
+//                                    folder3.mkdir();
+//                                    clustering.PatternTxt(folder3);
+//                                    folder3 = null; // TODO Check
 //                                    long endTime = System.currentTimeMillis();
 //                                    number_of_clusters = clustering.clusterSize();
 //                                    // Oracle-based Evaluation Score
