@@ -13,13 +13,15 @@ public class OracleGenerator {
         oracle.add(new ArrayList<>());  // CASE 1: Simultaneous Merge & Merge
         oracle.add(new ArrayList<>());  // CASE 2: Simultaneous Split & Merge
         oracle.add(new ArrayList<>());  // CASE 3: Simultaneous LLeave & Merge
-        oracle.add(new ArrayList<>());  // CASE 4: Simultaneous FLeave & Merge
-        oracle.add(new ArrayList<>());  // CASE 5: Configuration conflict Split & Merge
-        oracle.add(new ArrayList<>());  // CASE 6: Configuration conflict LLeave & Merge
-        oracle.add(new ArrayList<>());  // CASE 7: Single Operation Failure LLeave
-        oracle.add(new ArrayList<>());  // CASE 8: Configuration conflict FLeave & Merge (->Intermediate Leader)
-        oracle.add(new ArrayList<>());  // CASE 9: Single Operation Failure FLeave
-        oracle.add(new ArrayList<>());  // CASE 10: Configuration conflict FLeave & Merge (->Leaved vehicle)
+        oracle.add(new ArrayList<>());  // CASE 4: Simultaneous MFLeave & Merge
+        oracle.add(new ArrayList<>());  // CASE 5: Simultaneous EFLeave 1 & Merge
+        oracle.add(new ArrayList<>());  // CASE 6: Simultaneous EFLeave 2 & Merge
+        oracle.add(new ArrayList<>());  // CASE 7: Split Optsize
+        oracle.add(new ArrayList<>());  // CASE 8: LLeave Optsize 1
+        oracle.add(new ArrayList<>());  // CASE 9: LLeave Optsize 2
+        oracle.add(new ArrayList<>());  // CASE 10: MFLeave Optsize 1
+        oracle.add(new ArrayList<>());  // CASE 11: MFLeave Optsize 2
+        oracle.add(new ArrayList<>());  // CASE 12: EFLeave Optsize
         IM_index = new ArrayList<>();
     }
 
@@ -64,19 +66,35 @@ public class OracleGenerator {
                                     && Msgs.get(s_index+1).commandSent.equals("VOTE_LEADER"))){
                         if(!oracle.get(2).contains(im.getId())) oracle.get(2).add(im.getId());
                     }
-                    // ****** CASE 4 ******
+                    // ****** CASE 4 & 5 & 6 ******
                     else if((Msgs.get(s_index).commandSent.equals("LEAVE_REQ")
                             && Msgs.get(s_index+1).commandSent.equals("MERGE_REQ")) ||
                             (Msgs.get(s_index).commandSent.equals("MERGE_REQ")
                                     && Msgs.get(s_index+1).commandSent.equals("LEAVE_REQ"))){
-                        if(!oracle.get(3).contains(im.getId())) oracle.get(3).add(im.getId());
+                        int next_time = time + 20; // Next Operation Starting Time
+                        int split_done_count = 0, leave_req_count = 0;
+                        for(int tmp_s_index = s_index; tmp_s_index < Msgs.size(); tmp_s_index++) {
+                            if(Msgs.get(tmp_s_index).time >= next_time) break;
+                            if(Msgs.get(tmp_s_index).commandSent.equals("SPLIT_DONE")) split_done_count++;
+                            if(Msgs.get(tmp_s_index).commandSent.equals("LEAVE_REQ")) leave_req_count++;
+                        }
+                        // ****** Middle Follower Leave Case 4 ******
+                        if(split_done_count >= 2) {
+                            if(!oracle.get(3).contains(im.getId())) oracle.get(3).add(im.getId());
+                        } else { // ****** End Follower Leave ******
+                            if(leave_req_count >= 2) { // ****** Case 6 ******
+                                if(!oracle.get(5).contains(im.getId())) oracle.get(5).add(im.getId());
+                            } else { // ****** Case 5 ******
+                                if(!oracle.get(4).contains(im.getId())) oracle.get(4).add(im.getId());
+                            }
+                        }
                     }
                 }
                 else {
                     switch (Msgs.get(s_index).commandSent) {
-                        // ======= SPLIT & MERGE (Case 5) =======
+                        // ======= SPLIT Optsize (Case 7) =======
                         case "SPLIT_REQ":                           // TODO SPLIT_REQ 면 바로 가능한게 맞는지 확인
-                            if(!oracle.get(4).contains(im.getId())) oracle.get(4).add(im.getId());
+                            if(!oracle.get(6).contains(im.getId())) oracle.get(6).add(im.getId());
                             break;
                         // ======= LEADER LEAVE Cases =======
                         case "VOTE_LEADER":
@@ -88,13 +106,13 @@ public class OracleGenerator {
                                 if(Msgs.get(i).commandSent.equals("SPLIT_REQ")) {
                                     newLeader = Msgs.get(i).receiverId;
                                 } else if(Msgs.get(i).commandSent.equals("MERGE_REQ")) {
-                                    // ****** CASE 7 ******
+                                    // ****** CASE 9 ******
                                     if(Msgs.get(i).senderPltId.equals(newLeader) && Msgs.get(i).receiverId.equals(leaved)) {
-                                        if(!oracle.get(6).contains(im.getId())) oracle.get(6).add(im.getId());
+                                        if(!oracle.get(8).contains(im.getId())) oracle.get(8).add(im.getId());
                                     }
-                                    // ****** CASE 6 ******
+                                    // ****** CASE 8 ******
                                     else if(Msgs.get(i).receiverId.equals(newLeader)){
-                                        if(!oracle.get(5).contains(im.getId())) oracle.get(5).add(im.getId());
+                                        if(!oracle.get(7).contains(im.getId())) oracle.get(7).add(im.getId());
                                     }
                                 }
                             }
@@ -112,17 +130,17 @@ public class OracleGenerator {
                                     }
                                 }
                                 if (Msgs.get(i).commandSent.equals("MERGE_REQ")) {
-                                    // ****** CASE 9 ******
+                                    // ****** CASE 11 ******
                                     if (Msgs.get(i).senderPltId.equals(intermediateLeader) && Msgs.get(i).receiverId.equals(leaved)) {
-                                        if(!oracle.get(8).contains(im.getId())) oracle.get(8).add(im.getId());
+                                        if(!oracle.get(10).contains(im.getId())) oracle.get(10).add(im.getId());
                                     } else {
-                                        // ****** CASE 8 ******
-                                        if (Msgs.get(i).receiverId.equals(intermediateLeader)) {
-                                            if(!oracle.get(7).contains(im.getId())) oracle.get(7).add(im.getId());
-                                        }
                                         // ****** CASE 10 ******
-                                        else if (Msgs.get(i).receiverId.equals(leaved)) {
+                                        if (Msgs.get(i).receiverId.equals(intermediateLeader)) {
                                             if(!oracle.get(9).contains(im.getId())) oracle.get(9).add(im.getId());
+                                        }
+                                        // ****** CASE 12 ******
+                                        else if (Msgs.get(i).receiverId.equals(leaved)) {
+                                            if(!oracle.get(11).contains(im.getId())) oracle.get(11).add(im.getId());
                                         }
                                     }
                                 }
