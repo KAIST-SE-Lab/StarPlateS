@@ -1,8 +1,6 @@
 import java.io.*;
 import java.nio.file.Files;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
+import java.util.*;
 
 public class Main {
 
@@ -96,21 +94,24 @@ public class Main {
             ArrayList<InterplayModel> IMs = new ArrayList<>();
             ArrayList<InterplayModel> PIMs = new ArrayList<>(); // Passed IMs
 
+            FilenameFilter filter = new FilenameFilter() {
+                public boolean accept(File f, String name) {
+                    return name.contains("plnData");
+                }
+            };
+
             if(BasicVerifierProperty) {
                 if (f.exists()) {
-                    int numoffiles = f.listFiles().length;
-                    System.out.println("and it has " + numoffiles + " files.");
-                    for (int i = 0; i < 8000; i++) {    // TODO the number of input log files
-                        String txtdir = currentdir + i + "_0plnData.txt";
-                        File temptxt = new File(txtdir);
-                        if (temptxt.exists()) {
-                            matchingtxts++;
-                            for (int thshold : thresholds) {
-                                result = verifier.verifyLog(txtdir, "operationSuccessRate", thshold);  // TODO operationSuccessRate or operationTime
-                                if (!result) {
-                                    InterplayModel interplayModel = new InterplayModel(i, 0); // TODO r_index = 0 로 설정해놓음
-                                    IMs.add(interplayModel);
-                                    // Structure & Interplay model ".txt" file exporting part
+                    File files[] = f.listFiles(filter);
+                    for (File txtdir : files) {
+                        matchingtxts++;
+                        for (int thshold : thresholds) {
+                            result = verifier.verifyLog(txtdir.getPath(), "operationSuccessRate", thshold);
+                            System.out.println(txtdir.getName());
+                            InterplayModel interplayModel = new InterplayModel(Integer.parseInt(txtdir.getName().split("_")[0]), 0); // TODO r_index = 0 로 설정해놓음
+                            if (!result) {
+                                IMs.add(interplayModel);
+                            // Structure & Interplay model ".txt" file exporting part
                                 /*
                                 StructureModel structureModel = new StructureModel(i,0);
                                 File exportTxt = new File(currentdir + Integer.toString(i) + "_S_I_Model.txt");
@@ -132,11 +133,10 @@ public class Main {
                                         e.printStackTrace();
                                     }
                                 }*/
-                                } else {
-                                    InterplayModel interplayModel = new InterplayModel(i, 0);
-                                    PIMs.add(interplayModel);
-                                }
+                            } else {
+                                PIMs.add(interplayModel);
                             }
+                        }
 //                        for (int thshold2 : thresholds2){
 //                            result = verifier.verifyLog(txtdir, "operationTime", thshold2);
 ////                            smbfl.structureModelOverlapping(results, i, 0);
@@ -168,9 +168,7 @@ public class Main {
 //                                }
 //                            }
 //                        }
-                        }
                     }
-
                 } else {
                     System.out.println("There is no such directory");
                 }
@@ -300,6 +298,7 @@ public class Main {
 //                                    Clustering clustering = new Clustering();
 //                                    long startTime = System.currentTimeMillis();
 //
+//                                    Collections.shuffle(IMs); // TODO Random Sort
 //                                    for (InterplayModel im : IMs) {
 //                                        // 대조군 Clustering Algorithm
 ////                                    clustering.addTraceBaseLCS(im, delay_threshold, lcs_min_len_threshold);
