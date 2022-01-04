@@ -16,6 +16,7 @@ class Message {
     String senderRole;
     String receiverRole;
     Float distance;
+    int weight;
 }
 
 public class InterplayModel {
@@ -147,6 +148,8 @@ public class InterplayModel {
                 msg.receiverId = stringTokenizer.nextToken();
                 msg.senderPltId = stringTokenizer.nextToken();
                 msg.receiverPltId = stringTokenizer.nextToken(); //TODO Consider ManueverStartEnd ?? ex) Split_Start
+                stringTokenizer.nextToken();
+                msg.weight = Integer.parseInt(stringTokenizer.nextToken());
 
                 temp = stringTokenizer.nextToken();
                 if(temp.contains("Leave_Start") || temp.contains("Leave_Request")) {
