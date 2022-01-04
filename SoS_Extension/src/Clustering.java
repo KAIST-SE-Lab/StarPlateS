@@ -1805,4 +1805,45 @@ public class Clustering {
 
         return ret;
     }
+
+    public float PatternIdentityCheckerWeight(float delay_threshold) {
+        float ret = 0;
+
+        // Get ideal patterns from txt
+        File folder = new File(System.getProperty("user.dir") + "/results/Ideal");
+        File files[] = folder.listFiles();
+        ArrayList<InterplayModel> id_patterns = new ArrayList<>();
+        for (File file : files) {
+            InterplayModel interplayModel = new InterplayModel(file);
+            id_patterns.add(interplayModel);
+        }
+
+        ArrayList<Integer> matched = new ArrayList<>();
+        int max_len = -1;
+        int matched_id = -1;
+        ArrayList<Message> lcs = null;
+        for(int i = 0; i < centroidLCS.size(); i++) matched.add(-1);
+//        Collections.shuffle(id_patterns);
+        for (InterplayModel id_pattern : id_patterns) {
+            max_len = -1;
+            matched_id = -1;
+            for(int i = 0; i < centroidLCS.size(); i++) {
+                if (matched.get(i) != 1) {
+//                  lcs = LCSExtractorWithDelay(id_pattern.getMsgSequence(), centroidLCS.get(i), delay_threshold);
+                    lcs = LCSExtractorWithoutDelay(id_pattern.getMsgSequence(), centroidLCS.get(i));
+                    if (max_len < lcs.size()) {
+                        matched_id = i;
+                        max_len = lcs.size();
+                    }
+                }
+            }
+            matched.set(matched_id, 1);
+            for(Message msg : lcs) {
+                max_len += msg.weight;
+            }
+            ret += (float)(max_len / id_pattern.getMsgSequence().size());
+        }
+
+        return ret;
+    }
 }
