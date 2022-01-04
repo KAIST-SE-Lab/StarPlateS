@@ -8,6 +8,7 @@ import java.util.StringTokenizer;
 
 class Message {
     Float time;
+    String vehID;
     String commandSent;
     String senderPltId;
     String receiverId;
@@ -66,6 +67,7 @@ public class InterplayModel {
 
                 Message msg = new Message();
                 msg.time = t_time;
+                msg.vehID = vehID;
                 msg.commandSent = t_command;
                 msg.receiverId = stringTokenizer.nextToken();
                 msg.senderPltId = stringTokenizer.nextToken();
