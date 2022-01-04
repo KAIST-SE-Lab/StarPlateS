@@ -71,7 +71,7 @@ public class Verifier {
                 FileWriter writer = null;
                 try {
                     writer = new FileWriter(file, true);
-                    String log_id = txtdir.replace(System.getProperty("user.dir") + "/SoS_Extension/logs/", "");
+                    String log_id = txtdir.replace(System.getProperty("user.dir") + "/examples/platoon_SoS/results/", "");
                     writer.write(log_id + "," + Boolean.toString(ret) + "," + analysisResult + "\n");
                     writer.flush();
                 } catch (IOException e) {
@@ -112,6 +112,7 @@ public class Verifier {
         boolean missingFlag;
         float colLanePos = -1;
         String colLane = "";
+        String colVehId = "";
 
         ArrayList<collisionLog> prevList = new ArrayList<>();
         ArrayList<collisionLog> curntList = new ArrayList<>();
@@ -149,6 +150,7 @@ public class Verifier {
                                 ret = log.vehId;
                                 colLanePos = log.lanePos;
                                 colLane = log.lane;
+                                colVehId = log.vehId;
                             }
                         }
                     }
@@ -157,6 +159,7 @@ public class Verifier {
                         float difference = -1;
                         String minVehId = "";
                         for (collisionLog log : prevList) {
+                            if (log.vehId.equals(colVehId)) continue;
                             if (difference == -1 && colLane.equals(log.lane)) {
                                 difference = Math.abs(colLanePos - log.lanePos);
                                 minVehId = log.vehId;
