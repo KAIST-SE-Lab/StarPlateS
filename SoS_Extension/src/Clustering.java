@@ -1794,7 +1794,7 @@ public class Clustering {
         int matched_id = -1;
         for(int i = 0; i < centroidLCS.size(); i++) matched.add(-1);
 
-        int id_p_list[] = {10, 11, 12, 1, 2, 3, 4, 5, 6, 7, 8, 9};
+        int id_p_list[] = {9, 10, 11, 0, 1, 2, 3, 4, 5, 6, 7, 8};
         int id_p_index = 0;
 //        Collections.shuffle(id_patterns);
         for (InterplayModel id_pattern : id_patterns) {
@@ -1829,7 +1829,7 @@ public class Clustering {
         int matched_id = -1;
         ArrayList<Message> lcs = null;
         for(int i = 0; i < centroidLCS.size(); i++) matched.add(-1);
-        int id_p_list[] = {10, 11, 12, 1, 2, 3, 4, 5, 6, 7, 8, 9};
+        int id_p_list[] = {9, 10, 11, 0, 1, 2, 3, 4, 5, 6, 7, 8};
         int id_p_index = 0;
 //        Collections.shuffle(id_patterns);
         for (InterplayModel id_pattern : id_patterns) {
