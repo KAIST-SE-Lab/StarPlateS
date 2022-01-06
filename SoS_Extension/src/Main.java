@@ -86,7 +86,7 @@ public class Main {
             String base = System.getProperty("user.dir");
             System.out.println(System.getProperty("user.dir"));
             int matchingtxts = 0;
-            String currentdir = base + "/SoS_Extension/logs_full/oracle_temp/";
+            String currentdir = base + "/SoS_Extension/logs_full/";
             System.out.print("Current Working Directory : " + currentdir + "\n");
             File f = new File(currentdir);
             Boolean result;
@@ -276,8 +276,14 @@ public class Main {
             double m_delay = 1;
             int m_len = 9;
 
+            ArrayList<InterplayModel> IMs_batch = new ArrayList<>();
+            Collections.shuffle(IMs);
+            for(int i = 0; i < 1000; i++) {
+                IMs_batch.add(IMs.get(i));
+            }
+
             OracleGenerator oracleGenerator = new OracleGenerator();
-            oracleGenerator.oracleGeneration(IMs);
+            oracleGenerator.oracleGeneration(IMs_batch);
             oracleGenerator.printOracle();
             oracleGenerator.getOracleCSV();
             ArrayList<ArrayList<String>> oracle = oracleGenerator.getOracle();
@@ -297,7 +303,7 @@ public class Main {
                 File folder2 = new File(base + "/SoS_Extension/results/patterns/" + formatter.format(date));
                 folder2.mkdir();
                 if (!single) {
-                    File file2 = new File(base + "/SoS_Extension/results/" + "F1P - 2-2) HyperparameterAnalysis_Case6_ML_withTime.csv");  // TODO Which Case? -> File Name Change
+                    File file2 = new File(base + "/SoS_Extension/results/" + "F1P - HyperparameterAnalysis_Case6_ML.csv");  // TODO Which Case? -> File Name Change
 //                    File file2 = new File(base + "/SoS_Extension/results/" + "F1P - Base HyperparameterAnalysis_withTime_03_19.csv");
                     try {
                         FileWriter writer = new FileWriter(file2, true);
@@ -312,8 +318,8 @@ public class Main {
 
                                     long startTime = System.currentTimeMillis();
 
-                                    Collections.shuffle(IMs); // TODO Random Sort
-                                    for (InterplayModel im : IMs) {
+//                                    Collections.shuffle(IMs); // TODO Random Sort
+                                    for (InterplayModel im : IMs_batch) {
                                         // 대조군 Clustering Algorithm
 //                                    clustering.addTraceBaseLCS(im, delay_threshold, lcs_min_len_threshold);
 
@@ -360,12 +366,12 @@ public class Main {
                     delay_threshold = 0.1;
                     lcs_min_len_threshold = 3;
                     long startTime = System.currentTimeMillis();
-                    for (InterplayModel im : IMs) {
+                    for (InterplayModel im : IMs_batch) {
 //                        clustering.addTraceClusterNoise(im, delay_threshold, lcs_min_len_threshold);
                         clustering.addTraceCase6(im, simlr_threshold, delay_threshold, lcs_min_len_threshold);
 //                    clustering.addTraceBaseLCS(im, delay_threshold, lcs_min_len_threshold);
                     }
-                    clustering.ClusterMerge(simlr_threshold, delay_threshold, lcs_min_len_threshold);
+//                    clustering.ClusterMerge(simlr_threshold, delay_threshold, lcs_min_len_threshold);
                     clustering.ClusteringFinalize(simlr_threshold, delay_threshold, lcs_min_len_threshold);
                     long endTime = System.currentTimeMillis();
                     clustering.printCluster();

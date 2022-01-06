@@ -32,7 +32,7 @@ public class InterplayModel {
         id = s_index + "_" + r_index;
         
         try {
-            File pltConfig = new File("./SoS_Extension/logs_full/oracle_temp/" + s_index + "_" + r_index + "plnData.txt");
+            File pltConfig = new File("./SoS_Extension/logs_full/" + s_index + "_" + r_index + "plnData.txt");
             FileReader filereader = new FileReader(pltConfig);
             BufferedReader bufReader = new BufferedReader(filereader);
             String line="";
