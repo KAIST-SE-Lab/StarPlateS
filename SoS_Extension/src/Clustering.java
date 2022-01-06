@@ -1505,7 +1505,6 @@ public class Clustering {
         startingTime = new ArrayList<>();
         originCluster = new ArrayList<>();
         originCentroidLCS = new ArrayList<>();
-        id_patterns = new ArrayList<>();
         startingTime.add((float) 25.00);
         startingTime.add((float) 45.00);
         startingTime.add((float) 65.00);
