@@ -11,6 +11,7 @@ public class Clustering {
 
     private ArrayList<ArrayList<InterplayModel>> originCluster;
     private ArrayList<ArrayList<Message>> originCentroidLCS;
+    private ArrayList<InterplayModel> id_patterns;
 
     public Clustering() {
         cluster = new ArrayList<>();
@@ -18,10 +19,19 @@ public class Clustering {
         startingTime = new ArrayList<>();
         originCluster = new ArrayList<>();
         originCentroidLCS = new ArrayList<>();
+        id_patterns = new ArrayList<>();
         startingTime.add((float) 25.00);
         startingTime.add((float) 45.00);
         startingTime.add((float) 65.00);
         startingTime.add((float) 85.00);
+
+        // Get ideal patterns from txt
+        File folder = new File(System.getProperty("user.dir") + "/SoS_Extension/results/Ideal/");
+        File files[] = folder.listFiles();
+        for (File file : files) {
+            InterplayModel interplayModel = new InterplayModel(file);
+            id_patterns.add(interplayModel);
+        }
     }
 
     public void addTraceCase1(InterplayModel im_trace, double simlr_threshold, double delay_threshold,
@@ -996,7 +1006,7 @@ public class Clustering {
             return ret;
         } else { // No shorter LCS exists
             Collections.reverse(data_point);
-            return data_point;
+            return (ArrayList)data_point.clone();
         }
     }
 
@@ -1054,7 +1064,7 @@ public class Clustering {
             return ret;
         } else { // No shorter LCS exists
             Collections.reverse(data_point);
-            return data_point;
+            return (ArrayList)data_point.clone();
         }
     }
 
@@ -1112,7 +1122,7 @@ public class Clustering {
             return ret;
         } else { // No shorter LCS exists
             Collections.reverse(data_point);
-            return data_point;
+            return (ArrayList)data_point.clone();
         }
     }
 
@@ -1492,6 +1502,9 @@ public class Clustering {
     public void clusterClear() {
         cluster.clear();
         centroidLCS.clear();
+        startingTime.clear();
+        originCluster.clear();
+        originCentroidLCS.clear();
     }
 
     public int clusterSize() {
@@ -1769,17 +1782,8 @@ public class Clustering {
         }
     }
 
-    public float PatternIdentityChecker(float delay_threshold) {
-        float ret = 0;
-
-        // Get ideal patterns from txt
-        File folder = new File(System.getProperty("user.dir") + "/results/Ideal");
-        File files[] = folder.listFiles();
-        ArrayList<InterplayModel> id_patterns = new ArrayList<>();
-        for (File file : files) {
-            InterplayModel interplayModel = new InterplayModel(file);
-            id_patterns.add(interplayModel);
-        }
+    public double PatternIdentityChecker(double delay_threshold) {
+        double ret = 0;
 
         ArrayList<Integer> matched = new ArrayList<>();
         int max_len = -1;
@@ -1793,30 +1797,23 @@ public class Clustering {
                 if (matched.get(i) != 1) {
 //                  ArrayList<Message> lcs = LCSExtractorWithDelay(id_pattern.getMsgSequence(), centroidLCS.get(i), delay_threshold);
                     ArrayList<Message> lcs = LCSExtractorWithoutDelay(id_pattern.getMsgSequence(), centroidLCS.get(i));
+                    if (lcs == null) continue;
                     if (max_len < lcs.size()) {
                         matched_id = i;
                         max_len = lcs.size();
                     }
+                    lcs.clear();
                 }
             }
-            matched.set(matched_id, 1);
-            ret += (float)(max_len / id_pattern.getMsgSequence().size());
+            if (matched_id != -1) matched.set(matched_id, 1);
+            if (max_len != -1) ret += ((double)max_len / (double)id_pattern.getMsgSequence().size());
         }
 
         return ret;
     }
 
-    public float PatternIdentityCheckerWeight(float delay_threshold) {
-        float ret = 0;
-
-        // Get ideal patterns from txt
-        File folder = new File(System.getProperty("user.dir") + "/results/Ideal");
-        File files[] = folder.listFiles();
-        ArrayList<InterplayModel> id_patterns = new ArrayList<>();
-        for (File file : files) {
-            InterplayModel interplayModel = new InterplayModel(file);
-            id_patterns.add(interplayModel);
-        }
+    public double PatternIdentityCheckerWeight(double delay_threshold) {
+        double ret = 0;
 
         ArrayList<Integer> matched = new ArrayList<>();
         int max_len = -1;
@@ -1831,19 +1828,20 @@ public class Clustering {
                 if (matched.get(i) != 1) {
 //                  lcs = LCSExtractorWithDelay(id_pattern.getMsgSequence(), centroidLCS.get(i), delay_threshold);
                     lcs = LCSExtractorWithoutDelay(id_pattern.getMsgSequence(), centroidLCS.get(i));
+                    if (lcs == null) continue;
                     if (max_len < lcs.size()) {
                         matched_id = i;
                         max_len = lcs.size();
+                        for(Message msg : lcs) {
+                            max_len += msg.weight;
+                        }
                     }
+                    lcs.clear();
                 }
             }
-            matched.set(matched_id, 1);
-            for(Message msg : lcs) {
-                max_len += msg.weight;
-            }
-            ret += (float)(max_len / id_pattern.getMsgSequence().size());
+            if (matched_id != -1) matched.set(matched_id, 1); // NO LCS generated at all
+            if (max_len != -1) ret += ((double)max_len / (double)id_pattern.getMsgSequence().size());
         }
-
         return ret;
     }
 }

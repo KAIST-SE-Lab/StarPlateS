@@ -32,7 +32,7 @@ public class InterplayModel {
         id = s_index + "_" + r_index;
         
         try {
-            File pltConfig = new File("./SoS_Extension/logs_full/" + s_index + "_" + r_index + "plnData.txt");
+            File pltConfig = new File("./SoS_Extension/logs_full/oracle_temp/" + s_index + "_" + r_index + "plnData.txt");
             FileReader filereader = new FileReader(pltConfig);
             BufferedReader bufReader = new BufferedReader(filereader);
             String line="";
@@ -121,7 +121,7 @@ public class InterplayModel {
             while((line = bufReader.readLine()) != null) {
                 stringTokenizer = new StringTokenizer(line," ");
 
-                if(stringTokenizer.countTokens() != 9) continue;
+                if(stringTokenizer.countTokens() < 9) continue;
 
                 temp = stringTokenizer.nextToken();
                 if(temp.equals("timeStep")) {
@@ -148,10 +148,11 @@ public class InterplayModel {
                 msg.receiverId = stringTokenizer.nextToken();
                 msg.senderPltId = stringTokenizer.nextToken();
                 msg.receiverPltId = stringTokenizer.nextToken(); //TODO Consider ManueverStartEnd ?? ex) Split_Start
-                stringTokenizer.nextToken();
-                msg.weight = Integer.parseInt(stringTokenizer.nextToken());
 
                 temp = stringTokenizer.nextToken();
+                String temp2[] = temp.split("\t");
+                temp = temp2[0];
+                String t_weight = temp2[1];
                 if(temp.contains("Leave_Start") || temp.contains("Leave_Request")) {
                     vehRole.add(vehID);
                 }
@@ -172,10 +173,12 @@ public class InterplayModel {
                     msg.receiverRole = "Leader";
                 }
 
+                msg.weight = Integer.parseInt(t_weight);
                 msgSequence.add(msg);
             }
         } catch(Exception e) {
             System.out.println(e);
+            System.out.println(pltConfig.getPath());
         }
     }
 
