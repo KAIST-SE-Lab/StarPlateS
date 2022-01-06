@@ -1500,11 +1500,16 @@ public class Clustering {
     }                                                                                                                   // https://gentlej90.tistory.com/64
 
     public void clusterClear() {
-        cluster.clear();
-        centroidLCS.clear();
-        startingTime.clear();
-        originCluster.clear();
-        originCentroidLCS.clear();
+        cluster = new ArrayList<>();
+        centroidLCS = new ArrayList<>();
+        startingTime = new ArrayList<>();
+        originCluster = new ArrayList<>();
+        originCentroidLCS = new ArrayList<>();
+        id_patterns = new ArrayList<>();
+        startingTime.add((float) 25.00);
+        startingTime.add((float) 45.00);
+        startingTime.add((float) 65.00);
+        startingTime.add((float) 85.00);
     }
 
     public int clusterSize() {
