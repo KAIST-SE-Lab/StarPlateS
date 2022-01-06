@@ -1786,15 +1786,19 @@ public class Clustering {
         }
     }
 
-    public double PatternIdentityChecker(double delay_threshold) {
+    public double PatternIdentityChecker(double delay_threshold, ArrayList<ArrayList<String>> oracle) {
         double ret = 0;
 
         ArrayList<Integer> matched = new ArrayList<>();
         int max_len = -1;
         int matched_id = -1;
         for(int i = 0; i < centroidLCS.size(); i++) matched.add(-1);
+
+        int id_p_list[] = {10, 11, 12, 1, 2, 3, 4, 5, 6, 7, 8, 9};
+        int id_p_index = 0;
 //        Collections.shuffle(id_patterns);
         for (InterplayModel id_pattern : id_patterns) {
+            if(oracle.get(id_p_list[id_p_index]).size() == 0) continue;
             max_len = -1;
             matched_id = -1;
             for(int i = 0; i < centroidLCS.size(); i++) {
@@ -1811,12 +1815,13 @@ public class Clustering {
             }
             if (matched_id != -1) matched.set(matched_id, 1);
             if (max_len != -1) ret += ((double)max_len / (double)id_pattern.getMsgSequence().size());
+            id_p_index++;
         }
 
         return ret;
     }
 
-    public double PatternIdentityCheckerWeight(double delay_threshold) {
+    public double PatternIdentityCheckerWeight(double delay_threshold, ArrayList<ArrayList<String>> oracle) {
         double ret = 0;
 
         ArrayList<Integer> matched = new ArrayList<>();
@@ -1824,8 +1829,11 @@ public class Clustering {
         int matched_id = -1;
         ArrayList<Message> lcs = null;
         for(int i = 0; i < centroidLCS.size(); i++) matched.add(-1);
+        int id_p_list[] = {10, 11, 12, 1, 2, 3, 4, 5, 6, 7, 8, 9};
+        int id_p_index = 0;
 //        Collections.shuffle(id_patterns);
         for (InterplayModel id_pattern : id_patterns) {
+            if(oracle.get(id_p_list[id_p_index]).size() == 0) continue;
             max_len = -1;
             matched_id = -1;
             for(int i = 0; i < centroidLCS.size(); i++) {
@@ -1845,6 +1853,7 @@ public class Clustering {
             }
             if (matched_id != -1) matched.set(matched_id, 1); // NO LCS generated at all
             if (max_len != -1) ret += ((double)max_len / (double)id_pattern.getMsgSequence().size());
+            id_p_index++;
         }
         return ret;
     }
