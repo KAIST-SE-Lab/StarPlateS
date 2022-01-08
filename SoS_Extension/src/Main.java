@@ -277,9 +277,20 @@ public class Main {
             int m_len = 9;
 
             ArrayList<InterplayModel> IMs_batch = new ArrayList<>();
-            Collections.shuffle(IMs);
-            for(int i = 0; i < 1000; i++) {
-                IMs_batch.add(IMs.get(i));
+
+            File batch_im = new File(base + "/SoS_Extension/results/" + "F1P - HyperparameterAnalysis_Case6_ML_1.txt");
+            try {
+                FileWriter writer = new FileWriter(batch_im, true);
+                String ret = "";
+                Collections.shuffle(IMs);
+                for(int i = 0; i < 1000; i++) {
+                    IMs_batch.add(IMs.get(i));
+                    ret += IMs.get(i).getId() + "\n";
+                }
+                writer.write(ret);
+                writer.close();
+            } catch(Exception e) {
+                System.out.println(e);
             }
 
             OracleGenerator oracleGenerator = new OracleGenerator();
@@ -337,9 +348,9 @@ public class Main {
                                     clustering.ClusteringFinalize(simlr_threshold, delay_threshold, lcs_min_len_threshold);
 
                                     // Pattern Logging
-                                    File folder3 = new File(base + "/SoS_Extension/results/patterns/" + formatter.format(date) + "/" + simlr_threshold*100 + "_" + delay_threshold*100 + "_" + lcs_min_len_threshold);
-                                    folder3.mkdir();
-                                    clustering.PatternTxt(folder3);
+//                                    File folder3 = new File(base + "/SoS_Extension/results/patterns/" + formatter.format(date) + "/" + simlr_threshold*100 + "_" + delay_threshold*100 + "_" + lcs_min_len_threshold);
+//                                    folder3.mkdir();
+//                                    clustering.PatternTxt(folder3);
                                     long endTime = System.currentTimeMillis();
                                     number_of_clusters = clustering.clusterSize();
                                     // Oracle-based Evaluation Score
