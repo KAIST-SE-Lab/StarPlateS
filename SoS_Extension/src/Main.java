@@ -278,7 +278,7 @@ public class Main {
 
             ArrayList<InterplayModel> IMs_batch = new ArrayList<>();
 
-            File batch_im = new File(base + "/SoS_Extension/results/" + "F1P - HyperparameterAnalysis_Base_1.txt");
+            File batch_im = new File(base + "/SoS_Extension/results/" + "F1P - HyperparameterAnalysis_Base_2.txt");
             try {
                 FileWriter writer = new FileWriter(batch_im, true);
                 String ret = "";
@@ -314,7 +314,7 @@ public class Main {
 //                File folder2 = new File(base + "/SoS_Extension/results/patterns/" + formatter.format(date));
 //                folder2.mkdir();
                 if (!single) {
-                    File file2 = new File(base + "/SoS_Extension/results/" + "F1P - HyperparameterAnalysis_Base_1.csv");  // TODO Which Case? -> File Name Change
+                    File file2 = new File(base + "/SoS_Extension/results/" + "F1P - HyperparameterAnalysis_Base_2.csv");  // TODO Which Case? -> File Name Change
 //                    File file2 = new File(base + "/SoS_Extension/results/" + "F1P - Base HyperparameterAnalysis_withTime_03_19.csv");
                     try {
                         FileWriter writer = new FileWriter(file2, true);
