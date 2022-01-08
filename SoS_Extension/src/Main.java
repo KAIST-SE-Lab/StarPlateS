@@ -278,7 +278,7 @@ public class Main {
 
             ArrayList<InterplayModel> IMs_batch = new ArrayList<>();
 
-            File batch_im = new File(base + "/SoS_Extension/results/" + "F1P - HyperparameterAnalysis_Case6_ML_1.txt");
+            File batch_im = new File(base + "/SoS_Extension/results/" + "F1P - HyperparameterAnalysis_Base_1.txt");
             try {
                 FileWriter writer = new FileWriter(batch_im, true);
                 String ret = "";
@@ -332,7 +332,7 @@ public class Main {
 //                                    Collections.shuffle(IMs); // TODO Random Sort
                                     for (InterplayModel im : IMs_batch) {
                                         // 대조군 Clustering Algorithm
-                                    clustering.addTraceBaseLCS(im, delay_threshold, lcs_min_len_threshold);
+                                        clustering.addTraceBaseLCS(im, delay_threshold, lcs_min_len_threshold);
 
 //                                        clustering.addTraceCase6(im, simlr_threshold, delay_threshold, lcs_min_len_threshold);
 
