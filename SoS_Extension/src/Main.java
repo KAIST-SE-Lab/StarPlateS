@@ -278,7 +278,7 @@ public class Main {
 
             ArrayList<InterplayModel> IMs_batch = new ArrayList<>();
 
-            File batch_im = new File(base + "/SoS_Extension/results/" + "F1P - HyperparameterAnalysis_Case6_ML_3.txt");
+            File batch_im = new File(base + "/SoS_Extension/results/" + "F1P - HyperparameterAnalysis_Case6_ML_5.txt");
             try {
                 FileWriter writer = new FileWriter(batch_im, true);
                 String ret = "";
@@ -314,7 +314,7 @@ public class Main {
 //                File folder2 = new File(base + "/SoS_Extension/results/patterns/" + formatter.format(date));
 //                folder2.mkdir();
                 if (!single) {
-                    File file2 = new File(base + "/SoS_Extension/results/" + "F1P - HyperparameterAnalysis_ML_3.csv");  // TODO Which Case? -> File Name Change
+                    File file2 = new File(base + "/SoS_Extension/results/" + "F1P - HyperparameterAnalysis_Case6_ML_5.csv");  // TODO Which Case? -> File Name Change
 //                    File file2 = new File(base + "/SoS_Extension/results/" + "F1P - Base HyperparameterAnalysis_withTime_03_19.csv");
                     try {
                         FileWriter writer = new FileWriter(file2, true);
@@ -325,7 +325,7 @@ public class Main {
                             simlr_threshold = (double) simlr_counter / 100;
                             for (int delay_counter = 10; delay_counter <= 100; delay_counter += 10) {
                                 delay_threshold = (double) delay_counter / 100;
-                                for (lcs_min_len_threshold = 2; lcs_min_len_threshold <= 15; lcs_min_len_threshold++) {
+                                for (lcs_min_len_threshold = 2; lcs_min_len_threshold <= 10; lcs_min_len_threshold++) {
 
                                     long startTime = System.currentTimeMillis();
 
