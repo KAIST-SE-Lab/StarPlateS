@@ -40,8 +40,8 @@ public class Verifier {
                 FileWriter writer = null;
                 try {
                     writer = new FileWriter(file, true);
-//                    String log_id = txtdir.replace(System.getProperty("user.dir") + "/SoS_Extension/logs/", "");
-                    String log_id = "";
+                    String log_id = txtdir.replace(System.getProperty("user.dir") + "/SoS_Extension/logs/", "");
+//                    String log_id = "";
                     writer.write(log_id+ "," + Boolean.toString(ret) + "\n");
                     writer.flush();
                 } catch(IOException e) {
