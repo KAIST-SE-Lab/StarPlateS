@@ -1710,11 +1710,48 @@ public class Clustering {
                 ArrayList<Integer> temp = codescope.get(message.commandSent);
                 for (int line : temp) {
                     ArrayList<Integer> pfcount = SBFLTable.get(line);
-                    pfcount.set(0, pfcount.get(0)+1); // Increase the failed value
+                    pfcount.set(0, pfcount.get(0)+1); // Increase the passed value
                 }
             }
         }
-        // TODO Suspicious Calculation Methods
+        File SBFLresult = new File(base + "/SBFLresults.csv");
+
+        try {
+            FileWriter writer2 = new FileWriter(SBFLresult);
+            // TODO Suspicious Calculation Methods
+            String log = "Line, Tarantula, Ochiai, OP2, Barinel, DStar\n";
+            for (int line : SBFLTable.keySet()) {
+                log += line + "," + Tarantula(PIMs.size(), IMs.size(), SBFLTable.get(line).get(0), SBFLTable.get(line).get(1)) + ","
+                        + Ochiai(PIMs.size(), IMs.size(), SBFLTable.get(line).get(0), SBFLTable.get(line).get(1)) + ","
+                        + OP2(PIMs.size(), IMs.size(), SBFLTable.get(line).get(0), SBFLTable.get(line).get(1)) + ","
+                        + Barinel(PIMs.size(), IMs.size(), SBFLTable.get(line).get(0), SBFLTable.get(line).get(1)) + ","
+                        + DStar(PIMs.size(), IMs.size(), SBFLTable.get(line).get(0), SBFLTable.get(line).get(1)) + "\n";
+            }
+            writer2.write(log);
+            writer2.close();
+        } catch(Exception e) {
+            System.out.println(e);
+        }
+    }
+
+    private double Tarantula(int totalPassed, int totalFailed, int Passed, int Failed) {
+        return ((double)Failed / (double)totalFailed) / (((double)Passed / (double)totalPassed ) + ((double)Failed / (double)totalFailed));
+    }
+
+    private double Ochiai(int totalPassed, int totalFailed, int Passed, int Failed) {
+        return (double)Failed/ Math.sqrt((double)totalFailed * ((double)Failed + (double)Passed));
+    }
+
+    private double OP2(int totalPassed, int totalFailed, int Passed, int Failed) {
+        return (double)Failed - ((double)Passed / ((double)totalPassed + 1));
+    }
+
+    private double Barinel(int totalPassed, int totalFailed, int Passed, int Failed) {
+        return 1 - ((double)Passed / ((double)Passed + (double)Failed));
+    }
+
+    private double DStar(int totalPassed, int totalFailed, int Passed, int Failed) {
+        return Math.pow((double)Failed,2) / ((double)Passed + (double)totalFailed - (double)Failed);
     }
 
     private ArrayList<Integer> setCodeInspectionScope(ArrayList<String> source, String command, HashMap<Integer, Integer> tempMap, int flag) {
