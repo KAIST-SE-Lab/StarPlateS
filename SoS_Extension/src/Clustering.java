@@ -2,6 +2,8 @@
 import java.io.*;
 import java.lang.reflect.Array;
 import java.util.*;
+import java.io.File;
+import java.io.FileReader;
 
 public class Clustering {
 
@@ -1855,6 +1857,73 @@ public class Clustering {
             if (max_len != -1) ret += ((double)max_len / (double)id_pattern.getMsgSequence().size());
             id_p_index++;
         }
+        return ret;
+    }
+
+    public double SPADEPatternIdentityCheckerWeight(double delay_threshold, ArrayList<ArrayList<String>> oracle, String f_name) {
+        double ret = 0;
+        ArrayList<Message> sequence = new ArrayList<>();
+        ArrayList<ArrayList<Message>> SPADE_lcs = new ArrayList<>();
+
+        try {
+            File spade_log = new File("./SoS_Extension/results/" + f_name);
+            FileReader filereader = new FileReader(spade_log);
+            BufferedReader bufReader = new BufferedReader(filereader);
+            String line = "";
+            int count = 0;
+
+            while ((line = bufReader.readLine()) != null) {
+                if (count % 2 != 0) continue;
+                String messages[] = line.split("/");
+                for (String message : messages) {
+                    String items[] = message.split("-");
+                    Message temp = new Message();
+                    temp.commandSent = items[0];
+                    temp.senderPltId = items[1];
+                    temp.senderRole = items[1];
+                    temp.receiverId = items[2];
+                    temp.receiverRole = items[2];
+                    temp.receiverPltId = items[2];
+                    sequence.add(temp);
+                }
+                SPADE_lcs.add((ArrayList) sequence.clone());
+                sequence.clear();
+                count++;
+            }
+        } catch(Exception e) {
+            System.out.println(e);
+        }
+        ArrayList<Integer> matched = new ArrayList<>();
+        int max_len = -1;
+        int matched_id = -1;
+        ArrayList<Message> lcs = null;
+        for(int i = 0; i < SPADE_lcs.size(); i++) matched.add(-1);
+        int id_p_list[] = {9, 10, 11, 0, 1, 2, 3, 4, 5, 6, 7, 8};
+        int id_p_index = 0;
+//        Collections.shuffle(id_patterns);
+        for (InterplayModel id_pattern : id_patterns) {
+            if(oracle.get(id_p_list[id_p_index]).size() == 0) continue;
+            max_len = -1;
+            matched_id = -1;
+            for(int i = 0; i < SPADE_lcs.size(); i++) {
+                if (matched.get(i) != 1) {
+                    lcs = LCSExtractorWithoutDelay(id_pattern.getMsgSequence(), SPADE_lcs.get(i));
+                    if (lcs == null) continue;
+                    if (max_len < lcs.size()) {
+                        matched_id = i;
+                        max_len = lcs.size();
+                        for(Message msg : lcs) {
+                            max_len += msg.weight;
+                        }
+                    }
+                    lcs.clear();
+                }
+            }
+            if (matched_id != -1) matched.set(matched_id, 1); // NO LCS generated at all
+            if (max_len != -1) ret += ((double)max_len / (double)id_pattern.getMsgSequence().size());
+            id_p_index++;
+        }
+
         return ret;
     }
 }
