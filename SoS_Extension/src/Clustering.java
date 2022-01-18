@@ -1650,112 +1650,183 @@ public class Clustering {
         }
     }
 
-    private void setCodeInspectionScope(ArrayList<String> source, String command, HashMap<Integer, Integer> tempMap, int flag) {
-        ArrayList<Integer> ranges = new ArrayList<>();
-            if(command.equals("MERGE_REQ")) {
-                ranges.add(727);
-                ranges.add(745);
-            } else if(command.equals("MERGE_DONE")) {
-                ranges.add(746);
-                ranges.add(799);
-                ranges.add(808);
-                ranges.add(877);
-                ranges.add(1064);
-                ranges.add(1083);
-                ranges.add(1086);
-                ranges.add(1109);
-            } else if (command.equals("SPLIT_REQ")) {
-                ranges.add(1116);
-                ranges.add(1140);
-            } else if (command.equals("GAP_CREATED")) {
-                ranges.add(1143);
-                ranges.add(1204);
-                ranges.add(1485);
-                ranges.add(1504);
-                ranges.add(1507);
-                ranges.add(1533);
-            } else if (command.equals("VOTE_LEADER")) {
-                ranges.add(1540);
-                ranges.add(1554);
-            } else if (command.equals("LEAVE_REQ")) {
-                ranges.add(1642);
-                ranges.add(1682);
+    public void codeLocalizerSBFL(String base, String filepath, ArrayList<InterplayModel> IMs, ArrayList<InterplayModel> PIMs) {
+        File pltSource = new File(base + filepath);
+        BufferedReader reader = null;
+        ArrayList<String> source = new ArrayList<>();
+
+        // Get the code of Platoon Operation Management Protocol
+        try {
+            reader = new BufferedReader(new FileReader(pltSource));
+            String line;
+            while ((line = reader.readLine()) != null) {
+                source.add(line);
             }
-            if(flag == 1) {
-                ranges.add(28);
-                ranges.add(167);
-                ranges.add(177);
-                ranges.add(181);
-                ranges.add(184);
-                ranges.add(210);
-                ranges.add(213);
-                ranges.add(228);
-                ranges.add(231);
-                ranges.add(235);
-                ranges.add(238);
-                ranges.add(250);
-                ranges.add(253);
-                ranges.add(296);
-                ranges.add(301);
-                ranges.add(322);
-                ranges.add(325);
-                ranges.add(352);
-                ranges.add(355);
-                ranges.add(393);
-                ranges.add(396);
-                ranges.add(403);
-                ranges.add(406);
-                ranges.add(413);
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+
+        HashMap<String, ArrayList<Integer>> codescope = new HashMap<>(); // (MessageCommand, Ranges of codes executed)
+        HashMap<Integer, ArrayList<Integer>> SBFLTable = new HashMap<>(); // (Line number, ArrayList [passed, failed])
+        // For the failed logs
+        for(InterplayModel im : IMs) {
+            for (Message message : im.getMsgSequence()) {
+                if (!codescope.containsKey(message.commandSent)) { // When the message command is observed at the first time,
+                    ArrayList<Integer> ranges = setCodeInspectionScope(source, message.commandSent, null, 0);
+                    ArrayList<Integer> temp = new ArrayList<>();
+                    for (int k = 0; k < ranges.size(); k += 2) {
+                        for (int p = ranges.get(k); p <= ranges.get(k + 1); p++) {
+                            temp.add(p);
+                        }
+                    }
+                    codescope.put(message.commandSent, (ArrayList)temp.clone()); // Caching to the codescope map
+                    for (int line : temp) {
+                        SBFLTable.put(line, new ArrayList<Integer>(Collections.nCopies(2, 0))); // Generate initial SBFL table
+                    }
+                }
+                ArrayList<Integer> temp = codescope.get(message.commandSent);
+                for (int line : temp) {
+                    ArrayList<Integer> pfcount = SBFLTable.get(line);
+                    pfcount.set(1, pfcount.get(1)+1); // Increase the failed value
+                }
+            }
+        }
+
+        for (InterplayModel im: PIMs) {
+            for (Message message : im.getMsgSequence()) {
+                if (!codescope.containsKey(message.commandSent)) { // When the message command is observed at the first time,
+                    ArrayList<Integer> ranges = setCodeInspectionScope(source, message.commandSent, null, 0);
+                    ArrayList<Integer> temp = new ArrayList<>();
+                    for (int k = 0; k < ranges.size(); k += 2) {
+                        for (int p = ranges.get(k); p <= ranges.get(k + 1); p++) {
+                            temp.add(p);
+                        }
+                    }
+                    codescope.put(message.commandSent, (ArrayList)temp.clone()); // Caching to the codescope map
+                    for (int line : temp) {
+                        SBFLTable.put(line, new ArrayList<Integer>(Collections.nCopies(2, 0))); // Generate initial SBFL table
+                    }
+                }
+                ArrayList<Integer> temp = codescope.get(message.commandSent);
+                for (int line : temp) {
+                    ArrayList<Integer> pfcount = SBFLTable.get(line);
+                    pfcount.set(0, pfcount.get(0)+1); // Increase the failed value
+                }
+            }
+        }
+        // TODO Suspicious Calculation Methods
+    }
+
+    private ArrayList<Integer> setCodeInspectionScope(ArrayList<String> source, String command, HashMap<Integer, Integer> tempMap, int flag) {
+        ArrayList<Integer> ranges = new ArrayList<>(); // Starting line, Finishing line, Starting line, Finishing line, ...
+        if(command.equals("MERGE_REQ")) {
+            ranges.add(727);
+            ranges.add(745);
+        } else if(command.equals("MERGE_DONE")) {
+            ranges.add(746);
+            ranges.add(799);
+            ranges.add(808);
+            ranges.add(877);
+            ranges.add(1064);
+            ranges.add(1083);
+            ranges.add(1086);
+            ranges.add(1109);
+        } else if (command.equals("SPLIT_REQ")) {
+            ranges.add(1116);
+            ranges.add(1140);
+        } else if (command.equals("GAP_CREATED")) {
+            ranges.add(1143);
+            ranges.add(1204);
+            ranges.add(1485);
+            ranges.add(1504);
+            ranges.add(1507);
+            ranges.add(1533);
+        } else if (command.equals("VOTE_LEADER")) {
+            ranges.add(1540);
+            ranges.add(1554);
+        } else if (command.equals("LEAVE_REQ")) {
+            ranges.add(1642);
+            ranges.add(1682);
+        }
+        if(flag == 1) {
+            ranges.add(28);
+            ranges.add(167);
+            ranges.add(177);
+            ranges.add(181);
+            ranges.add(184);
+            ranges.add(210);
+            ranges.add(213);
+            ranges.add(228);
+            ranges.add(231);
+            ranges.add(235);
+            ranges.add(238);
+            ranges.add(250);
+            ranges.add(253);
+            ranges.add(296);
+            ranges.add(301);
+            ranges.add(322);
+            ranges.add(325);
+            ranges.add(352);
+            ranges.add(355);
+            ranges.add(393);
+            ranges.add(396);
+            ranges.add(403);
+            ranges.add(406);
+            ranges.add(413);
 //                ranges.add(421);
 //                ranges.add(448);
 //                ranges.add(452);
 //                ranges.add(489);
 //                ranges.add(492);
 //                ranges.add(563);
-                ranges.add(603);
-                ranges.add(643);
-            }
-            for(int k = 0; k < source.size(); k++) {
-                if(source.get(k).contains(command)) {
-                    if(source.get(k).contains("//")) continue;
-                    if(source.get(k).contains("if")) {
-                        ranges.add(k+1);
-                        int count = 0;
-                        for(int p = k + 1; p < source.size(); p++) {
-                            if (source.get(p).contains("{")) count += 1;
-                            else if (source.get(p).contains("}")) {
-                                if(--count == 0) {
-                                    ranges.add(p + 1);
-                                    break;
-                                }
-                            }
-                        }
-                    } else {
-                        for (int p = k; p > 0; p--) {
-                            if (source.get(p).contains("{")) {
-                                ranges.add(p);
+            ranges.add(603);
+            ranges.add(643);
+        }
+
+        for(int k = 0; k < source.size(); k++) {
+            if(source.get(k).contains(command)) {
+                if(source.get(k).contains("//")) continue;
+                if(source.get(k).contains("if")) {
+                    ranges.add(k+1);
+                    int count = 0;
+                    for(int p = k + 1; p < source.size(); p++) {
+                        if (source.get(p).contains("{")) count += 1;
+                        else if (source.get(p).contains("}")) {
+                            if(--count == 0) {
+                                ranges.add(p + 1);
                                 break;
                             }
                         }
-                        int count = 1;
-                        for(int p = k + 1; p < source.size(); p++) {
-                            if (source.get(p).contains("{")) count += 1;
-                            else if (source.get(p).contains("}")) {
-                                if(--count == 0) {
-                                    ranges.add(p + 1);
-                                    break;
-                                }
+                    }
+                } else {
+                    for (int p = k; p > 0; p--) {
+                        if (source.get(p).contains("{")) {
+                            ranges.add(p);
+                            break;
+                        }
+                    }
+                    int count = 1;
+                    for(int p = k + 1; p < source.size(); p++) {
+                        if (source.get(p).contains("{")) count += 1;
+                        else if (source.get(p).contains("}")) {
+                            if(--count == 0) {
+                                ranges.add(p + 1);
+                                break;
                             }
                         }
                     }
                 }
             }
-        for(int k = 0; k < ranges.size(); k+=2) {
-            for(int p = ranges.get(k); p <=ranges.get(k+1); p++) {
-                if(tempMap.containsKey(p)) tempMap.put(p, tempMap.get(p)+1);
-                else tempMap.put(p, 1);
+        }
+        if (tempMap != null) {
+            for (int k = 0; k < ranges.size(); k += 2) {
+                for (int p = ranges.get(k); p <= ranges.get(k + 1); p++) {
+                    if (tempMap.containsKey(p)) tempMap.put(p, tempMap.get(p) + 1);
+                    else tempMap.put(p, 1);
+                }
             }
         }
+        return ranges;
     }
 
     public void PatternTxt(File folder) {
