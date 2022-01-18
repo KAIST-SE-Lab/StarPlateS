@@ -63,7 +63,7 @@ public class StructureModelBasedFaultLocalization {
 
     ArrayList<EdgeInfo> SMcalculateSuspiciousness () {
         for (EdgeInfo edgeInfo: edgeInfos) {
-            SuspisiousnessMeasure sm = new SuspisiousnessMeasure();
+            SuspiciousnessMeasure sm = new SuspiciousnessMeasure();
             sm.totalFailed = totalFailed;
             sm.totalPassed = totalPassed;
             sm.faileds = edgeInfo.fail;
