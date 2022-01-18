@@ -20,17 +20,23 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="f68f5609-9eed-4cd0-954c-f480721c486b" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/lib.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SoS_Extension/src/Clustering.java" beforeDir="false" afterPath="$PROJECT_DIR$/SoS_Extension/src/Clustering.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SoS_Extension/SoS_Extension.iml" beforeDir="false" afterPath="$PROJECT_DIR$/SoS_Extension/SoS_Extension.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SoS_Extension/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/SoS_Extension/src/Main.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="EndpointsView">
+    <option name="showDetails" value="false" />
+  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
-    <option name="UPDATE_TYPE" value="REBASE" />
   </component>
   <component name="GithubDefaultAccount">
     <option name="defaultAccountId" value="ef6b310e-8d84-435a-8d27-de2c77c15175" />
@@ -53,7 +59,6 @@
     <property name="project.structure.side.proportion" value="0.2" />
     <property name="settings.editor.selected.configurable" value="org.jetbrains.plugins.github.ui.GithubSettingsConfigurable" />
   </component>
-  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="SvnConfiguration">
     <configuration />
   </component>
@@ -81,6 +86,51 @@
         </entry>
       </map>
     </option>
-    <option name="oldMeFiltersMigrated" value="true" />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="762" y="405" key="#Notifications" timestamp="1587084330009">
+      <screen x="65" y="24" width="1653" height="1024" />
+    </state>
+    <state x="762" y="405" key="#Notifications/65.24.1653.1024@65.24.1653.1024" timestamp="1587084330009" />
+    <state x="676" y="295" key="FileChooserDialogImpl" timestamp="1587084946412">
+      <screen x="65" y="24" width="1653" height="1024" />
+    </state>
+    <state x="676" y="295" key="FileChooserDialogImpl/65.24.1653.1024@65.24.1653.1024" timestamp="1587084946412" />
+    <state x="752" y="437" key="Github.ShareDialog" timestamp="1587083789323">
+      <screen x="65" y="24" width="1653" height="1024" />
+    </state>
+    <state x="752" y="437" key="Github.ShareDialog/65.24.1653.1024@65.24.1653.1024" timestamp="1587083789323" />
+    <state x="484" y="341" key="NewModule_or_Project.wizard" timestamp="1587084800558">
+      <screen x="65" y="24" width="1653" height="1024" />
+    </state>
+    <state x="484" y="341" key="NewModule_or_Project.wizard/65.24.1653.1024@65.24.1653.1024" timestamp="1587084800558" />
+    <state x="458" y="114" key="SettingsEditor" timestamp="1587084951090">
+      <screen x="65" y="24" width="1653" height="1024" />
+    </state>
+    <state x="458" y="114" key="SettingsEditor/65.24.1653.1024@65.24.1653.1024" timestamp="1587084951090" />
+    <state x="488" y="273" key="Vcs.Push.Dialog.v2" timestamp="1587084320923">
+      <screen x="65" y="24" width="1653" height="1024" />
+    </state>
+    <state x="488" y="273" key="Vcs.Push.Dialog.v2/65.24.1653.1024@65.24.1653.1024" timestamp="1587084320923" />
+    <state x="288" y="124" width="1200" height="824" key="com.intellij.history.integration.ui.views.FileHistoryDialog" timestamp="1587083736779">
+      <screen x="65" y="24" width="1653" height="1024" />
+    </state>
+    <state x="288" y="124" width="1200" height="824" key="com.intellij.history.integration.ui.views.FileHistoryDialog/65.24.1653.1024@65.24.1653.1024" timestamp="1587083736779" />
+    <state x="559" y="325" width="660" height="421" key="git4idea.merge.GitPullDialog" timestamp="1587084756035">
+      <screen x="65" y="24" width="1653" height="1024" />
+    </state>
+    <state x="559" y="325" width="660" height="421" key="git4idea.merge.GitPullDialog/65.24.1653.1024@65.24.1653.1024" timestamp="1587084756035" />
+    <state x="648" y="437" key="git4idea.remote.GitConfigureRemotesDialog" timestamp="1587083815617">
+      <screen x="65" y="24" width="1653" height="1024" />
+    </state>
+    <state x="648" y="437" key="git4idea.remote.GitConfigureRemotesDialog/65.24.1653.1024@65.24.1653.1024" timestamp="1587083815617" />
+    <state x="661" y="437" key="git4idea.ui.GitStashDialog" timestamp="1587084513298">
+      <screen x="65" y="24" width="1653" height="1024" />
+    </state>
+    <state x="661" y="437" key="git4idea.ui.GitStashDialog/65.24.1653.1024@65.24.1653.1024" timestamp="1587084513298" />
+    <state x="629" y="221" key="svn.repositoryBrowser" timestamp="1587083761280">
+      <screen x="65" y="24" width="1653" height="1024" />
+    </state>
+    <state x="629" y="221" key="svn.repositoryBrowser/65.24.1653.1024@65.24.1653.1024" timestamp="1587083761280" />
   </component>
 </project>
