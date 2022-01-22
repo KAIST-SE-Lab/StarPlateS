@@ -2180,8 +2180,8 @@ public class Clustering {
         }
 
         ArrayList<Message> generatedLCS = LCSExtractorWithoutDelayBase(centroidLCS.get(0), im_trace.getMsgSequence());
-        if (generatedLCS != null && generatedLCS.size() > lcs_min_len_threshold) {                               // 여부를 이용하여 해당 Cluster에 포함가능한지를 확인함
-            cluster.get(0).add(im_trace);
+        cluster.get(0).add(im_trace);
+        if (generatedLCS != null) {
             Collections.reverse(generatedLCS);
             centroidLCS.set(0, generatedLCS);
         }
