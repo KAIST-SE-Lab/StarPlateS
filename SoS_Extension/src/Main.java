@@ -299,7 +299,7 @@ public class Main {
             oracleGenerator.getOracleCSV();
             ArrayList<ArrayList<String>> oracle = oracleGenerator.getOracle();
 
-            boolean multiple_cases = true;
+            boolean multiple_cases = false;
             boolean single_run = false;
 
             if (isClustering) {
@@ -323,7 +323,7 @@ public class Main {
 
 //                                    Collections.shuffle(IMs); // TODO Random Sort
                                         for (InterplayModel im : IMs) {
-                                            if (!oracle.get(0).contains(im.getId())) continue;
+                                            if (!oracle.get(i).contains(im.getId())) continue;
                                             clustering.SingleCasePatternMining(im, delay_threshold, lcs_min_len_threshold);
                                         }
 
@@ -341,6 +341,7 @@ public class Main {
                                         System.out.println(delay_threshold + ", " + lcs_min_len_threshold + "," + " Clustering Evaluation Score: " + f1p_ev_score.get(2) + ", F_C_O: " + f1p_ev_score.get(0) + ", F_O_C: " + f1p_ev_score.get(1) + ", Cluster Size: " + number_of_clusters + ", PIT value: " + pattern_identity_score + ", PITW value: " + pattern_identity_score_w + ", Time(ms): " + (endTime - startTime));
                                         ret += delay_threshold + "," + lcs_min_len_threshold + "," + f1p_ev_score.get(2) + "," + f1p_ev_score.get(0) + "," + f1p_ev_score.get(1) + "," + number_of_clusters + "," + pattern_identity_score + "," + pattern_identity_score_w + ", Time(ms): ," + (endTime - startTime) + "\n";
 
+                                        clustering.clusterClear();
                                     }
                                 }
                                 writer.write(ret);
