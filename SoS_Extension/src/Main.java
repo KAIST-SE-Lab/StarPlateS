@@ -308,8 +308,9 @@ public class Main {
                     if(!single_run) {
                          // TODO Which Case? -> File Name Change
 //                    File file2 = new File(base + "/SoS_Extension/results/" + "F1P - Base HyperparameterAnalysis_withTime_03_19.csv");
+                        Collections.shuffle(IMs);
                         for (int i = 0; i < oracle.size(); i++) {
-                            File file2 = new File(base + "/SoS_Extension/results/" + "Single Case Hyperparameter_0_" + i + ".csv");
+                            File file2 = new File(base + "/SoS_Extension/results/" + "Single Case Hyperparameter_1_" + i + ".csv");
                             try {
                                 FileWriter writer = new FileWriter(file2, true);
                                 String ret = "";
