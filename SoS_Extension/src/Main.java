@@ -311,7 +311,7 @@ public class Main {
                         for(int j = 2; j < 30; j++) {
                             Collections.shuffle(IMs);
                             for (int i = 0; i < oracle.size(); i++) {
-                                File file2 = new File(base + "/SoS_Extension/results/" + "Single Case Hyperparameter_1_" + i + ".csv");
+                                File file2 = new File(base + "/SoS_Extension/results/" + "Single Case Hyperparameter_" + j + "_" + i + ".csv");
                                 try {
                                     FileWriter writer = new FileWriter(file2, true);
                                     String ret = "";
