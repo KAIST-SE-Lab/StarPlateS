@@ -277,24 +277,24 @@ public class Main {
 
             ArrayList<InterplayModel> IMs_batch = new ArrayList<>();
 //
-            File batch_im = new File(base + "/SoS_Extension/results/" + "F1P - HyperparameterAnalysis_Case5_ML_13.txt");
-            try {
-                FileWriter writer = new FileWriter(batch_im, true);
-                String ret = "";
-                Collections.shuffle(IMs);
-                for(int i = 0; i < 1000; i++) {
-                    IMs_batch.add(IMs.get(i));
-                    ret += IMs.get(i).getId() + "\n";
-                }
-                writer.write(ret);
-                writer.close();
-            } catch(Exception e) {
-                System.out.println(e);
-            }
+//            File batch_im = new File(base + "/SoS_Extension/results/" + "F1P - HyperparameterAnalysis_Case5_ML_13.txt");
+//            try {
+//                FileWriter writer = new FileWriter(batch_im, true);
+//                String ret = "";
+//                Collections.shuffle(IMs);
+//                for(int i = 0; i < 1000; i++) {
+//                    IMs_batch.add(IMs.get(i));
+//                    ret += IMs.get(i).getId() + "\n";
+//                }
+//                writer.write(ret);
+//                writer.close();
+//            } catch(Exception e) {
+//                System.out.println(e);
+//            }
 
             OracleGenerator oracleGenerator = new OracleGenerator();
-            oracleGenerator.oracleGeneration(IMs_batch);
-//            oracleGenerator.oracleGeneration(IMs);
+//            oracleGenerator.oracleGeneration(IMs_batch);
+            oracleGenerator.oracleGeneration(IMs);
             oracleGenerator.printOracle();
             oracleGenerator.getOracleCSV();
             ArrayList<ArrayList<String>> oracle = oracleGenerator.getOracle();
