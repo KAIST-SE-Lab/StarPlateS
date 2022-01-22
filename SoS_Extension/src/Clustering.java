@@ -2137,6 +2137,7 @@ public class Clustering {
                 continue;
             }
             ArrayList<Message> lcs = LCSExtractorWithDelay(id_pattern.getMsgSequence(), centroidLCS.get(0), delay_threshold);
+            if (lcs == null) return 0;
             ret += ((double)lcs.size() / (double)id_pattern.getMsgSequence().size());
             id_p_index++;
         }
@@ -2161,6 +2162,7 @@ public class Clustering {
                 continue;
             }
             ArrayList<Message> lcs = LCSExtractorWithDelay(id_pattern.getMsgSequence(), centroidLCS.get(0), delay_threshold);
+            if (lcs == null) return 0;
             double len = (double)lcs.size();
             for(Message msg : lcs) {
                 len += msg.weight;
