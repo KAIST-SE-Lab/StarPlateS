@@ -308,7 +308,7 @@ public class Main {
                     if(!single_run) {
                          // TODO Which Case? -> File Name Change
 //                    File file2 = new File(base + "/SoS_Extension/results/" + "F1P - Base HyperparameterAnalysis_withTime_03_19.csv");
-                        for(int j = 2; j < 30; j++) {
+                        for(int j = 0; j < 30; j++) {
                             Collections.shuffle(IMs);
                             for (int i = 0; i < oracle.size(); i++) {
                                 File file2 = new File(base + "/SoS_Extension/results/" + "Single Case Hyperparameter_" + j + "_" + i + ".csv");
@@ -326,7 +326,7 @@ public class Main {
 //                                    Collections.shuffle(IMs); // TODO Random Sort
                                             for (InterplayModel im : IMs) {
                                                 if (!oracle.get(i).contains(im.getId())) continue;
-                                                clustering.SingleCasePatternMining(im, delay_threshold, lcs_min_len_threshold);
+                                                clustering.SingleCasePatternMiningBase(im, delay_threshold, lcs_min_len_threshold);
                                             }
 
                                             // Pattern Logging
