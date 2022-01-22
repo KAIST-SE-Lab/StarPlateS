@@ -1,6 +1,6 @@
 import static java.lang.Math.sqrt;
 
-public class SuspisiousnessMeasure {
+public class SuspiciousnessMeasure {
     double faileds;
     double totalFailed;
     double passeds;

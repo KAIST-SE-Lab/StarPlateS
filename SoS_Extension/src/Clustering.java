@@ -1,7 +1,9 @@
 
 import java.io.*;
-import java.lang.reflect.Array;
+import java.sql.Array;
 import java.util.*;
+import java.io.File;
+import java.io.FileReader;
 
 public class Clustering {
 
@@ -357,6 +359,10 @@ public class Clustering {
         for (int i = 0; i < cluster.size(); i++) {
             generatedLCS.clear();
             lcs_index = -1;
+            int best_message_type_num = 0;
+            int lcs_length = 0;
+            int current_message_type_num = 0;
+
             for (int j = 0; j < startingTime.size(); j++) {
                 generatedLCS.add(LCSExtractorWithDelay(centroidLCS.get(i),  //cluster.get(i).get(0).getMsgSequence()    // Starting time에 따라 given IM을 slicing 하여
                         IMSlicer(startingTime.get(j), im_trace.getMsgSequence()), delay_threshold));                     // 중간에 중요 사건의 sequence가 시작하는 경우의 예외 처리 진행
@@ -369,26 +375,42 @@ public class Clustering {
                         continue;                                                           // generated_LCS (lcs between centroid_lcs and given IM)
                     double temp = similarityChecker(centroidLCS.get(i), generatedLCS.get(j), delay_threshold);          // 와 기존 centroid_lcs와의 size를 비교하여 simlr_threshold
                     // 를 넘는지 확인함
-                    if (temp >= simlr_threshold) {                                                                      // simlr_threshold를 넘는 경우, centroidLCS를 업데이트
+                    if (temp >= simlr_threshold) {
                         assignFlag = true;
                         if (generatedLCS.get(j).size() > lcs_min_len_threshold) {
-                            if (lcs_index == -1) {
-                                centroidLCS.set(i, generatedLCS.get(j));
-                                lcs_index = j;
-                            } else {
-                                if (generatedLCS.get(j).size() > generatedLCS.get(lcs_index).size()) {                         //길이가 더 긴 경우가 있다면 추가로 업데이트
-                                    centroidLCS.set(i, generatedLCS.get(lcs_index));
+                            current_message_type_num = LCSPatternAnalyzer(generatedLCS.get(j));
+                            if(best_message_type_num < current_message_type_num) {                                                // 1번 조건: LCS를 구성하는 Message type의 갯수
+                                lcs_index = j;                                                            // Ex) Merge_request로만 구성 vs Merge_request + Split_request
+                                lcs_length = generatedLCS.get(j).size();                                                                          // 후자 선택
+                                best_message_type_num = current_message_type_num;
+                            } else if (best_message_type_num == current_message_type_num) {                                       // 2번 조건: LCS의 길이
+                                if (lcs_length < generatedLCS.get(j).size()) {                                                                     // 같은 Message type의 갯수를 가지는 경우, LCS의 길이가 긴쪽 선택
+                                    lcs_index = j;
+                                    lcs_length = generatedLCS.get(j).size();
+                                    best_message_type_num = current_message_type_num;
                                 }
                             }
                         }
-                        if (!cluster.get(i).contains(im_trace)) cluster.get(i).add(im_trace);
-                        // im_trace가 중복으로 cluster에 입력되는 거 방지
+                        if(lcs_index != -1) centroidLCS.set(i, generatedLCS.get(lcs_index));
+                        if (!cluster.get(i).contains(im_trace))
+                            cluster.get(i).add(im_trace);                           // im_trace가 중복으로 cluster에 입력되는 거 방지
+                        // simlr_threshold를 넘는 경우, centroidLCS를 업데이트
+//                        assignFlag = true;
+//                        if (generatedLCS.get(j).size() > lcs_min_len_threshold) {
+//                            if (lcs_index == -1) {
+//                                centroidLCS.set(i, generatedLCS.get(j));
+//                                lcs_index = j;
+//                            } else {
+//                                if (generatedLCS.get(j).size() > generatedLCS.get(lcs_index).size()) {                         //길이가 더 긴 경우가 있다면 추가로 업데이트
+//                                    centroidLCS.set(i, generatedLCS.get(lcs_index));
+//                                }
+//                            }
+//                        }
+//                        if (!cluster.get(i).contains(im_trace)) cluster.get(i).add(im_trace);
+//                        // im_trace가 중복으로 cluster에 입력되는 거 방지
                     }
                 }
             } else {                                                                                                    // Cluster에 1개의 IM만 존재할때는 해당 IM 과의 LCS가 존재하는지 여부를 이용하여 해당 Cluster에 포함가능한지를 확인함
-                int best_message_type_num = 0;
-                int lcs_length = 0;
-                int current_message_type_num = 0;
                 for (ArrayList<Message> lcs : generatedLCS) {                                                            // Starting time에 따른 IM_Sliced로 생성된 generated LCS
                     if (lcs == null)
                         continue;                                                                           // 중 가장 최적의 LCS를 선택하는 프로세스
@@ -1648,112 +1670,220 @@ public class Clustering {
         }
     }
 
-    private void setCodeInspectionScope(ArrayList<String> source, String command, HashMap<Integer, Integer> tempMap, int flag) {
-        ArrayList<Integer> ranges = new ArrayList<>();
-            if(command.equals("MERGE_REQ")) {
-                ranges.add(727);
-                ranges.add(745);
-            } else if(command.equals("MERGE_DONE")) {
-                ranges.add(746);
-                ranges.add(799);
-                ranges.add(808);
-                ranges.add(877);
-                ranges.add(1064);
-                ranges.add(1083);
-                ranges.add(1086);
-                ranges.add(1109);
-            } else if (command.equals("SPLIT_REQ")) {
-                ranges.add(1116);
-                ranges.add(1140);
-            } else if (command.equals("GAP_CREATED")) {
-                ranges.add(1143);
-                ranges.add(1204);
-                ranges.add(1485);
-                ranges.add(1504);
-                ranges.add(1507);
-                ranges.add(1533);
-            } else if (command.equals("VOTE_LEADER")) {
-                ranges.add(1540);
-                ranges.add(1554);
-            } else if (command.equals("LEAVE_REQ")) {
-                ranges.add(1642);
-                ranges.add(1682);
+    public void codeLocalizerSBFL(String base, String filepath, ArrayList<InterplayModel> IMs, ArrayList<InterplayModel> PIMs) {
+        File pltSource = new File(base + filepath);
+        BufferedReader reader = null;
+        ArrayList<String> source = new ArrayList<>();
+
+        // Get the code of Platoon Operation Management Protocol
+        try {
+            reader = new BufferedReader(new FileReader(pltSource));
+            String line;
+            while ((line = reader.readLine()) != null) {
+                source.add(line);
             }
-            if(flag == 1) {
-                ranges.add(28);
-                ranges.add(167);
-                ranges.add(177);
-                ranges.add(181);
-                ranges.add(184);
-                ranges.add(210);
-                ranges.add(213);
-                ranges.add(228);
-                ranges.add(231);
-                ranges.add(235);
-                ranges.add(238);
-                ranges.add(250);
-                ranges.add(253);
-                ranges.add(296);
-                ranges.add(301);
-                ranges.add(322);
-                ranges.add(325);
-                ranges.add(352);
-                ranges.add(355);
-                ranges.add(393);
-                ranges.add(396);
-                ranges.add(403);
-                ranges.add(406);
-                ranges.add(413);
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+
+        HashMap<String, ArrayList<Integer>> codescope = new HashMap<>(); // (MessageCommand, Ranges of codes executed)
+        HashMap<Integer, ArrayList<Integer>> SBFLTable = new HashMap<>(); // (Line number, ArrayList [passed, failed])
+        // For the failed logs
+        for(InterplayModel im : IMs) {
+            for (Message message : im.getMsgSequence()) {
+                if (!codescope.containsKey(message.commandSent)) { // When the message command is observed at the first time,
+                    ArrayList<Integer> ranges = setCodeInspectionScope(source, message.commandSent, null, 0);
+                    ArrayList<Integer> temp = new ArrayList<>();
+                    for (int k = 0; k < ranges.size(); k += 2) {
+                        for (int p = ranges.get(k); p <= ranges.get(k + 1); p++) {
+                            temp.add(p);
+                        }
+                    }
+                    codescope.put(message.commandSent, (ArrayList)temp.clone()); // Caching to the codescope map
+                    for (int line : temp) {
+                        SBFLTable.put(line, new ArrayList<Integer>(Collections.nCopies(2, 0))); // Generate initial SBFL table
+                    }
+                }
+                ArrayList<Integer> temp = codescope.get(message.commandSent);
+                for (int line : temp) {
+                    ArrayList<Integer> pfcount = SBFLTable.get(line);
+                    pfcount.set(1, pfcount.get(1)+1); // Increase the failed value
+                }
+            }
+        }
+
+        for (InterplayModel im: PIMs) {
+            for (Message message : im.getMsgSequence()) {
+                if (!codescope.containsKey(message.commandSent)) { // When the message command is observed at the first time,
+                    ArrayList<Integer> ranges = setCodeInspectionScope(source, message.commandSent, null, 0);
+                    ArrayList<Integer> temp = new ArrayList<>();
+                    for (int k = 0; k < ranges.size(); k += 2) {
+                        for (int p = ranges.get(k); p <= ranges.get(k + 1); p++) {
+                            temp.add(p);
+                        }
+                    }
+                    codescope.put(message.commandSent, (ArrayList)temp.clone()); // Caching to the codescope map
+                    for (int line : temp) {
+                        SBFLTable.put(line, new ArrayList<Integer>(Collections.nCopies(2, 0))); // Generate initial SBFL table
+                    }
+                }
+                ArrayList<Integer> temp = codescope.get(message.commandSent);
+                for (int line : temp) {
+                    ArrayList<Integer> pfcount = SBFLTable.get(line);
+                    pfcount.set(0, pfcount.get(0)+1); // Increase the passed value
+                }
+            }
+        }
+        File SBFLresult = new File(base + "/SBFLresults.csv");
+
+        try {
+            FileWriter writer2 = new FileWriter(SBFLresult);
+            // TODO Suspicious Calculation Methods
+            String log = "Line, Tarantula, Ochiai, OP2, Barinel, DStar\n";
+            for (int line : SBFLTable.keySet()) {
+                log += line + "," + Tarantula(PIMs.size(), IMs.size(), SBFLTable.get(line).get(0), SBFLTable.get(line).get(1)) + ","
+                        + Ochiai(PIMs.size(), IMs.size(), SBFLTable.get(line).get(0), SBFLTable.get(line).get(1)) + ","
+                        + OP2(PIMs.size(), IMs.size(), SBFLTable.get(line).get(0), SBFLTable.get(line).get(1)) + ","
+                        + Barinel(PIMs.size(), IMs.size(), SBFLTable.get(line).get(0), SBFLTable.get(line).get(1)) + ","
+                        + DStar(PIMs.size(), IMs.size(), SBFLTable.get(line).get(0), SBFLTable.get(line).get(1)) + "\n";
+            }
+            writer2.write(log);
+            writer2.close();
+        } catch(Exception e) {
+            System.out.println(e);
+        }
+    }
+
+    private double Tarantula(int totalPassed, int totalFailed, int Passed, int Failed) {
+        return ((double)Failed / (double)totalFailed) / (((double)Passed / (double)totalPassed ) + ((double)Failed / (double)totalFailed));
+    }
+
+    private double Ochiai(int totalPassed, int totalFailed, int Passed, int Failed) {
+        return (double)Failed/ Math.sqrt((double)totalFailed * ((double)Failed + (double)Passed));
+    }
+
+    private double OP2(int totalPassed, int totalFailed, int Passed, int Failed) {
+        return (double)Failed - ((double)Passed / ((double)totalPassed + 1));
+    }
+
+    private double Barinel(int totalPassed, int totalFailed, int Passed, int Failed) {
+        return 1 - ((double)Passed / ((double)Passed + (double)Failed));
+    }
+
+    private double DStar(int totalPassed, int totalFailed, int Passed, int Failed) {
+        return Math.pow((double)Failed,2) / ((double)Passed + (double)totalFailed - (double)Failed);
+    }
+
+    private ArrayList<Integer> setCodeInspectionScope(ArrayList<String> source, String command, HashMap<Integer, Integer> tempMap, int flag) {
+        ArrayList<Integer> ranges = new ArrayList<>(); // Starting line, Finishing line, Starting line, Finishing line, ...
+        if(command.equals("MERGE_REQ")) {
+            ranges.add(727);
+            ranges.add(745);
+        } else if(command.equals("MERGE_DONE")) {
+            ranges.add(746);
+            ranges.add(799);
+            ranges.add(808);
+            ranges.add(877);
+            ranges.add(1064);
+            ranges.add(1083);
+            ranges.add(1086);
+            ranges.add(1109);
+        } else if (command.equals("SPLIT_REQ")) {
+            ranges.add(1116);
+            ranges.add(1140);
+        } else if (command.equals("GAP_CREATED")) {
+            ranges.add(1143);
+            ranges.add(1204);
+            ranges.add(1485);
+            ranges.add(1504);
+            ranges.add(1507);
+            ranges.add(1533);
+        } else if (command.equals("VOTE_LEADER")) {
+            ranges.add(1540);
+            ranges.add(1554);
+        } else if (command.equals("LEAVE_REQ")) {
+            ranges.add(1642);
+            ranges.add(1682);
+        }
+        if(flag == 1) {
+            ranges.add(28);
+            ranges.add(167);
+            ranges.add(177);
+            ranges.add(181);
+            ranges.add(184);
+            ranges.add(210);
+            ranges.add(213);
+            ranges.add(228);
+            ranges.add(231);
+            ranges.add(235);
+            ranges.add(238);
+            ranges.add(250);
+            ranges.add(253);
+            ranges.add(296);
+            ranges.add(301);
+            ranges.add(322);
+            ranges.add(325);
+            ranges.add(352);
+            ranges.add(355);
+            ranges.add(393);
+            ranges.add(396);
+            ranges.add(403);
+            ranges.add(406);
+            ranges.add(413);
 //                ranges.add(421);
 //                ranges.add(448);
 //                ranges.add(452);
 //                ranges.add(489);
 //                ranges.add(492);
 //                ranges.add(563);
-                ranges.add(603);
-                ranges.add(643);
-            }
-            for(int k = 0; k < source.size(); k++) {
-                if(source.get(k).contains(command)) {
-                    if(source.get(k).contains("//")) continue;
-                    if(source.get(k).contains("if")) {
-                        ranges.add(k+1);
-                        int count = 0;
-                        for(int p = k + 1; p < source.size(); p++) {
-                            if (source.get(p).contains("{")) count += 1;
-                            else if (source.get(p).contains("}")) {
-                                if(--count == 0) {
-                                    ranges.add(p + 1);
-                                    break;
-                                }
-                            }
-                        }
-                    } else {
-                        for (int p = k; p > 0; p--) {
-                            if (source.get(p).contains("{")) {
-                                ranges.add(p);
+            ranges.add(603);
+            ranges.add(643);
+        }
+
+        for(int k = 0; k < source.size(); k++) {
+            if(source.get(k).contains(command)) {
+                if(source.get(k).contains("//")) continue;
+                if(source.get(k).contains("if")) {
+                    ranges.add(k+1);
+                    int count = 0;
+                    for(int p = k + 1; p < source.size(); p++) {
+                        if (source.get(p).contains("{")) count += 1;
+                        else if (source.get(p).contains("}")) {
+                            if(--count == 0) {
+                                ranges.add(p + 1);
                                 break;
                             }
                         }
-                        int count = 1;
-                        for(int p = k + 1; p < source.size(); p++) {
-                            if (source.get(p).contains("{")) count += 1;
-                            else if (source.get(p).contains("}")) {
-                                if(--count == 0) {
-                                    ranges.add(p + 1);
-                                    break;
-                                }
+                    }
+                } else {
+                    for (int p = k; p > 0; p--) {
+                        if (source.get(p).contains("{")) {
+                            ranges.add(p);
+                            break;
+                        }
+                    }
+                    int count = 1;
+                    for(int p = k + 1; p < source.size(); p++) {
+                        if (source.get(p).contains("{")) count += 1;
+                        else if (source.get(p).contains("}")) {
+                            if(--count == 0) {
+                                ranges.add(p + 1);
+                                break;
                             }
                         }
                     }
                 }
             }
-        for(int k = 0; k < ranges.size(); k+=2) {
-            for(int p = ranges.get(k); p <=ranges.get(k+1); p++) {
-                if(tempMap.containsKey(p)) tempMap.put(p, tempMap.get(p)+1);
-                else tempMap.put(p, 1);
+        }
+        if (tempMap != null) {
+            for (int k = 0; k < ranges.size(); k += 2) {
+                for (int p = ranges.get(k); p <= ranges.get(k + 1); p++) {
+                    if (tempMap.containsKey(p)) tempMap.put(p, tempMap.get(p) + 1);
+                    else tempMap.put(p, 1);
+                }
             }
         }
+        return ranges;
     }
 
     public void PatternTxt(File folder) {
@@ -1856,5 +1986,138 @@ public class Clustering {
             id_p_index++;
         }
         return ret;
+    }
+
+    public double SPADEPatternIdentityCheckerWeight(double delay_threshold, ArrayList<ArrayList<String>> oracle, String f_name) {
+        double ret = 0;
+        ArrayList<Message> sequence = new ArrayList<>();
+        ArrayList<ArrayList<Message>> SPADE_lcs = new ArrayList<>();
+
+        try {
+            File spade_log = new File("./SoS_Extension/results/" + f_name);
+            FileReader filereader = new FileReader(spade_log);
+            BufferedReader bufReader = new BufferedReader(filereader);
+            String line = "";
+            int count = 0;
+
+            while ((line = bufReader.readLine()) != null) {
+                if (count % 2 != 0) continue;
+                String messages[] = line.split("/");
+                for (String message : messages) {
+                    String items[] = message.split("-");
+                    Message temp = new Message();
+                    temp.commandSent = items[0];
+                    temp.senderPltId = items[1];
+                    temp.senderRole = items[1];
+                    temp.receiverId = items[2];
+                    temp.receiverRole = items[2];
+                    temp.receiverPltId = items[2];
+                    sequence.add(temp);
+                }
+                SPADE_lcs.add((ArrayList) sequence.clone());
+                sequence.clear();
+                count++;
+            }
+        } catch(Exception e) {
+            System.out.println(e);
+        }
+        ArrayList<Integer> matched = new ArrayList<>();
+        int max_len = -1;
+        int matched_id = -1;
+        ArrayList<Message> lcs = null;
+        for(int i = 0; i < SPADE_lcs.size(); i++) matched.add(-1);
+        int id_p_list[] = {9, 10, 11, 0, 1, 2, 3, 4, 5, 6, 7, 8};
+        int id_p_index = 0;
+//        Collections.shuffle(id_patterns);
+        for (InterplayModel id_pattern : id_patterns) {
+            if(oracle.get(id_p_list[id_p_index]).size() == 0) continue;
+            max_len = -1;
+            matched_id = -1;
+            for(int i = 0; i < SPADE_lcs.size(); i++) {
+                if (matched.get(i) != 1) {
+                    lcs = LCSExtractorWithoutDelay(id_pattern.getMsgSequence(), SPADE_lcs.get(i));
+                    if (lcs == null) continue;
+                    if (max_len < lcs.size()) {
+                        matched_id = i;
+                        max_len = lcs.size();
+                        for(Message msg : lcs) {
+                            max_len += msg.weight;
+                        }
+                    }
+                    lcs.clear();
+                }
+            }
+            if (matched_id != -1) matched.set(matched_id, 1); // NO LCS generated at all
+            if (max_len != -1) ret += ((double)max_len / (double)id_pattern.getMsgSequence().size());
+            id_p_index++;
+        }
+
+        return ret;
+    }
+
+    public void SingleCasePatternMining(InterplayModel im_trace, double delay_threshold, double lcs_min_len_threshold) {
+        ArrayList<ArrayList<Message>> generatedLCS = new ArrayList<>();
+        int lcs_index;
+
+        if (centroidLCS.size() == 0) {
+            cluster.add(new ArrayList<>());
+            cluster.get(0).add(im_trace);
+            centroidLCS.add(new ArrayList<>());
+            centroidLCS.set(0, im_trace.getMsgSequence());
+            return;
+        }
+
+        lcs_index = -1;
+        int best_message_type_num = 0;
+        int lcs_length = 0;
+        int current_message_type_num = 0;
+//            for (int j = 0; j < startingTime.size(); j++) {
+//                    generatedLCS.add(LCSExtractorWithDelay(centroidLCS.get(0), //cluster.get(i).get(0).getMsgSequence()
+//                            IMSlicer(startingTime.get(j), im_trace.getMsgSequence()), delay_threshold));
+//                    if (generatedLCS.get(j) != null) Collections.reverse(generatedLCS.get(j));
+//                }
+//
+//                for (int j = 0; j < startingTime.size(); j++) {                                                          // Starting time에 따라 slicing 된 given IM에 대해 생성된
+//                    if (generatedLCS.get(j) == null)
+//                        continue;
+//                    if (generatedLCS.get(j).size() > lcs_min_len_threshold) {
+//                        if (lcs_index == -1) {
+//                            centroidLCS.set(0, generatedLCS.get(j));
+//                            lcs_index = j;
+//                        } else {
+//                            if (generatedLCS.get(j).size() > generatedLCS.get(lcs_index).size()) {                         //길이가 더 긴 경우가 있다면 추가로 업데이트
+//                                centroidLCS.set(0, generatedLCS.get(lcs_index));
+//                            }
+//                        }
+//                    }
+//                }
+                                // Cluster에 1개의 IM만 존재할때는 해당 IM 과의 LCS가 존재하는지 여부를 이용하여 해당 Cluster에 포함가능한지를 확인함
+        for (int j = 0; j < startingTime.size(); j++) {
+            generatedLCS.add(LCSExtractorWithDelay(IMSlicer(startingTime.get(j), im_trace.getMsgSequence()),                  // Starting time에 따라 given IM을 slicing 하여
+                    centroidLCS.get(0), delay_threshold));                                                       // 중간에 중요 사건의 sequence가 시작하는 경우의 예외 처리 진행
+            if (generatedLCS.get(j) != null) Collections.reverse(generatedLCS.get(j));
+        }
+
+        for (ArrayList<Message> lcs : generatedLCS) {                                                            // Starting time에 따른 IM_Sliced로 생성된 generated LCS
+            if (lcs == null)
+                continue;                                                                           // 중 가장 최적의 LCS를 선택하는 프로세스
+            current_message_type_num = LCSPatternAnalyzer(lcs);
+            if(best_message_type_num < current_message_type_num) {                                                // 1번 조건: LCS를 구성하는 Message type의 갯수
+                lcs_index = generatedLCS.indexOf(lcs);                                                            // Ex) Merge_request로만 구성 vs Merge_request + Split_request
+                lcs_length = lcs.size();                                                                          // 후자 선택
+                best_message_type_num = current_message_type_num;
+            } else if (best_message_type_num == current_message_type_num) {                                       // 2번 조건: LCS의 길이
+                if (lcs_length < lcs.size()) {                                                                     // 같은 Message type의 갯수를 가지는 경우, LCS의 길이가 긴쪽 선택
+                    lcs_index = generatedLCS.indexOf(lcs);
+                    lcs_length = lcs.size();
+                    best_message_type_num = current_message_type_num;
+                }
+            }
+        }
+
+        if (lcs_index != -1 && generatedLCS.get(lcs_index).size() > lcs_min_len_threshold) {                  // TODO Length Threshold
+            centroidLCS.set(0, generatedLCS.get(lcs_index));
+            cluster.get(0).add(im_trace);
+        }
     }
 }
