@@ -277,7 +277,7 @@ public class Main {
 
             ArrayList<InterplayModel> IMs_batch = new ArrayList<>();
 //
-            File batch_im = new File(base + "/SoS_Extension/results/" + "F1P - HyperparameterAnalysis_Case6_ML_12.txt");
+            File batch_im = new File(base + "/SoS_Extension/results/" + "F1P - HyperparameterAnalysis_Case5_ML_13.txt");
             try {
                 FileWriter writer = new FileWriter(batch_im, true);
                 String ret = "";
@@ -299,11 +299,11 @@ public class Main {
             oracleGenerator.getOracleCSV();
             ArrayList<ArrayList<String>> oracle = oracleGenerator.getOracle();
 
-            boolean multiple = true;
+            boolean multiple_cases = true;
             boolean single_run = false;
 
             if (isClustering) {
-                if (!multiple) {
+                if (!multiple_cases) {
                     // Single case run
                     if(!single_run) {
                         File file2 = new File(base + "/SoS_Extension/results/" + "Single Case Hyperparameter_0.csv");  // TODO Which Case? -> File Name Change
@@ -323,7 +323,7 @@ public class Main {
 //                                    Collections.shuffle(IMs); // TODO Random Sort
                                         for (InterplayModel im : IMs) {
                                             if (!oracle.get(0).contains(im.getId())) continue;
-
+                                            clustering.SingleCasePatternMining(im, delay_threshold, lcs_min_len_threshold);
                                         }
 
                                         // Pattern Logging
@@ -369,7 +369,7 @@ public class Main {
 //                File folder2 = new File(base + "/SoS_Extension/results/patterns/" + formatter.format(date));
 //                folder2.mkdir();
                     if (!single_run) {
-                        File file2 = new File(base + "/SoS_Extension/results/" + "F1P - HyperparameterAnalysis_Case6_ML_12.csv");  // TODO Which Case? -> File Name Change
+                        File file2 = new File(base + "/SoS_Extension/results/" + "F1P - HyperparameterAnalysis_Case5_ML_13.csv");  // TODO Which Case? -> File Name Change
 //                    File file2 = new File(base + "/SoS_Extension/results/" + "F1P - Base HyperparameterAnalysis_withTime_03_19.csv");
                         try {
                             FileWriter writer = new FileWriter(file2, true);
