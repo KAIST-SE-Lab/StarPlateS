@@ -2120,4 +2120,50 @@ public class Clustering {
             cluster.get(0).add(im_trace);
         }
     }
+
+    public double PatternIdentityCheckerSingleCase(double delay_threshold, ArrayList<ArrayList<String>> oracle, int oracle_index) {
+        double ret = 0;
+
+        ArrayList<Integer> matched = new ArrayList<>();
+        int max_len = -1;
+        int matched_id = -1;
+        for(int i = 0; i < centroidLCS.size(); i++) matched.add(-1);
+
+        int id_p_list[] = {9, 10, 11, 0, 1, 2, 3, 4, 5, 6, 7, 8};
+        int id_p_index = 0;
+//        Collections.shuffle(id_patterns);
+        for (InterplayModel id_pattern : id_patterns) {
+            if(id_p_list[id_p_index] != oracle_index) continue;
+            ArrayList<Message> lcs = LCSExtractorWithDelay(id_pattern.getMsgSequence(), centroidLCS.get(0), delay_threshold);
+            ret += ((double)lcs.size() / (double)id_pattern.getMsgSequence().size());
+            id_p_index++;
+        }
+
+        return ret;
+    }
+
+    public double PatternIdentityCheckerWeightSingleCase(double delay_threshold, ArrayList<ArrayList<String>> oracle, int oracle_index) {
+        double ret = 0;
+
+        ArrayList<Integer> matched = new ArrayList<>();
+        int max_len = -1;
+        int matched_id = -1;
+        for(int i = 0; i < centroidLCS.size(); i++) matched.add(-1);
+
+        int id_p_list[] = {9, 10, 11, 0, 1, 2, 3, 4, 5, 6, 7, 8};
+        int id_p_index = 0;
+//        Collections.shuffle(id_patterns);
+        for (InterplayModel id_pattern : id_patterns) {
+            if(id_p_list[id_p_index] != oracle_index) continue;
+            ArrayList<Message> lcs = LCSExtractorWithDelay(id_pattern.getMsgSequence(), centroidLCS.get(0), delay_threshold);
+            double len = (double)lcs.size();
+            for(Message msg : lcs) {
+                len += msg.weight;
+            }
+            ret += (len / (double)id_pattern.getMsgSequence().size());
+            id_p_index++;
+        }
+
+        return ret;
+    }
 }

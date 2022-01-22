@@ -336,8 +336,8 @@ public class Main {
                                         // Oracle-based Evaluation Score
                                         f1p_ev_score = clustering.EvaluateF1P(oracle, oracleGenerator.getIndex()); // 0: F_C_O, 1: F_O_C, 2: Evaluation Score
 //                                evaluation_score = clustering.EvaluateClusteringResult(oracle, oracleGenerator.getIndex());
-                                        double pattern_identity_score = clustering.PatternIdentityChecker(delay_threshold, oracle);
-                                        double pattern_identity_score_w = clustering.PatternIdentityCheckerWeight(delay_threshold, oracle);
+                                        double pattern_identity_score = clustering.PatternIdentityCheckerSingleCase(delay_threshold, oracle,i);
+                                        double pattern_identity_score_w = clustering.PatternIdentityCheckerWeightSingleCase(delay_threshold, oracle,i);
                                         System.out.println(delay_threshold + ", " + lcs_min_len_threshold + "," + " Clustering Evaluation Score: " + f1p_ev_score.get(2) + ", F_C_O: " + f1p_ev_score.get(0) + ", F_O_C: " + f1p_ev_score.get(1) + ", Cluster Size: " + number_of_clusters + ", PIT value: " + pattern_identity_score + ", PITW value: " + pattern_identity_score_w + ", Time(ms): " + (endTime - startTime));
                                         ret += delay_threshold + "," + lcs_min_len_threshold + "," + f1p_ev_score.get(2) + "," + f1p_ev_score.get(0) + "," + f1p_ev_score.get(1) + "," + number_of_clusters + "," + pattern_identity_score + "," + pattern_identity_score_w + ", Time(ms): ," + (endTime - startTime) + "\n";
 
