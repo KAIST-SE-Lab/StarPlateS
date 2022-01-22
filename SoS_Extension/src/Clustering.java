@@ -1,6 +1,6 @@
 
 import java.io.*;
-import java.lang.reflect.Array;
+import java.sql.Array;
 import java.util.*;
 import java.io.File;
 import java.io.FileReader;
@@ -2060,6 +2060,8 @@ public class Clustering {
         int lcs_index;
 
         if (centroidLCS.size() == 0) {
+            cluster.add(new ArrayList<>());
+            cluster.get(0).add(im_trace);
             centroidLCS.add(new ArrayList<>());
             centroidLCS.set(0, im_trace.getMsgSequence());
             return;
@@ -2115,6 +2117,7 @@ public class Clustering {
 
         if (lcs_index != -1 && generatedLCS.get(lcs_index).size() > lcs_min_len_threshold) {                  // TODO Length Threshold
             centroidLCS.set(0, generatedLCS.get(lcs_index));
+            cluster.get(0).add(im_trace);
         }
     }
 }
