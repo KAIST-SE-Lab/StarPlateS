@@ -375,7 +375,7 @@ public class Main {
 //                File folder2 = new File(base + "/SoS_Extension/results/patterns/" + formatter.format(date));
 //                folder2.mkdir();
                         if (!single_run) {
-                            File file2 = new File(base + "/SoS_Extension/results/" + "F1P - HyperparameterAnalysis_Base_" + (k+11) + ".txt");  // TODO Which Case? -> File Name Change
+                            File file2 = new File(base + "/SoS_Extension/results/" + "F1P - HyperparameterAnalysis_Base_" + (k+11) + ".csv");  // TODO Which Case? -> File Name Change
 //                    File file2 = new File(base + "/SoS_Extension/results/" + "F1P - Base HyperparameterAnalysis_withTime_03_19.csv");
                             try {
                                 FileWriter writer = new FileWriter(file2, true);
