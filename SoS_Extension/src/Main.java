@@ -306,9 +306,10 @@ public class Main {
                 if (!multiple_cases) {
                     // Single case run
                     if(!single_run) {
-                        File file2 = new File(base + "/SoS_Extension/results/" + "Single Case Hyperparameter_0.csv");  // TODO Which Case? -> File Name Change
+                         // TODO Which Case? -> File Name Change
 //                    File file2 = new File(base + "/SoS_Extension/results/" + "F1P - Base HyperparameterAnalysis_withTime_03_19.csv");
                         for (int i = 0; i < oracle.size(); i++) {
+                            File file2 = new File(base + "/SoS_Extension/results/" + "Single Case Hyperparameter_0_" + i + ".csv");
                             try {
                                 FileWriter writer = new FileWriter(file2, true);
                                 String ret = "";
