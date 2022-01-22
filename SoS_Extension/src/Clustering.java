@@ -567,7 +567,7 @@ public class Clustering {
         }
 
         for (int i = 0; i < cluster.size(); i++) {
-            generatedLCS = LCSExtractorWithoutDelayBase(cluster.get(i).get(0).getMsgSequence(), im_trace.getMsgSequence());      // Cluster에 1개의 IM만 존재할때는 해당 IM 과의 LCS가 존재하는지
+            generatedLCS = LCSExtractorWithoutDelayBase(centroidLCS.get(i), im_trace.getMsgSequence());      // Cluster에 1개의 IM만 존재할때는 해당 IM 과의 LCS가 존재하는지
             if (generatedLCS != null && generatedLCS.size() > lcs_min_len_threshold) {                               // 여부를 이용하여 해당 Cluster에 포함가능한지를 확인함
                 cluster.get(i).add(im_trace);
                 Collections.reverse(generatedLCS);
@@ -2148,11 +2148,6 @@ public class Clustering {
     public double PatternIdentityCheckerWeightSingleCase(double delay_threshold, ArrayList<ArrayList<String>> oracle, int oracle_index) {
         double ret = 0;
 
-        ArrayList<Integer> matched = new ArrayList<>();
-        int max_len = -1;
-        int matched_id = -1;
-        for(int i = 0; i < centroidLCS.size(); i++) matched.add(-1);
-
         int id_p_list[] = {9, 10, 11, 0, 1, 2, 3, 4, 5, 6, 7, 8};
         int id_p_index = 0;
 //        Collections.shuffle(id_patterns);
@@ -2172,5 +2167,23 @@ public class Clustering {
         }
 
         return ret;
+    }
+
+    public void SingleCasePatternMiningBase(InterplayModel im_trace, double delay_threshold, double lcs_min_len_threshold) {
+
+        if (centroidLCS.size() == 0) {
+            cluster.add(new ArrayList<>());
+            cluster.get(0).add(im_trace);
+            centroidLCS.add(new ArrayList<>());
+            centroidLCS.set(0, im_trace.getMsgSequence());
+            return;
+        }
+
+        ArrayList<Message> generatedLCS = LCSExtractorWithoutDelayBase(centroidLCS.get(0), im_trace.getMsgSequence());
+        if (generatedLCS != null && generatedLCS.size() > lcs_min_len_threshold) {                               // 여부를 이용하여 해당 Cluster에 포함가능한지를 확인함
+            cluster.get(0).add(im_trace);
+            Collections.reverse(generatedLCS);
+            centroidLCS.set(0, generatedLCS);
+        }
     }
 }
