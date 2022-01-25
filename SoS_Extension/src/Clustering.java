@@ -827,12 +827,28 @@ public class Clustering {
                 temp = centroidLCS.get(i).get(j);
                 System.out.println(j + " " + temp.time + ": " + temp.commandSent + " from " + temp.senderPltId + " to " + temp.receiverId);
             }
-            break;
-//            System.out.println("Clustered IMs: " + cluster.get(i).size());
+
+            System.out.println("Clustered IMs: " + cluster.get(i).size());
 //            for(int j = 0; j < cluster.get(i).size(); j++) {
 //                System.out.println((j+1) + ": IM_" + cluster.get(i).get(j).getId());
 //            }
         }
+    }
+
+    public void printMaxPattern() {
+        Message temp;
+        int max_index = 0;
+        for (int i = 1; i <cluster.size(); i++) {
+            if (centroidLCS.get(max_index).size() < centroidLCS.get(i).size()) {
+                max_index = i;
+            }
+        }
+
+        for (int j = 0; j < centroidLCS.get(max_index).size(); j++) {
+            temp = centroidLCS.get(max_index).get(j);
+            System.out.println(j + " " + temp.time + ": " + temp.commandSent + " from " + temp.senderPltId + " to " + temp.receiverId);
+        }
+
     }
 
     public void ClusterMerge(double simlr_threshold, double delay_threshold, int lcs_min_len_threshold) {
