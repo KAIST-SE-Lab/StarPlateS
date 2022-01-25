@@ -454,7 +454,7 @@ public class Clustering {
             cluster.add(new ArrayList<>());
             centroidLCS.add(new ArrayList<>());
             cluster.get(0).add(im_trace);
-            centroidLCS.set(0, im_trace.getMsgSequence());
+            centroidLCS.set(0, IMSlicer(startingTime.get(0), im_trace.getMsgSequence()));
             return;
         }
 
@@ -473,7 +473,7 @@ public class Clustering {
                     if (generatedLCS.get(j) != null) {
                         if(generatedLCS.get(j).size() >= 2 && (generatedLCS.get(j).get(0).time > generatedLCS.get(j).get(1).time))
                             Collections.reverse(generatedLCS.get(j));
-                        else if (generatedLCS.get(j).size() >= 2 && (generatedLCS.get(j).get(0).time == generatedLCS.get(j).get(1).time)) {
+                        if (generatedLCS.get(j).size() >= 2 && (generatedLCS.get(j).get(0).time == generatedLCS.get(j).get(1).time)) {
                             if(generatedLCS.get(j).size() >= 3 && (generatedLCS.get(j).get(1).time > generatedLCS.get(j).get(2).time)) {
                                 Collections.reverse(generatedLCS.get(j));
                             }
@@ -851,7 +851,7 @@ public class Clustering {
                     else {
                         if(lcs_lcs.size() >= 2 && (lcs_lcs.get(0).time > lcs_lcs.get(1).time))
                             Collections.reverse(lcs_lcs);
-                        else if (lcs_lcs.size() >= 2 && (lcs_lcs.get(0).time == lcs_lcs.get(1).time)) {
+                        if (lcs_lcs.size() >= 2 && (lcs_lcs.get(0).time == lcs_lcs.get(1).time)) {
                             if(lcs_lcs.size() >= 3 && (lcs_lcs.get(1).time > lcs_lcs.get(2).time)) {
                                 Collections.reverse(lcs_lcs);
                             }
@@ -874,8 +874,8 @@ public class Clustering {
                                 centroidLCS.get(j), delay_threshold));
                         if (lcs_lcses.get(k) != null) {
                             if(lcs_lcses.get(k).size() >= 2 && (lcs_lcses.get(k).get(0).time > lcs_lcses.get(k).get(1).time))
-                                Collections.reverse(lcs_lcses.get(j));
-                            else if (lcs_lcses.get(k).size() >= 2 && (lcs_lcses.get(k).get(0).time == lcs_lcses.get(k).get(1).time)) {
+                                Collections.reverse(lcs_lcses.get(k));
+                            if (lcs_lcses.get(k).size() >= 2 && (lcs_lcses.get(k).get(0).time == lcs_lcses.get(k).get(1).time)) {
                                 if(lcs_lcses.get(k).size() >= 3 && (lcs_lcses.get(k).get(1).time > lcs_lcses.get(k).get(2).time)) {
                                     Collections.reverse(lcs_lcses.get(k));
                                 }
@@ -928,7 +928,7 @@ public class Clustering {
                         if (generatedLCS.get(k) != null) {
                             if(generatedLCS.get(k).size() >= 2 && (generatedLCS.get(k).get(0).time > generatedLCS.get(k).get(1).time))
                                 Collections.reverse(generatedLCS.get(k));
-                            else if (generatedLCS.get(k).size() >= 2 && (generatedLCS.get(k).get(0).time == generatedLCS.get(k).get(1).time)) {
+                            if (generatedLCS.get(k).size() >= 2 && (generatedLCS.get(k).get(0).time == generatedLCS.get(k).get(1).time)) {
                                 if(generatedLCS.get(k).size() >= 3 && (generatedLCS.get(k).get(1).time > generatedLCS.get(k).get(2).time)) {
                                     Collections.reverse(generatedLCS.get(k));
                                 }
@@ -1067,7 +1067,6 @@ public class Clustering {
             }
             return ret;
         } else { // No shorter LCS exists
-            Collections.reverse(data_point);
             return (ArrayList)data_point.clone();
         }
     }
@@ -1125,7 +1124,6 @@ public class Clustering {
             }
             return ret;
         } else { // No shorter LCS exists
-            Collections.reverse(data_point);
             return (ArrayList)data_point.clone();
         }
     }
