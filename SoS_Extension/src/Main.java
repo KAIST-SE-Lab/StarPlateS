@@ -446,7 +446,8 @@ public class Main {
                             clustering.ClusterMerge(simlr_threshold, delay_threshold, lcs_min_len_threshold);
                             clustering.ClusteringFinalize(simlr_threshold, delay_threshold, lcs_min_len_threshold);
                             long endTime = System.currentTimeMillis();
-                            clustering.printCluster();
+//                            clustering.printCluster();
+                            clustering.printMaxPattern();
                             f1p_ev_score = clustering.EvaluateF1P(oracle, oracleGenerator.getIndex());
                             number_of_clusters = clustering.clusterSize();
                             double pattern_identity_score = clustering.PatternIdentityChecker(delay_threshold, oracle);
