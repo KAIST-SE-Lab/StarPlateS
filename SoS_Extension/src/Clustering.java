@@ -848,7 +848,15 @@ public class Clustering {
                 if (cluster.get(i).size() > 1 && cluster.get(j).size() > 1) {
                     lcs_lcs = LCSExtractorWithDelay(centroidLCS.get(i), centroidLCS.get(j), delay_threshold);
                     if (lcs_lcs == null) continue;
-                    Collections.reverse(lcs_lcs);
+                    else {
+                        if(lcs_lcs.size() >= 2 && (lcs_lcs.get(0).time > lcs_lcs.get(1).time))
+                            Collections.reverse(lcs_lcs);
+                        else if (lcs_lcs.size() >= 2 && (lcs_lcs.get(0).time == lcs_lcs.get(1).time)) {
+                            if(lcs_lcs.size() >= 3 && (lcs_lcs.get(1).time > lcs_lcs.get(2).time)) {
+                                Collections.reverse(lcs_lcs);
+                            }
+                        }
+                    }
                     temp = similarityChecker(centroidLCS.get(i), lcs_lcs, delay_threshold);
 //                  temp = similarityChecker(centroidLCS.get(i), centroidLCS.get(j), delay_threshold); TODO Similarity: Cent vs Cent / Cent vs LCS_LCS ??
                     if (temp >= simlr_threshold) {
@@ -864,7 +872,15 @@ public class Clustering {
                     for (int k = 0; k < startingTime.size(); k++) {
                         lcs_lcses.add(LCSExtractorWithDelay(IMSlicer(startingTime.get(k), centroidLCS.get(i)),
                                 centroidLCS.get(j), delay_threshold));
-                        if (lcs_lcses.get(k) != null) Collections.reverse(lcs_lcses.get(k));
+                        if (lcs_lcses.get(j) != null) {
+                            if(lcs_lcses.get(j).size() >= 2 && (lcs_lcses.get(j).get(0).time > lcs_lcses.get(j).get(1).time))
+                                Collections.reverse(lcs_lcses.get(j));
+                            else if (lcs_lcses.get(j).size() >= 2 && (lcs_lcses.get(j).get(0).time == lcs_lcses.get(j).get(1).time)) {
+                                if(lcs_lcses.get(j).size() >= 3 && (lcs_lcses.get(j).get(1).time > lcs_lcses.get(j).get(2).time)) {
+                                    Collections.reverse(lcs_lcses.get(j));
+                                }
+                            }
+                        }
                     }
                     for (int k = 0; k < startingTime.size(); k++) {
                         if (lcs_lcses.get(k) != null && (lcs_lcses.get(k).size() > lcs_min_len_threshold)) {
@@ -909,7 +925,15 @@ public class Clustering {
                     for (int k = 0; k < startingTime.size(); k++) {
                         generatedLCS.add(LCSExtractorWithDelay(centroidLCS.get(j),
                                 IMSlicer(startingTime.get(k), IM.getMsgSequence()), delay_threshold));
-                        if (generatedLCS.get(k) != null) Collections.reverse(generatedLCS.get(k));
+                        if (generatedLCS.get(j) != null) {
+                            if(generatedLCS.get(j).size() >= 2 && (generatedLCS.get(j).get(0).time > generatedLCS.get(j).get(1).time))
+                                Collections.reverse(generatedLCS.get(j));
+                            else if (generatedLCS.get(j).size() >= 2 && (generatedLCS.get(j).get(0).time == generatedLCS.get(j).get(1).time)) {
+                                if(generatedLCS.get(j).size() >= 3 && (generatedLCS.get(j).get(1).time > generatedLCS.get(j).get(2).time)) {
+                                    Collections.reverse(generatedLCS.get(j));
+                                }
+                            }
+                        }
                     }
 
                     if (cluster.get(j).size() > 1) {                                                                             // Cluster에 2개 이상의 IM이 존재하는 경우, representative lcs 와 given IM 사이의 LCS를 생성하여 Similarity 비교
