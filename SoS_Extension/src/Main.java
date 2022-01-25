@@ -296,12 +296,12 @@ public class Main {
                 OracleGenerator oracleGenerator = new OracleGenerator();
                 oracleGenerator.oracleGeneration(IMs_batch);
 //            oracleGenerator.oracleGeneration(IMs);
-                oracleGenerator.printOracle();
+//                oracleGenerator.printOracle();
                 oracleGenerator.getOracleCSV();
                 ArrayList<ArrayList<String>> oracle = oracleGenerator.getOracle();
 
                 boolean multiple_cases = true;
-                boolean single_run = false;
+                boolean single_run = true;
 
                 if (isClustering) {
                     if (!multiple_cases) {
@@ -435,7 +435,7 @@ public class Main {
                         else {
                             Clustering clustering = new Clustering();
                             simlr_threshold = 0.6;
-                            delay_threshold = 0.1;
+                            delay_threshold = 0.9;
                             lcs_min_len_threshold = 3;
                             long startTime = System.currentTimeMillis();
                             for (InterplayModel im : IMs_batch) {
@@ -443,7 +443,7 @@ public class Main {
                                 clustering.addTraceCase6(im, simlr_threshold, delay_threshold, lcs_min_len_threshold);
 //                    clustering.addTraceBaseLCS(im, delay_threshold, lcs_min_len_threshold);
                             }
-//                    clustering.ClusterMerge(simlr_threshold, delay_threshold, lcs_min_len_threshold);
+                            clustering.ClusterMerge(simlr_threshold, delay_threshold, lcs_min_len_threshold);
                             clustering.ClusteringFinalize(simlr_threshold, delay_threshold, lcs_min_len_threshold);
                             long endTime = System.currentTimeMillis();
                             clustering.printCluster();
@@ -467,7 +467,7 @@ public class Main {
 //                    } catch (Exception e) {
 //                        e.printStackTrace();
 //                    }
-                            clustering.codeLocalizer(base, "/src/nodes/vehicle/05_PlatoonMg.cc");
+                            clustering.codeLocalizer(base, "/src/nodes/vehicle/05_PlatoonMg.cc", 1); // 0: run by external pattern file, 1: run by using the above clustering results
                         }
                     }
                 }
