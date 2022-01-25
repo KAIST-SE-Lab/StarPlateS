@@ -382,11 +382,11 @@ public class Main {
                                 String ret = "";
                                 // The code for Hyperparameter optimization of clustering algorithm
                                 Clustering clustering = new Clustering();
-                                for (int simlr_counter = 60; simlr_counter <= 90; simlr_counter++) {
+                                for (int simlr_counter = 60; simlr_counter <= 100; simlr_counter++) {
                                     simlr_threshold = (double) simlr_counter / 100;
                                     for (int delay_counter = 10; delay_counter <= 100; delay_counter += 10) {
                                         delay_threshold = (double) delay_counter / 100;
-                                        for (lcs_min_len_threshold = 2; lcs_min_len_threshold <= 15; lcs_min_len_threshold++) {
+                                        for (lcs_min_len_threshold = 2; lcs_min_len_threshold <= 20; lcs_min_len_threshold++) {
 
                                             long startTime = System.currentTimeMillis();
 
