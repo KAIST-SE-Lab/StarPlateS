@@ -2047,9 +2047,11 @@ public class Clustering {
                     lcs.clear();
                 }
             }
-            if (matched_id != -1) matched.set(matched_id, 1); // NO LCS generated at all
-            if (max_len != -1) ret += ((double)max_len / (double)id_pattern.getMsgSequence().size());
-            retList.add((double)max_len / (double)id_pattern.getMsgSequence().size());
+            if (matched_id != -1) matched.set(matched_id, 1);
+            if (max_len != -1) {
+                ret += ((double) max_len / (double) id_pattern.getMsgSequence().size());
+                retList.add((double) max_len / (double) id_pattern.getMsgSequence().size());
+            }
             id_p_index++;
         }
         retList.add(ret);
