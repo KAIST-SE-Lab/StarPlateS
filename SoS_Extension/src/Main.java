@@ -301,7 +301,7 @@ public class Main {
                 ArrayList<ArrayList<String>> oracle = oracleGenerator.getOracle();
 
                 boolean multiple_cases = true;
-                boolean single_run = true;
+                boolean single_run = false;
 
                 if (isClustering) {
                     if (!multiple_cases) {
@@ -386,7 +386,7 @@ public class Main {
                                     simlr_threshold = (double) simlr_counter / 100;
                                     for (int delay_counter = 10; delay_counter <= 100; delay_counter += 10) {
                                         delay_threshold = (double) delay_counter / 100;
-                                        for (lcs_min_len_threshold = 2; lcs_min_len_threshold <= 10; lcs_min_len_threshold++) {
+                                        for (lcs_min_len_threshold = 2; lcs_min_len_threshold <= 15; lcs_min_len_threshold++) {
 
                                             long startTime = System.currentTimeMillis();
 
