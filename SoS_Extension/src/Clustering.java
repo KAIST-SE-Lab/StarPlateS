@@ -1625,7 +1625,7 @@ public class Clustering {
         return ret;
     }
 
-    public void codeLocalizer(String base, String filepath) {
+    public void codeLocalizer(String base, String filepath, int file_flag) {
         File pltSource = new File(base + filepath);
         BufferedReader reader = null;
         ArrayList<String> source = new ArrayList<>();
@@ -1640,33 +1640,35 @@ public class Clustering {
         } catch (Exception e) {
             System.out.println(e);
         }
-        try {
-            File pltConfig = new File("./SoS_Extension/logs/generatedPatterns.txt");
-            FileReader filereader = new FileReader(pltConfig);
-            BufferedReader bufReader = new BufferedReader(filereader);
-            String line = "";
-            StringTokenizer stringTokenizer;
-            ArrayList<Message> msgSequence = new ArrayList<>();
-            centroidLCS.clear();
+        if(file_flag == 0) {// File reading
+            try {
+                File pltConfig = new File("./SoS_Extension/logs/generatedPatterns.txt");
+                FileReader filereader = new FileReader(pltConfig);
+                BufferedReader bufReader = new BufferedReader(filereader);
+                String line = "";
+                StringTokenizer stringTokenizer;
+                ArrayList<Message> msgSequence = new ArrayList<>();
+                centroidLCS.clear();
 
-            while((line = bufReader.readLine()) != null) {
-                stringTokenizer = new StringTokenizer(line, " ");
-                Message msg = new Message();
-                if(stringTokenizer.countTokens() == 3) {
-                    if(msgSequence.size() != 0) {
-                        centroidLCS.add((ArrayList)msgSequence.clone());
+                while ((line = bufReader.readLine()) != null) {
+                    stringTokenizer = new StringTokenizer(line, " ");
+                    Message msg = new Message();
+                    if (stringTokenizer.countTokens() == 3) {
+                        if (msgSequence.size() != 0) {
+                            centroidLCS.add((ArrayList) msgSequence.clone());
+                        }
+                        msgSequence = new ArrayList<>();
                     }
-                    msgSequence = new ArrayList<>();
-                }
 
-                if(stringTokenizer.countTokens() != 7) continue;
-                stringTokenizer.nextToken();
-                stringTokenizer.nextToken();
-                msg.commandSent = stringTokenizer.nextToken();
-                msgSequence.add(msg);
+                    if (stringTokenizer.countTokens() != 7) continue;
+                    stringTokenizer.nextToken();
+                    stringTokenizer.nextToken();
+                    msg.commandSent = stringTokenizer.nextToken();
+                    msgSequence.add(msg);
+                }
+            } catch (Exception e) {
+                System.out.println(e);
             }
-        } catch(Exception e){
-            System.out.println(e);
         }
 
         File file2 = new File(base + "/SoS_Extension/results/" + "CodeScopeReductionRate_bestOption.csv");
