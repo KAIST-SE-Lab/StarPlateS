@@ -470,7 +470,15 @@ public class Clustering {
                 for (int j = 0; j < startingTime.size(); j++) {
                     generatedLCS.add(LCSExtractorWithoutDelay(centroidLCS.get(i), //cluster.get(i).get(0).getMsgSequence()
                             IMSlicer(startingTime.get(j), im_trace.getMsgSequence())));
-                    if (generatedLCS.get(j) != null) Collections.reverse(generatedLCS.get(j));
+                    if (generatedLCS.get(j) != null) {
+                        if(generatedLCS.get(j).size() >= 2 && (generatedLCS.get(j).get(0).time > generatedLCS.get(j).get(1).time))
+                            Collections.reverse(generatedLCS.get(j));
+                        else if (generatedLCS.get(j).size() >= 2 && (generatedLCS.get(j).get(0).time == generatedLCS.get(j).get(1).time)) {
+                            if(generatedLCS.get(j).size() >= 3 && (generatedLCS.get(j).get(1).time > generatedLCS.get(j).get(2).time)) {
+                                Collections.reverse(generatedLCS.get(j));
+                            }
+                        }
+                    }
                 }
 
                 for (int j = 0; j < startingTime.size(); j++) {                                                          // Starting time에 따라 slicing 된 given IM에 대해 생성된
@@ -517,7 +525,15 @@ public class Clustering {
                 for (int j = 0; j < startingTime.size(); j++) {
                     generatedLCS.add(LCSExtractorWithDelay(IMSlicer(startingTime.get(j), im_trace.getMsgSequence()),                  // Starting time에 따라 given IM을 slicing 하여
                             centroidLCS.get(i), delay_threshold));                                                       // 중간에 중요 사건의 sequence가 시작하는 경우의 예외 처리 진행
-                    if (generatedLCS.get(j) != null) Collections.reverse(generatedLCS.get(j));
+                    if (generatedLCS.get(j) != null) {
+                        if(generatedLCS.get(j).size() >= 2 && (generatedLCS.get(j).get(0).time > generatedLCS.get(j).get(1).time))
+                            Collections.reverse(generatedLCS.get(j));
+                        else if (generatedLCS.get(j).size() >= 2 && (generatedLCS.get(j).get(0).time == generatedLCS.get(j).get(1).time)) {
+                            if(generatedLCS.get(j).size() >= 3 && (generatedLCS.get(j).get(1).time > generatedLCS.get(j).get(2).time)) {
+                                Collections.reverse(generatedLCS.get(j));
+                            }
+                        }
+                    }
                 }
 
                 for (ArrayList<Message> lcs : generatedLCS) {                                                            // Starting time에 따른 IM_Sliced로 생성된 generated LCS
@@ -549,7 +565,7 @@ public class Clustering {
             cluster.add(new ArrayList<>());                                                                             // 새로운 cluster와 centroidLCS slot를 생성한 후
             centroidLCS.add(new ArrayList<>());
             cluster.get(cluster.size() - 1).add(im_trace);                                                                // 해당 IM을 cluster에 삽입
-            centroidLCS.set(centroidLCS.size() - 1, im_trace.getMsgSequence());
+            centroidLCS.set(centroidLCS.size() - 1, IMSlicer(startingTime.get(0), im_trace.getMsgSequence()));
         }
     }
 
@@ -811,8 +827,8 @@ public class Clustering {
                 temp = centroidLCS.get(i).get(j);
                 System.out.println(j + " " + temp.time + ": " + temp.commandSent + " from " + temp.senderPltId + " to " + temp.receiverId);
             }
-
-            System.out.println("Clustered IMs: " + cluster.get(i).size());
+            break;
+//            System.out.println("Clustered IMs: " + cluster.get(i).size());
 //            for(int j = 0; j < cluster.get(i).size(); j++) {
 //                System.out.println((j+1) + ": IM_" + cluster.get(i).get(j).getId());
 //            }
