@@ -2016,7 +2016,8 @@ public class Clustering {
         return ret;
     }
 
-    public double PatternIdentityCheckerWeight(double delay_threshold, ArrayList<ArrayList<String>> oracle) {
+    public ArrayList<Double> PatternIdentityCheckerWeight(double delay_threshold, ArrayList<ArrayList<String>> oracle) {
+        ArrayList<Double> retList = new ArrayList<>();
         double ret = 0;
 
         ArrayList<Integer> matched = new ArrayList<>();
@@ -2048,9 +2049,11 @@ public class Clustering {
             }
             if (matched_id != -1) matched.set(matched_id, 1); // NO LCS generated at all
             if (max_len != -1) ret += ((double)max_len / (double)id_pattern.getMsgSequence().size());
+            retList.add((double)max_len / (double)id_pattern.getMsgSequence().size());
             id_p_index++;
         }
-        return ret;
+        retList.add(ret);
+        return retList;
     }
 
     public double SPADEPatternIdentityCheckerWeight(double delay_threshold, ArrayList<ArrayList<String>> oracle, String f_name) {
