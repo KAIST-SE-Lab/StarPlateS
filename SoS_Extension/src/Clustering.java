@@ -925,12 +925,12 @@ public class Clustering {
                     for (int k = 0; k < startingTime.size(); k++) {
                         generatedLCS.add(LCSExtractorWithDelay(centroidLCS.get(j),
                                 IMSlicer(startingTime.get(k), IM.getMsgSequence()), delay_threshold));
-                        if (generatedLCS.get(j) != null) {
-                            if(generatedLCS.get(j).size() >= 2 && (generatedLCS.get(j).get(0).time > generatedLCS.get(j).get(1).time))
-                                Collections.reverse(generatedLCS.get(j));
-                            else if (generatedLCS.get(j).size() >= 2 && (generatedLCS.get(j).get(0).time == generatedLCS.get(j).get(1).time)) {
-                                if(generatedLCS.get(j).size() >= 3 && (generatedLCS.get(j).get(1).time > generatedLCS.get(j).get(2).time)) {
-                                    Collections.reverse(generatedLCS.get(j));
+                        if (generatedLCS.get(k) != null) {
+                            if(generatedLCS.get(k).size() >= 2 && (generatedLCS.get(k).get(0).time > generatedLCS.get(k).get(1).time))
+                                Collections.reverse(generatedLCS.get(k));
+                            else if (generatedLCS.get(k).size() >= 2 && (generatedLCS.get(k).get(0).time == generatedLCS.get(k).get(1).time)) {
+                                if(generatedLCS.get(k).size() >= 3 && (generatedLCS.get(k).get(1).time > generatedLCS.get(k).get(2).time)) {
+                                    Collections.reverse(generatedLCS.get(k));
                                 }
                             }
                         }
