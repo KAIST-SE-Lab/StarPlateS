@@ -2214,7 +2214,8 @@ public class Clustering {
                 id_p_index++;
                 continue;
             }
-            ArrayList<Message> lcs = LCSExtractorWithDelay(id_pattern.getMsgSequence(), centroidLCS.get(0), delay_threshold);
+//            ArrayList<Message> lcs = LCSExtractorWithDelay(id_pattern.getMsgSequence(), centroidLCS.get(0), delay_threshold);
+            ArrayList<Message> lcs = LCSExtractorWithoutDelayBase(id_pattern.getMsgSequence(), centroidLCS.get(0));
             if (lcs == null) return 0;
             ret += ((double)lcs.size() / (double)id_pattern.getMsgSequence().size());
             id_p_index++;
@@ -2234,7 +2235,8 @@ public class Clustering {
                 id_p_index++;
                 continue;
             }
-            ArrayList<Message> lcs = LCSExtractorWithDelay(id_pattern.getMsgSequence(), centroidLCS.get(0), delay_threshold);
+//            ArrayList<Message> lcs = LCSExtractorWithDelay(id_pattern.getMsgSequence(), centroidLCS.get(0), delay_threshold);
+            ArrayList<Message> lcs = LCSExtractorWithoutDelayBase(id_pattern.getMsgSequence(), centroidLCS.get(0));
             if (lcs == null) return 0;
             double len = (double)lcs.size();
             for(Message msg : lcs) {
