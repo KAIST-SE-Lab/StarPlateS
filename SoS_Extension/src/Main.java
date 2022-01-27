@@ -308,10 +308,14 @@ public class Main {
                         // Single case run
                         if (!single_run) {
                             // TODO Which Case? -> File Name Change
+                            String max_ret = "";
+                            String max_ret_w = "";
 //                    File file2 = new File(base + "/SoS_Extension/results/" + "F1P - Base HyperparameterAnalysis_withTime_03_19.csv");
                             for (int j = 0; j < 30; j++) {
                                 Collections.shuffle(IMs);
                                 for (int i = 0; i < oracle.size(); i++) {
+                                    double max_PIT = 0;
+                                    double max_PITW = 0;
                                     File file2 = new File(base + "/SoS_Extension/results/" + "Single Case Hyperparameter_" + j + "_" + i + ".csv");
                                     try {
                                         FileWriter writer = new FileWriter(file2, true);
@@ -341,6 +345,8 @@ public class Main {
 //                                evaluation_score = clustering.EvaluateClusteringResult(oracle, oracleGenerator.getIndex());
                                                 double pattern_identity_score = clustering.PatternIdentityCheckerSingleCase(delay_threshold, oracle, i);
                                                 double pattern_identity_score_w = clustering.PatternIdentityCheckerWeightSingleCase(delay_threshold, oracle, i);
+                                                if(max_PIT < pattern_identity_score) max_PIT = pattern_identity_score;
+                                                if(max_PITW < pattern_identity_score_w) max_PIT = pattern_identity_score_w;
                                                 System.out.println(delay_threshold + ", " + lcs_min_len_threshold + "," + " Clustering Evaluation Score: " + f1p_ev_score.get(2) + ", F_C_O: " + f1p_ev_score.get(0) + ", F_O_C: " + f1p_ev_score.get(1) + ", Cluster Size: " + number_of_clusters + ", PIT value: " + pattern_identity_score + ", PITW value: " + pattern_identity_score_w + ", Time(ms): " + (endTime - startTime));
                                                 ret += delay_threshold + "," + lcs_min_len_threshold + "," + f1p_ev_score.get(2) + "," + f1p_ev_score.get(0) + "," + f1p_ev_score.get(1) + "," + number_of_clusters + "," + pattern_identity_score + "," + pattern_identity_score_w + ", Time(ms): ," + (endTime - startTime) + "\n";
 
@@ -352,7 +358,21 @@ public class Main {
                                     } catch (Exception e) {
                                         e.printStackTrace();
                                     }
+                                    max_ret += max_PIT + ",";
+                                    max_ret_w += max_PITW + ",";
                                 }
+                                max_ret += "\n";
+                                max_ret_w += "\n";
+                            }
+                            File file2 = new File(base + "/SoS_Extension/results/" + "Max PIT_PITW.csv");
+                            try {
+                                FileWriter writer = new FileWriter(file2, true);
+                                writer.write(max_ret);
+                                writer.write("\n");
+                                writer.write(max_ret_w);
+                                writer.close();
+                            } catch (Exception e) {
+                                System.out.println(e);
                             }
                         } else {
 
