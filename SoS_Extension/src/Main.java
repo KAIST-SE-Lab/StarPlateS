@@ -275,32 +275,32 @@ public class Main {
             double m_delay = 1;
             int m_len = 9;
 
-            for (int k = 6; k <= 10; k++) {
+            for (int k = 10; k <= 10; k++) {
                 ArrayList<InterplayModel> IMs_batch = new ArrayList<>();
 //
-                File batch_im = new File(base + "/SoS_Extension/results/" + "F1P - HyperparameterAnalysis_Case6_ML" + (k+14) + ".txt");
-                try {
-                    FileWriter writer = new FileWriter(batch_im, true);
-                    String ret = "";
-                    Collections.shuffle(IMs);
-                    for (int i = 0; i < 1000; i++) {
-                        IMs_batch.add(IMs.get(i));
-                        ret += IMs.get(i).getId() + "\n";
-                    }
-                    writer.write(ret);
-                    writer.close();
-                } catch (Exception e) {
-                    System.out.println(e);
-                }
+//                File batch_im = new File(base + "/SoS_Extension/results/" + "F1P - HyperparameterAnalysis_Case6_ML" + (k+14) + ".txt");
+//                try {
+//                    FileWriter writer = new FileWriter(batch_im, true);
+//                    String ret = "";
+//                    Collections.shuffle(IMs);
+//                    for (int i = 0; i < 1000; i++) {
+//                        IMs_batch.add(IMs.get(i));
+//                        ret += IMs.get(i).getId() + "\n";
+//                    }
+//                    writer.write(ret);
+//                    writer.close();
+//                } catch (Exception e) {
+//                    System.out.println(e);
+//                }
 
                 OracleGenerator oracleGenerator = new OracleGenerator();
-                oracleGenerator.oracleGeneration(IMs_batch);
-//            oracleGenerator.oracleGeneration(IMs);
+//                oracleGenerator.oracleGeneration(IMs_batch);
+            oracleGenerator.oracleGeneration(IMs);
 //                oracleGenerator.printOracle();
                 oracleGenerator.getOracleCSV();
                 ArrayList<ArrayList<String>> oracle = oracleGenerator.getOracle();
 
-                boolean multiple_cases = true;
+                boolean multiple_cases = false;
                 boolean single_run = false;
 
                 if (isClustering) {
@@ -309,7 +309,7 @@ public class Main {
                         if (!single_run) {
                             // TODO Which Case? -> File Name Change
 //                    File file2 = new File(base + "/SoS_Extension/results/" + "F1P - Base HyperparameterAnalysis_withTime_03_19.csv");
-                            for (int j = 0; j < 20; j++) {
+                            for (int j = 0; j < 30; j++) {
                                 Collections.shuffle(IMs);
                                 for (int i = 0; i < oracle.size(); i++) {
                                     File file2 = new File(base + "/SoS_Extension/results/" + "Single Case Hyperparameter_" + j + "_" + i + ".csv");
