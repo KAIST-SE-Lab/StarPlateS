@@ -275,7 +275,7 @@ public class Main {
             double m_delay = 1;
             int m_len = 9;
 
-            for (int k = 0; k < 5; k++) {
+            for (int k = 5; k <= 10; k++) {
                 ArrayList<InterplayModel> IMs_batch = new ArrayList<>();
 //
                 File batch_im = new File(base + "/SoS_Extension/results/" + "F1P - HyperparameterAnalysis_Base" + (k+20) + ".txt");

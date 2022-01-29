@@ -1998,8 +1998,8 @@ public class Clustering {
             matched_id = -1;
             for(int i = 0; i < centroidLCS.size(); i++) {
                 if (matched.get(i) != 1) {
-//                  ArrayList<Message> lcs = LCSExtractorWithDelay(id_pattern.getMsgSequence(), centroidLCS.get(i), delay_threshold);
-                    ArrayList<Message> lcs = LCSExtractorWithoutDelay(id_pattern.getMsgSequence(), centroidLCS.get(i));
+                  ArrayList<Message> lcs = LCSExtractorWithDelay(id_pattern.getMsgSequence(), centroidLCS.get(i), delay_threshold);
+//                    ArrayList<Message> lcs = LCSExtractorWithoutDelay(id_pattern.getMsgSequence(), centroidLCS.get(i));
                     if (lcs == null) continue;
                     if (max_len < lcs.size()) {
                         matched_id = i;
@@ -2034,8 +2034,8 @@ public class Clustering {
             matched_id = -1;
             for(int i = 0; i < centroidLCS.size(); i++) {
                 if (matched.get(i) != 1) {
-//                  lcs = LCSExtractorWithDelay(id_pattern.getMsgSequence(), centroidLCS.get(i), delay_threshold);
-                    lcs = LCSExtractorWithoutDelay(id_pattern.getMsgSequence(), centroidLCS.get(i));
+                  lcs = LCSExtractorWithDelay(id_pattern.getMsgSequence(), centroidLCS.get(i), delay_threshold);
+//                    lcs = LCSExtractorWithoutDelay(id_pattern.getMsgSequence(), centroidLCS.get(i));
                     if (lcs == null) continue;
                     if (max_len < lcs.size()) {
                         matched_id = i;
