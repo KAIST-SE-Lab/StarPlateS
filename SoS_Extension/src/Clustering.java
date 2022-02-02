@@ -1650,7 +1650,7 @@ public class Clustering {
         return ret;
     }
 
-    public void codeLocalizer(String base, String filepath, int file_flag) {
+    public void codeLocalizer(String base, String filepath) {
         File pltSource = new File(base + filepath);
         BufferedReader reader = null;
         ArrayList<String> source = new ArrayList<>();
@@ -1665,47 +1665,19 @@ public class Clustering {
         } catch (Exception e) {
             System.out.println(e);
         }
-        if(file_flag == 0) {// File reading
-            try {
-                File pltConfig = new File("./SoS_Extension/logs/generatedPatterns.txt");
-                FileReader filereader = new FileReader(pltConfig);
-                BufferedReader bufReader = new BufferedReader(filereader);
-                String line = "";
-                StringTokenizer stringTokenizer;
-                ArrayList<Message> msgSequence = new ArrayList<>();
-                centroidLCS.clear();
 
-                while ((line = bufReader.readLine()) != null) {
-                    stringTokenizer = new StringTokenizer(line, " ");
-                    Message msg = new Message();
-                    if (stringTokenizer.countTokens() == 3) {
-                        if (msgSequence.size() != 0) {
-                            centroidLCS.add((ArrayList) msgSequence.clone());
-                        }
-                        msgSequence = new ArrayList<>();
-                    }
+        int id_p_list[] = {9, 10, 11, 0, 1, 2, 3, 4, 5, 6, 7, 8};
 
-                    if (stringTokenizer.countTokens() != 7) continue;
-                    stringTokenizer.nextToken();
-                    stringTokenizer.nextToken();
-                    msg.commandSent = stringTokenizer.nextToken();
-                    msgSequence.add(msg);
-                }
-            } catch (Exception e) {
-                System.out.println(e);
-            }
-        }
-
-        File file2 = new File(base + "/SoS_Extension/results/" + "CodeScopeReductionRate_bestOption.csv");
+//        File file2 = new File(base + "/SoS_Extension/results/" + "CodeScopeReductionRate_bestOption.csv");
         try {
-            FileWriter writer = new FileWriter(file2);
-            writer.write("Cluster/IM, Code Inspection Scope, Reduction Rate\n");
+//            FileWriter writer = new FileWriter(file2);
+//            writer.write("Cluster/IM, Code Inspection Scope, Reduction Rate\n");
             int flag = 0; // 0 : normal, 1 : first time in log
-            for(int i = 0; i < this.centroidLCS.size(); i++) {
+            for(int i = 0; i < id_patterns.size(); i++) {
                 File file3 = new File(base + "/SoS_Extension/results/" + "SuspiciousOrders_" + i + ".csv");
                 HashMap<Integer, Integer> patternScope = new HashMap<>();
-                for(int j = 0; j < this.centroidLCS.get(i).size(); j++) {
-                    String command = this.centroidLCS.get(i).get(j).commandSent;
+                for(int j = 0; j < id_patterns.get(i).getMsgSequence().size(); j++) {
+                    String command = id_patterns.get(i).getMsgSequence().get(j).commandSent;
                     setCodeInspectionScope(source, command, patternScope, flag);
                 }
                 String tempWriter = "";
@@ -1729,7 +1701,7 @@ public class Clustering {
                 writer2.write(tempWriter);
                 writer2.close();
             }
-            writer.close();
+//            writer.close();
         } catch(Exception e) {
             System.out.println(e);
         }
