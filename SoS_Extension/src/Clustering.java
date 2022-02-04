@@ -1142,9 +1142,9 @@ public class Clustering {
             float time_i = -1;
             float time_j = -1;
             for (int i = ret_i.size() - 1, j = ret_j.size() - 1; i >= 0 && j >= 0; i--, j--) {
-                time_i = Float.valueOf(ret_i.get(i).time);
-                time_j = Float.valueOf(ret_j.get(j).time);
-                if (time_i < 25.0 || time_j < 25.0) continue;
+                if (ret_i.get(i).time != null) time_i = Float.valueOf(ret_i.get(i).time);
+                if (ret_j.get(j).time != null) time_j = Float.valueOf(ret_j.get(j).time);
+                if ((time_i != -1 && time_i < 25.0) || (time_j != -1 && time_j < 25.0)) continue;
                 else ret.add(ret_i.get(i));
             }
             return ret;
@@ -1199,9 +1199,9 @@ public class Clustering {
             float time_i = -1;
             float time_j = -1;
             for (int i = ret_i.size() - 1, j = ret_j.size() - 1; i >= 0 && j >= 0; i--, j--) {
-                time_i = Float.valueOf(ret_i.get(i).time);
-                time_j = Float.valueOf(ret_j.get(j).time);
-                if (time_i < 25.0 || time_j < 25.0) continue;
+                if (ret_i.get(i).time != null) time_i = Float.valueOf(ret_i.get(i).time);
+                if (ret_j.get(j).time != null) time_j = Float.valueOf(ret_j.get(j).time);
+                if ((time_i != -1 && time_i < 25.0) || (time_j != -1 && time_j < 25.0)) continue;
                 else ret.add(ret_i.get(i));
             }
             return ret;
@@ -1213,7 +1213,7 @@ public class Clustering {
 
     private boolean compareMessage(Message m_a, Message m_b) {
 
-        if (m_a.time < 25.00 || m_b.time < 25.00) return false;
+        if ((m_a.time != null && m_a.time < 25.00) || (m_b.time != null && m_b.time < 25.00)) return false;
         if (m_a.commandSent.equals(m_b.commandSent) && m_a.senderRole.equals(m_b.senderRole)
                 && m_a.receiverRole.equals(m_b.receiverRole)) return true;
 
@@ -1225,7 +1225,7 @@ public class Clustering {
 
     private boolean compareMessageBase(Message m_a, Message m_b) {
 
-        if (m_a.time < 25.00 || m_b.time < 25.00) return false;
+        if ((m_a.time != null && m_a.time < 25.00) || (m_b.time != null && m_b.time < 25.00)) return false;
 //        if(m_a.commandSent.equals(m_b.commandSent) && m_a.senderRole.equals(m_b.senderRole)
 //                && m_a.receiverRole.equals(m_b.receiverRole)) return true;
 
@@ -2030,20 +2030,24 @@ public class Clustering {
         return retList;
     }
 
-    public double SPADEPatternIdentityCheckerWeight(double delay_threshold, ArrayList<ArrayList<String>> oracle, String f_name) {
+    public ArrayList<Double> SPADEPatternIdentityCheckerWeight(double delay_threshold, ArrayList<ArrayList<String>> oracle, String f_name) {
+        ArrayList<Double> retList = new ArrayList<>();
         double ret = 0;
         ArrayList<Message> sequence = new ArrayList<>();
         ArrayList<ArrayList<Message>> SPADE_lcs = new ArrayList<>();
 
         try {
-            File spade_log = new File("./SoS_Extension/results/" + f_name);
+            File spade_log = new File("./SoS_Extension/results/SPADE/" + f_name);
             FileReader filereader = new FileReader(spade_log);
             BufferedReader bufReader = new BufferedReader(filereader);
             String line = "";
             int count = 0;
 
             while ((line = bufReader.readLine()) != null) {
-                if (count % 2 != 0) continue;
+                if (count % 2 != 0) {
+                    count++;
+                    continue;
+                }
                 String messages[] = line.split("/");
                 for (String message : messages) {
                     String items[] = message.split("-");
@@ -2077,7 +2081,7 @@ public class Clustering {
             matched_id = -1;
             for(int i = 0; i < SPADE_lcs.size(); i++) {
                 if (matched.get(i) != 1) {
-                    lcs = LCSExtractorWithoutDelay(id_pattern.getMsgSequence(), SPADE_lcs.get(i));
+                    lcs = LCSExtractorWithoutDelayBase(id_pattern.getMsgSequence(), SPADE_lcs.get(i));
                     if (lcs == null) continue;
                     if (max_len < lcs.size()) {
                         matched_id = i;
@@ -2090,11 +2094,16 @@ public class Clustering {
                 }
             }
             if (matched_id != -1) matched.set(matched_id, 1); // NO LCS generated at all
-            if (max_len != -1) ret += ((double)max_len / (double)id_pattern.getMsgSequence().size());
+            if (max_len != -1) {
+                ret += ((double)max_len / (double)id_pattern.getMsgSequence().size());
+                retList.add((double) max_len / (double) id_pattern.getMsgSequence().size());
+            } else {
+                retList.add((double)-1);
+            }
             id_p_index++;
         }
-
-        return ret;
+        retList.add(ret);
+        return retList;
     }
 
     public void SingleCasePatternMining(InterplayModel im_trace, double delay_threshold, double lcs_min_len_threshold) {

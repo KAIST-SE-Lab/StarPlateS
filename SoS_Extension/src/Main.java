@@ -275,33 +275,33 @@ public class Main {
             double m_delay = 1;
             int m_len = 9;
 
-            for (int k = 8; k < 10; k++) {
+            for (int k = 0; k < 1; k++) {
                 ArrayList<InterplayModel> IMs_batch = new ArrayList<>();
 //
-                File batch_im = new File(base + "/SoS_Extension/results/" + "F1P - HyperparameterAnalysis_Case6_ML_" + (k+20) + ".txt");
-                try {
-                    FileWriter writer = new FileWriter(batch_im, true);
-                    String ret = "";
-                    Collections.shuffle(IMs);
-                    for (int i = 0; i < 1000; i++) {
-                        IMs_batch.add(IMs.get(i));
-                        ret += IMs.get(i).getId() + "\n";
-                    }
-                    writer.write(ret);
-                    writer.close();
-                } catch (Exception e) {
-                    System.out.println(e);
-                }
+//                File batch_im = new File(base + "/SoS_Extension/results/" + "F1P - HyperparameterAnalysis_Case6_ML_" + (k+20) + ".txt");
+//                try {
+//                    FileWriter writer = new FileWriter(batch_im, true);
+//                    String ret = "";
+//                    Collections.shuffle(IMs);
+//                    for (int i = 0; i < 1000; i++) {
+//                        IMs_batch.add(IMs.get(i));
+//                        ret += IMs.get(i).getId() + "\n";
+//                    }
+//                    writer.write(ret);
+//                    writer.close();
+//                } catch (Exception e) {
+//                    System.out.println(e);
+//                }
 
                 OracleGenerator oracleGenerator = new OracleGenerator();
-                oracleGenerator.oracleGeneration(IMs_batch);
-//            oracleGenerator.oracleGeneration(IMs);
+//                oracleGenerator.oracleGeneration(IMs_batch);
+            oracleGenerator.oracleGeneration(IMs);
 //                oracleGenerator.printOracle();
                 oracleGenerator.getOracleCSV();
                 ArrayList<ArrayList<String>> oracle = oracleGenerator.getOracle();
 
-                boolean multiple_cases = true;
-                boolean single_run = false;
+                boolean multiple_cases = false;
+                boolean single_run = true;
 
                 if (isClustering) {
                     if (!multiple_cases) {
@@ -376,7 +376,25 @@ public class Main {
                                 System.out.println(e);
                             }
                         } else {
-
+                            Clustering clustering = new Clustering();
+                            for(int i = 0; i < 21; i++) {
+                                ArrayList<Double> pattern_identity_score_w = clustering.SPADEPatternIdentityCheckerWeight(0.1, oracle, "SPADE_" + i + "_0.75.txt");
+                                String pattern_identity_score_w_print = String.valueOf(pattern_identity_score_w.get(pattern_identity_score_w.size() - 1));
+                                for (int l = 0; l < pattern_identity_score_w.size() - 1; l++) {
+                                    pattern_identity_score_w_print += "," + pattern_identity_score_w.get(l);
+                                }
+                                System.out.println(pattern_identity_score_w_print);
+                                File file2 = new File(base + "/SoS_Extension/results/" + "SPADE_PIT_PITW_0.csv");
+                                try {
+                                    FileWriter writer = new FileWriter(file2, true);
+                                    writer.write(pattern_identity_score_w_print);
+                                    writer.write("\n");
+                                    writer.close();
+                                } catch (Exception e) {
+                                    System.out.println(e);
+                                }
+                                pattern_identity_score_w.clear();
+                            }
                         }
                     } else {
                         // Multiple cases run
@@ -497,7 +515,7 @@ public class Main {
 //                    } catch (Exception e) {
 //                        e.printStackTrace();
 //                    }
-                            clustering.codeLocalizer(base, "/src/nodes/vehicle/05_PlatoonMg.cc", 1); // 0: run by external pattern file, 1: run by using the above clustering results
+                            clustering.codeLocalizer(base, "/src/nodes/vehicle/05_PlatoonMg.cc");
                         }
                     }
                 }
