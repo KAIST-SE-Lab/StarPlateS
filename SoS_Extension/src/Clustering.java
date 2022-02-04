@@ -2023,6 +2023,8 @@ public class Clustering {
             if (max_len != -1) {
                 ret += ((double) max_len / (double) id_pattern.getMsgSequence().size());
                 retList.add((double) max_len / (double) id_pattern.getMsgSequence().size());
+            } else {
+                retList.add(0.0);
             }
             id_p_index++;
         }

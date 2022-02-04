@@ -275,33 +275,33 @@ public class Main {
             double m_delay = 1;
             int m_len = 9;
 
-            for (int k = 0; k < 1; k++) {
+            for (int k = 0; k < 30; k++) {
                 ArrayList<InterplayModel> IMs_batch = new ArrayList<>();
 //
-//                File batch_im = new File(base + "/SoS_Extension/results/" + "F1P - HyperparameterAnalysis_Case6_ML_" + (k+20) + ".txt");
-//                try {
-//                    FileWriter writer = new FileWriter(batch_im, true);
-//                    String ret = "";
-//                    Collections.shuffle(IMs);
-//                    for (int i = 0; i < 1000; i++) {
-//                        IMs_batch.add(IMs.get(i));
-//                        ret += IMs.get(i).getId() + "\n";
-//                    }
-//                    writer.write(ret);
-//                    writer.close();
-//                } catch (Exception e) {
-//                    System.out.println(e);
-//                }
+                File batch_im = new File(base + "/SoS_Extension/results/" + "F1P - HyperparameterAnalysis_Base_" + k + ".txt");
+                try {
+                    FileWriter writer = new FileWriter(batch_im, true);
+                    String ret = "";
+                    Collections.shuffle(IMs);
+                    for (int i = 0; i < 1000; i++) {
+                        IMs_batch.add(IMs.get(i));
+                        ret += IMs.get(i).getId() + "\n";
+                    }
+                    writer.write(ret);
+                    writer.close();
+                } catch (Exception e) {
+                    System.out.println(e);
+                }
 
                 OracleGenerator oracleGenerator = new OracleGenerator();
-//                oracleGenerator.oracleGeneration(IMs_batch);
-            oracleGenerator.oracleGeneration(IMs);
+                oracleGenerator.oracleGeneration(IMs_batch);
+//                oracleGenerator.oracleGeneration(IMs);
 //                oracleGenerator.printOracle();
                 oracleGenerator.getOracleCSV();
                 ArrayList<ArrayList<String>> oracle = oracleGenerator.getOracle();
 
-                boolean multiple_cases = false;
-                boolean single_run = true;
+                boolean multiple_cases = true;
+                boolean single_run = false;
 
                 if (isClustering) {
                     if (!multiple_cases) {
@@ -427,7 +427,7 @@ public class Main {
 //                File folder2 = new File(base + "/SoS_Extension/results/patterns/" + formatter.format(date));
 //                folder2.mkdir();
                         if (!single_run) {
-                            File file2 = new File(base + "/SoS_Extension/results/" + "F1P - HyperparameterAnalysis_Case6_ML_" + (k+20) + ".csv");  // TODO Which Case? -> File Name Change
+                            File file2 = new File(base + "/SoS_Extension/results/" + "F1P - HyperparameterAnalysis_Base_" + k + ".csv");  // TODO Which Case? -> File Name Change
 //                    File file2 = new File(base + "/SoS_Extension/results/" + "F1P - Base HyperparameterAnalysis_withTime_03_19.csv");
                             try {
                                 FileWriter writer = new FileWriter(file2, true);
@@ -445,20 +445,20 @@ public class Main {
 //                                    Collections.shuffle(IMs); // TODO Random Sort
                                             for (InterplayModel im : IMs_batch) {
                                                 // 대조군 Clustering Algorithm
-//                                                clustering.addTraceBaseLCS(im, delay_threshold, lcs_min_len_threshold);
+                                                clustering.addTraceBaseLCS(im, delay_threshold, lcs_min_len_threshold);
 
-                                            clustering.addTraceCase6(im, simlr_threshold, delay_threshold, lcs_min_len_threshold);
+//                                            clustering.addTraceCase6(im, simlr_threshold, delay_threshold, lcs_min_len_threshold);
 
                                                 // For Merging&Finalizing Optimization
 //                                    clustering.addTraceCase6(im, c_simlr, c_delay, c_len);
                                             }
 
                                             // Clustering Merge Optimization
-                                        clustering.ClusterMerge(simlr_threshold, delay_threshold, lcs_min_len_threshold);
+//                                        clustering.ClusterMerge(simlr_threshold, delay_threshold, lcs_min_len_threshold);
 
                                             // Clustering Finalize Optimization
 //                                clustering.ClusterMerge(m_simlr, m_delay, m_len);
-                                        clustering.ClusteringFinalize(simlr_threshold, delay_threshold, lcs_min_len_threshold);
+//                                        clustering.ClusteringFinalize(simlr_threshold, delay_threshold, lcs_min_len_threshold);
 
                                             // Pattern Logging
 //                                    File folder3 = new File(base + "/SoS_Extension/results/patterns/" + formatter.format(date) + "/" + simlr_threshold*100 + "_" + delay_threshold*100 + "_" + lcs_min_len_threshold);
