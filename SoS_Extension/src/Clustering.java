@@ -2106,6 +2106,47 @@ public class Clustering {
         return retList;
     }
 
+    public double LogLinerPatternIdentityCheckerWeight(double delay_threshold, ArrayList<ArrayList<String>> oracle, String f_name, int oracle_index) {
+        double ret = 0;
+        ArrayList<Message> LL_lcs = new ArrayList<>();
+
+        try {
+            File ll_log = new File("./SoS_Extension/results/LogLiner/" + f_name);
+            FileReader filereader = new FileReader(ll_log);
+            BufferedReader bufReader = new BufferedReader(filereader);
+            String line = "";
+
+            while ((line = bufReader.readLine()) != null) {
+                String items[] = line.split("-");
+                Message temp = new Message();
+                temp.commandSent = items[0];
+                temp.senderPltId = items[1];
+                temp.senderRole = items[1];
+                temp.receiverId = items[2];
+                temp.receiverRole = items[2];
+                temp.receiverPltId = items[2];
+                LL_lcs.add(temp);
+            }
+        } catch(Exception e) {
+            System.out.println(e);
+        }
+        ArrayList<Message> lcs = null;
+        int id_p_list[] = {9, 10, 11, 0, 1, 2, 3, 4, 5, 6, 7, 8};
+        int id_p_index = 0;
+//        Collections.shuffle(id_patterns);
+        for (InterplayModel id_pattern : id_patterns) {
+            if(id_p_list[id_p_index] != oracle_index) {
+                id_p_index++;
+                continue;
+            }
+            lcs = LCSExtractorWithoutDelayBase(id_pattern.getMsgSequence(), LL_lcs);
+            if (lcs == null) return 0;
+            ret += ((double)lcs.size() / (double)id_pattern.getMsgSequence().size());
+            id_p_index++;
+        }
+        return ret;
+    }
+
     public void SingleCasePatternMining(InterplayModel im_trace, double delay_threshold, double lcs_min_len_threshold) {
         ArrayList<ArrayList<Message>> generatedLCS = new ArrayList<>();
         int lcs_index;
