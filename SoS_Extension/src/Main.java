@@ -377,23 +377,36 @@ public class Main {
                             }
                         } else {
                             Clustering clustering = new Clustering();
-                            for(int i = 0; i < 21; i++) {
-                                ArrayList<Double> pattern_identity_score_w = clustering.SPADEPatternIdentityCheckerWeight(0.1, oracle, "SPADE_" + i + "_0.75.txt");
-                                String pattern_identity_score_w_print = String.valueOf(pattern_identity_score_w.get(pattern_identity_score_w.size() - 1));
-                                for (int l = 0; l < pattern_identity_score_w.size() - 1; l++) {
-                                    pattern_identity_score_w_print += "," + pattern_identity_score_w.get(l);
-                                }
-                                System.out.println(pattern_identity_score_w_print);
-                                File file2 = new File(base + "/SoS_Extension/results/" + "SPADE_PIT_PITW_0.csv");
-                                try {
-                                    FileWriter writer = new FileWriter(file2, true);
-                                    writer.write(pattern_identity_score_w_print);
-                                    writer.write("\n");
-                                    writer.close();
-                                } catch (Exception e) {
-                                    System.out.println(e);
-                                }
-                                pattern_identity_score_w.clear();
+                            String writer_pattern = "";
+                            for(int i = 0; i < 12; i++) {
+//                                ArrayList<Double> pattern_identity_score_w = clustering.SPADEPatternIdentityCheckerWeight(0.1, oracle, "SPADE_" + i + "_0.75.txt");
+                                double pattern_identity_score_w = clustering.LogLinerPatternIdentityCheckerWeight(0.1, oracle, "LogLiner_0_" + i + ".txt", i);
+//                                String pattern_identity_score_w_print = String.valueOf(pattern_identity_score_w.get(pattern_identity_score_w.size() - 1));
+//                                for (int l = 0; l < pattern_identity_score_w.size() - 1; l++) {
+//                                    pattern_identity_score_w_print += "," + pattern_identity_score_w.get(l);
+//                                }
+//                                System.out.println(pattern_identity_score_w_print);
+                                System.out.println(pattern_identity_score_w);
+                                writer_pattern += pattern_identity_score_w + ",";
+//                                File file2 = new File(base + "/SoS_Extension/results/" + "SPADE_PIT_PITW_0.csv");
+//                                try {
+//                                    FileWriter writer = new FileWriter(file2, true);
+//                                    writer.write(pattern_identity_score_w_print);
+//                                    writer.write(",");
+//                                    writer.close();
+//                                } catch (Exception e) {
+//                                    System.out.println(e);
+//                                }
+//                                pattern_identity_score_w.clear();
+                            }
+                            File file2 = new File(base + "/SoS_Extension/results/" + "LogLiner_PIT_PITW_0.csv");
+                            try {
+                                FileWriter writer = new FileWriter(file2, true);
+//                                    writer.write(pattern_identity_score_w_print);
+                                writer.write(writer_pattern);
+                                writer.close();
+                            } catch (Exception e) {
+                                System.out.println(e);
                             }
                         }
                     } else {
