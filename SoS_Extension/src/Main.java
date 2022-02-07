@@ -275,6 +275,13 @@ public class Main {
             double m_delay = 1;
             int m_len = 9;
 
+            boolean SBFL = true;
+
+            if (SBFL) {
+                Clustering clustering = new Clustering();
+                clustering.codeLocalizerSBFL(base, "/src/nodes/vehicle/05_PlatoonMg.cc", IMs, PIMs);
+            }
+
             for (int k = 0; k < 30; k++) {
                 ArrayList<InterplayModel> IMs_batch = new ArrayList<>();
 //
@@ -296,7 +303,7 @@ public class Main {
                 OracleGenerator oracleGenerator = new OracleGenerator();
                 oracleGenerator.oracleGeneration(IMs_batch);
 //                oracleGenerator.oracleGeneration(IMs);
-//                oracleGenerator.printOracle();
+                oracleGenerator.printOracle();
                 oracleGenerator.getOracleCSV();
                 ArrayList<ArrayList<String>> oracle = oracleGenerator.getOracle();
 
@@ -445,20 +452,20 @@ public class Main {
 //                                    Collections.shuffle(IMs); // TODO Random Sort
                                             for (InterplayModel im : IMs_batch) {
                                                 // 대조군 Clustering Algorithm
-                                                clustering.addTraceBaseLCS(im, delay_threshold, lcs_min_len_threshold);
+//                                                clustering.addTraceBaseLCS(im, delay_threshold, lcs_min_len_threshold);
 
-//                                            clustering.addTraceCase6(im, simlr_threshold, delay_threshold, lcs_min_len_threshold);
+                                            clustering.addTraceCase6(im, simlr_threshold, delay_threshold, lcs_min_len_threshold);
 
                                                 // For Merging&Finalizing Optimization
 //                                    clustering.addTraceCase6(im, c_simlr, c_delay, c_len);
                                             }
 
                                             // Clustering Merge Optimization
-//                                        clustering.ClusterMerge(simlr_threshold, delay_threshold, lcs_min_len_threshold);
+                                        clustering.ClusterMerge(simlr_threshold, delay_threshold, lcs_min_len_threshold);
 
                                             // Clustering Finalize Optimization
 //                                clustering.ClusterMerge(m_simlr, m_delay, m_len);
-//                                        clustering.ClusteringFinalize(simlr_threshold, delay_threshold, lcs_min_len_threshold);
+                                        clustering.ClusteringFinalize(simlr_threshold, delay_threshold, lcs_min_len_threshold);
 
                                             // Pattern Logging
 //                                    File folder3 = new File(base + "/SoS_Extension/results/patterns/" + formatter.format(date) + "/" + simlr_threshold*100 + "_" + delay_threshold*100 + "_" + lcs_min_len_threshold);

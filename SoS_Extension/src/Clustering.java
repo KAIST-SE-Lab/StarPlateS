@@ -1970,8 +1970,8 @@ public class Clustering {
             matched_id = -1;
             for(int i = 0; i < centroidLCS.size(); i++) {
                 if (matched.get(i) != 1) {
-                  ArrayList<Message> lcs = LCSExtractorWithDelay(id_pattern.getMsgSequence(), centroidLCS.get(i), delay_threshold);
-//                    ArrayList<Message> lcs = LCSExtractorWithoutDelay(id_pattern.getMsgSequence(), centroidLCS.get(i));
+//                  ArrayList<Message> lcs = LCSExtractorWithDelay(id_pattern.getMsgSequence(), centroidLCS.get(i), delay_threshold);
+                    ArrayList<Message> lcs = LCSExtractorWithoutDelay(id_pattern.getMsgSequence(), centroidLCS.get(i));
                     if (lcs == null) continue;
                     if (max_len < lcs.size()) {
                         matched_id = i;
@@ -2009,7 +2009,7 @@ public class Clustering {
                   lcs = LCSExtractorWithDelay(id_pattern.getMsgSequence(), centroidLCS.get(i), delay_threshold);
 //                    lcs = LCSExtractorWithoutDelay(id_pattern.getMsgSequence(), centroidLCS.get(i));
                     if (lcs == null) continue;
-                    if (max_len < lcs.size()) {
+                    if (max_len < lcs.size()) { // TODO Check lcs.size() with weights
                         matched_id = i;
                         max_len = lcs.size();
                         for(Message msg : lcs) {
