@@ -278,8 +278,27 @@ public class Main {
             boolean SBFL = true;
 
             if (SBFL) {
+                // Whole log running
                 Clustering clustering = new Clustering();
-                clustering.codeLocalizerSBFL(base, "/src/nodes/vehicle/05_PlatoonMg.cc", IMs, PIMs);
+//                clustering.codeLocalizerSBFL(base, "/src/nodes/vehicle/05_PlatoonMg.cc", IMs, PIMs, 0, 0);
+
+                // Single case running
+                OracleGenerator oracleGenerator = new OracleGenerator();
+                oracleGenerator.oracleGeneration(IMs);
+//                oracleGenerator.printOracle();
+//                oracleGenerator.getOracleCSV();
+                ArrayList<ArrayList<String>> oracle = oracleGenerator.getOracle();
+
+                for(int j = 1; j < 2; j++) {
+                    for (int i = 0; i < oracle.size(); i++) {
+                        ArrayList<InterplayModel> IMs_batch = new ArrayList<>();
+                        for (InterplayModel im : IMs) {
+                            if (oracle.get(i).contains(im.getId())) IMs_batch.add(im);
+                        }
+                        Collections.shuffle(IMs_batch);
+                        clustering.codeLocalizerSBFL(base, "/src/nodes/vehicle/05_PlatoonMg.cc", IMs_batch, PIMs, i, j);
+                    }
+                }
             } else {
                 for (int k = 0; k < 30; k++) {
                     ArrayList<InterplayModel> IMs_batch = new ArrayList<>();

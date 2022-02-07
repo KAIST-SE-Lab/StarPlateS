@@ -1707,7 +1707,7 @@ public class Clustering {
         }
     }
 
-    public void codeLocalizerSBFL(String base, String filepath, ArrayList<InterplayModel> IMs, ArrayList<InterplayModel> PIMs) {
+    public void codeLocalizerSBFL(String base, String filepath, ArrayList<InterplayModel> IMs, ArrayList<InterplayModel> PIMs, int index, int repeat) {
         File pltSource = new File(base + filepath);
         BufferedReader reader = null;
         ArrayList<String> source = new ArrayList<>();
@@ -1782,7 +1782,7 @@ public class Clustering {
             coveredCode.clear();
         }
 
-        File SBFLresult = new File(base + "/SoS_Extension/results/SBFLresults.csv");
+        File SBFLresult = new File(base + "/SoS_Extension/results/SBFLresults_" +index + "_" + repeat + ".csv");
         try {
             FileWriter writer2 = new FileWriter(SBFLresult);
             // TODO Suspicious Calculation Methods
