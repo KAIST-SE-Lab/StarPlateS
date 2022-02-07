@@ -1725,6 +1725,7 @@ public class Clustering {
 
         HashMap<String, ArrayList<Integer>> codescope = new HashMap<>(); // (MessageCommand, Ranges of codes executed)
         HashMap<Integer, ArrayList<Integer>> SBFLTable = new HashMap<>(); // (Line number, ArrayList [passed, failed])
+        ArrayList<Integer> coveredCode = new ArrayList<>();
         // For the failed logs
         for(InterplayModel im : IMs) {
             for (Message message : im.getMsgSequence()) {
@@ -1741,15 +1742,20 @@ public class Clustering {
                         SBFLTable.put(line, new ArrayList<Integer>(Collections.nCopies(2, 0))); // Generate initial SBFL table
                     }
                 }
+
                 ArrayList<Integer> temp = codescope.get(message.commandSent);
                 for (int line : temp) {
-                    ArrayList<Integer> pfcount = SBFLTable.get(line);
-                    pfcount.set(1, pfcount.get(1)+1); // Increase the failed value
+                    if(!coveredCode.contains(line)) { // Dealing with the repetitive marking of spectrum in code
+                        ArrayList<Integer> pfcount = SBFLTable.get(line);
+                        pfcount.set(1, pfcount.get(1) + 1); // Increase the failed value
+                        coveredCode.add(line);
+                    }
                 }
             }
+            coveredCode.clear();
         }
 
-        for (InterplayModel im: PIMs) {
+         for (InterplayModel im: PIMs) {
             for (Message message : im.getMsgSequence()) {
                 if (!codescope.containsKey(message.commandSent)) { // When the message command is observed at the first time,
                     ArrayList<Integer> ranges = setCodeInspectionScope(source, message.commandSent, null, 0);
@@ -1766,13 +1772,17 @@ public class Clustering {
                 }
                 ArrayList<Integer> temp = codescope.get(message.commandSent);
                 for (int line : temp) {
-                    ArrayList<Integer> pfcount = SBFLTable.get(line);
-                    pfcount.set(0, pfcount.get(0)+1); // Increase the passed value
+                    if(!coveredCode.contains(line)) { // Dealing with the repetitive marking of spectrum in code
+                        ArrayList<Integer> pfcount = SBFLTable.get(line);
+                        pfcount.set(0, pfcount.get(0) + 1); // Increase the passed value
+                        coveredCode.add(line);
+                    }
                 }
             }
+            coveredCode.clear();
         }
-        File SBFLresult = new File(base + "/SBFLresults.csv");
 
+        File SBFLresult = new File(base + "/SoS_Extension/results/SBFLresults.csv");
         try {
             FileWriter writer2 = new FileWriter(SBFLresult);
             // TODO Suspicious Calculation Methods
