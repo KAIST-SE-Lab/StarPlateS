@@ -3,6 +3,12 @@ import java.nio.file.Files;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xssf.usermodel.XSSFCell;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+
 public class Main {
 
     public static void main(String[] args) {
@@ -85,74 +91,172 @@ public class Main {
             int[] thresholds2 = {4};                                        // TODO Threshold value for the VP2
             String base = System.getProperty("user.dir");
             System.out.println(System.getProperty("user.dir"));
-            int matchingtxts = 0;
-            String currentdir = base + "/SoS_Extension/logs_full/";
+            String currentdir = base + "/SoS_Extension/logs_full/MCI Sample";
             System.out.print("Current Working Directory : " + currentdir + "\n");
             File f = new File(currentdir);
             Boolean result;
-            matchingtxts = 0;
 
             ArrayList<InterplayModel> IMs = new ArrayList<>();
             ArrayList<InterplayModel> PIMs = new ArrayList<>(); // Passed IMs
 
-            FilenameFilter filter = new FilenameFilter() {
-                public boolean accept(File f, String name) {
-                    return name.contains("plnData");
-                }
-            };
+            File[] folders = f.listFiles();
+            int file_id = 0;
+            for (File folder : folders) {
+                for (File target : folder.listFiles()) {
+                    try(FileInputStream fis = new FileInputStream(target)) {
+                        XSSFWorkbook workbook = new XSSFWorkbook(fis);
 
-            if (BasicVerifierProperty) {
-                if (f.exists()) {
-                    File files[] = f.listFiles(filter);
-                    for (File txtdir : files) {
-                        matchingtxts++;
-                        for (int thshold : thresholds) {
-                            result = verifier.verifyLog(txtdir.getPath(), "operationSuccessRate", thshold);
-                            InterplayModel interplayModel = new InterplayModel(Integer.parseInt(txtdir.getName().split("_")[0]), 0); // TODO r_index = 0 로 설정해놓음
-                            if (!result) {
-                                IMs.add(interplayModel);
-                                // Structure & Interplay model ".txt" file exporting part
-                                /*
-                                StructureModel structureModel = new StructureModel(i,0);
-                                File exportTxt = new File(currentdir + Integer.toString(i) + "_S_I_Model.txt");
-                                FileWriter writerExport = null;
-                                try {
-                                    writerExport = new FileWriter(exportTxt, true);
-                                    writerExport.write(Integer.toString(i) + "\n");
-                                    writerExport.write("Interplay\n");                                              // OpSuccessRate -> I / OpTime -> S
-                                    writerExport.write("Structure Model\n");
-                                    writerExport.write(structureModel.printGraphText());
-                                    writerExport.write("Interplay Model\n");
-                                    writerExport.write(interplayModel.printSequence());
-                                } catch (IOException e) {
-                                    System.out.println(e);
-                                } finally {
-                                    try {
-                                        if (writerExport != null) writerExport.close();
-                                    } catch (IOException e) {
-                                        e.printStackTrace();
-                                    }
-                                }*/
-                            } else {
-                                PIMs.add(interplayModel);
+                        XSSFSheet communication_sheet = workbook.getSheetAt(1);
+                        int num_rows = communication_sheet.getLastRowNum() + 1;
+                        ArrayList<Message> msgSequence = new ArrayList();
+                        for (int id = 2; id <num_rows; id++) {
+                            Row row = communication_sheet.getRow(id);
+
+                            float time = (float)row.getCell(0).getNumericCellValue();
+
+//                            int[] msg_index_list = {1,2,4,5,7,8,10,11,13,14,16,17,19,20}; With Received
+                            int[] msg_index_list = {1,4,7,10,13,16,19}; // Without Received
+                            for (int index : msg_index_list) {
+                                Message msg = new Message();
+                                switch (index) {
+                                    case 1: // FF -> FF Broadcast
+                                        for (int i = 0; i < (int)row.getCell(index).getNumericCellValue(); i++) {
+                                            msg.time = time;
+                                            msg.vehID = "FF";
+                                            msg.commandSent = "MemorySharing";
+                                            msg.receiverId = "FF-Broadcast";
+                                            msg.senderPltId = "FF";
+                                            msg.receiverPltId = "FF-Broadcast";
+                                            msg.senderRole = "FF";
+                                            msg.receiverRole = "FF-Broadcast";
+                                            msgSequence.add(msg);
+                                        }
+                                        break;
+
+                                    case 4: // FF -> Org
+                                        for (int i = 0; i < (int)row.getCell(index).getNumericCellValue(); i++) {
+                                            msg.time = time;
+                                            msg.vehID = "FF";
+                                            msg.commandSent = "Nearest Hospital";
+                                            msg.receiverId = "Org";
+                                            msg.senderPltId = "FF";
+                                            msg.receiverPltId = "Org";
+                                            msg.senderRole = "FF";
+                                            msg.receiverRole = "Org";
+                                            msgSequence.add(msg);
+                                        }
+                                        break;
+
+                                    case 7: // Org -> FF
+                                        for (int i = 0; i < (int)row.getCell(index).getNumericCellValue(); i++) {
+                                            msg.time = time;
+                                            msg.vehID = "Org";
+                                            msg.commandSent = "Nearest Hospital Info";
+                                            msg.receiverId = "FF";
+                                            msg.senderPltId = "Org";
+                                            msg.receiverPltId = "FF";
+                                            msg.senderRole = "Org";
+                                            msg.receiverRole = "FF";
+                                            msgSequence.add(msg);
+                                        }
+                                        break;
+
+                                    case 10: // Amb -> Org
+                                        for (int i = 0; i < (int)row.getCell(index).getNumericCellValue(); i++) {
+                                            msg.time = time;
+                                            msg.vehID = "Amb";
+                                            msg.commandSent = "Free State Start";
+                                            msg.receiverId = "Org";
+                                            msg.senderPltId = "Amb";
+                                            msg.receiverPltId = "Org";
+                                            msg.senderRole = "Amb";
+                                            msg.receiverRole = "Org";
+                                            msgSequence.add(msg);
+                                        }
+                                        break;
+
+                                    case 13: // Org -> Amb
+                                        for (int i = 0; i < (int)row.getCell(index).getNumericCellValue(); i++) {
+                                            msg.time = time;
+                                            msg.vehID = "Org";
+                                            msg.commandSent = "Move to Bridgehead";
+                                            msg.receiverId = "Amb";
+                                            msg.senderPltId = "Org";
+                                            msg.receiverPltId = "Amb";
+                                            msg.senderRole = "Org";
+                                            msg.receiverRole = "Amb";
+                                            msgSequence.add(msg);
+                                        }
+                                        break;
+
+                                    case 16: // Brg -> Org
+                                        for (int i = 0; i < (int)row.getCell(index).getNumericCellValue(); i++) {
+                                            msg.time = time;
+                                            msg.vehID = "Bridge";
+                                            msg.commandSent = "Patient Arrived";
+                                            msg.receiverId = "Bridge";
+                                            msg.senderPltId = "Amb";
+                                            msg.receiverPltId = "Bridge";
+                                            msg.senderRole = "Amb";
+                                            msg.receiverRole = "Bridge";
+                                            msgSequence.add(msg);
+                                        }
+                                        break;
+
+                                    case 19: // Org -> Brg
+                                        for (int i = 0; i < (int)row.getCell(index).getNumericCellValue(); i++) {
+                                            msg.time = time;
+                                            msg.vehID = "Org";
+                                            msg.commandSent = "Not Defined";
+                                            msg.receiverId = "Brg";
+                                            msg.senderPltId = "Org";
+                                            msg.receiverPltId = "Brg";
+                                            msg.senderRole = "Org";
+                                            msg.receiverRole = "Brg";
+                                            msgSequence.add(msg);
+                                        }
+                                        break;
+                                }
                             }
                         }
-//                        for (int thshold2 : thresholds2){
-//                            result = verifier.verifyLog(txtdir, "operationTime", thshold2);
-////                            smbfl.structureModelOverlapping(results, i, 0);
-//                            if (!result) {
-//                                InterplayModel interplayModel = new InterplayModel(i, 0);                       // TODO r_index = 0 로 설정해놓음
-//                                StructureModel structureModel = new StructureModel(i,0);
-////                            clustering.addTrace(interplayModel, simlr_threshold);                                  // TODO Similarity Threshold = 75%
-//                                IMs.add(interplayModel);
+                        InterplayModel interplayModel = new InterplayModel(String.valueOf(file_id++), msgSequence);
+                        if (folder.getPath().contains("Coll")) {
+                            IMs.add(interplayModel);
+                        } else {
+                            PIMs.add(interplayModel);
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        System.out.println(e);
+                    }
+                }
+            }
+
+//            FilenameFilter filter = new FilenameFilter() {
+//                public boolean accept(File f, String name) {
+//                    return name.contains(".xlsx");
+//                }
+//            };
 //
+//            if (BasicVerifierProperty) {
+//                if (f.exists()) {
+//                    File files[] = f.listFiles(filter);
+//                    for (File txtdir : files) {
+//                        matchingtxts++;
+//                        for (int thshold : thresholds) {
+//                            result = verifier.verifyLog(txtdir.getPath(), "operationSuccessRate", thshold);
+//                            InterplayModel interplayModel = new InterplayModel(Integer.parseInt(txtdir.getName().split("_")[0]), 0); // TODO r_index = 0 로 설정해놓음
+//                            if (!result) {
+//                                IMs.add(interplayModel);
 //                                // Structure & Interplay model ".txt" file exporting part
-//                                File exportTxt = new File(currentdir + Integer.toString(i+1512) + "_S_I_Model.txt");
+//                                /*
+//                                StructureModel structureModel = new StructureModel(i,0);
+//                                File exportTxt = new File(currentdir + Integer.toString(i) + "_S_I_Model.txt");
 //                                FileWriter writerExport = null;
 //                                try {
 //                                    writerExport = new FileWriter(exportTxt, true);
 //                                    writerExport.write(Integer.toString(i) + "\n");
-//                                    writerExport.write("Structure\n");                                              // OpSuccessRate -> I / OpTime -> S
+//                                    writerExport.write("Interplay\n");                                              // OpSuccessRate -> I / OpTime -> S
 //                                    writerExport.write("Structure Model\n");
 //                                    writerExport.write(structureModel.printGraphText());
 //                                    writerExport.write("Interplay Model\n");
@@ -165,15 +269,48 @@ public class Main {
 //                                    } catch (IOException e) {
 //                                        e.printStackTrace();
 //                                    }
-//                                }
+//                                }*/
+//                            } else {
+//                                PIMs.add(interplayModel);
 //                            }
 //                        }
-                    }
-                } else {
-                    System.out.println("There is no such directory");
-                }
-                System.out.println("There were " + matchingtxts + " platooning text files");
-            }
+////                        for (int thshold2 : thresholds2){
+////                            result = verifier.verifyLog(txtdir, "operationTime", thshold2);
+//////                            smbfl.structureModelOverlapping(results, i, 0);
+////                            if (!result) {
+////                                InterplayModel interplayModel = new InterplayModel(i, 0);                       // TODO r_index = 0 로 설정해놓음
+////                                StructureModel structureModel = new StructureModel(i,0);
+//////                            clustering.addTrace(interplayModel, simlr_threshold);                                  // TODO Similarity Threshold = 75%
+////                                IMs.add(interplayModel);
+////
+////                                // Structure & Interplay model ".txt" file exporting part
+////                                File exportTxt = new File(currentdir + Integer.toString(i+1512) + "_S_I_Model.txt");
+////                                FileWriter writerExport = null;
+////                                try {
+////                                    writerExport = new FileWriter(exportTxt, true);
+////                                    writerExport.write(Integer.toString(i) + "\n");
+////                                    writerExport.write("Structure\n");                                              // OpSuccessRate -> I / OpTime -> S
+////                                    writerExport.write("Structure Model\n");
+////                                    writerExport.write(structureModel.printGraphText());
+////                                    writerExport.write("Interplay Model\n");
+////                                    writerExport.write(interplayModel.printSequence());
+////                                } catch (IOException e) {
+////                                    System.out.println(e);
+////                                } finally {
+////                                    try {
+////                                        if (writerExport != null) writerExport.close();
+////                                    } catch (IOException e) {
+////                                        e.printStackTrace();
+////                                    }
+////                                }
+////                            }
+////                        }
+//                    }
+//                } else {
+//                    System.out.println("There is no such directory");
+//                }
+//                System.out.println("There were " + matchingtxts + " platooning text files");
+//            }
 
             // TODO Check the input parameter whether distance checker should be processed
             if (DistanceChecker) {

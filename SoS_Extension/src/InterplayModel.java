@@ -25,6 +25,11 @@ public class InterplayModel {
     ArrayList<String> vehRole;
     String id;
 
+    public InterplayModel(String id, ArrayList<Message> msgSequence) {
+        this.msgSequence = msgSequence;
+        this.id = id;
+    }
+
     public InterplayModel(int s_index, int r_index) {
 
         msgSequence = new ArrayList<>();
