@@ -1586,10 +1586,11 @@ public class Clustering {
         startingTime = new ArrayList<>();
         originCluster = new ArrayList<>();
         originCentroidLCS = new ArrayList<>();
-        startingTime.add((float) 25.00);
-        startingTime.add((float) 45.00);
-        startingTime.add((float) 65.00);
-        startingTime.add((float) 85.00);
+        startingTime.add((float) 00.00);
+        startingTime.add((float) 200.00);
+        startingTime.add((float) 400.00);
+        startingTime.add((float) 600.00);
+        startingTime.add((float) 800.00);
     }
 
     public int clusterSize() {
