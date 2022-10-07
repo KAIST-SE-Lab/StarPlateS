@@ -91,7 +91,7 @@ public class Main {
             int[] thresholds2 = {4};                                        // TODO Threshold value for the VP2
             String base = System.getProperty("user.dir");
             System.out.println(System.getProperty("user.dir"));
-            String currentdir = base + "/SoS_Extension/logs_full/MCI Sample";
+            String currentdir = base + "/SoS_Extension/logs_full/MCI Sample/";
             System.out.print("Current Working Directory : " + currentdir + "\n");
             File f = new File(currentdir);
             Boolean result;
@@ -368,172 +368,6 @@ public class Main {
                 }
             }
 
-//            FilenameFilter filter = new FilenameFilter() {
-//                public boolean accept(File f, String name) {
-//                    return name.contains(".xlsx");
-//                }
-//            };
-//
-//            if (BasicVerifierProperty) {
-//                if (f.exists()) {
-//                    File files[] = f.listFiles(filter);
-//                    for (File txtdir : files) {
-//                        matchingtxts++;
-//                        for (int thshold : thresholds) {
-//                            result = verifier.verifyLog(txtdir.getPath(), "operationSuccessRate", thshold);
-//                            InterplayModel interplayModel = new InterplayModel(Integer.parseInt(txtdir.getName().split("_")[0]), 0); // TODO r_index = 0 로 설정해놓음
-//                            if (!result) {
-//                                IMs.add(interplayModel);
-//                                // Structure & Interplay model ".txt" file exporting part
-//                                /*
-//                                StructureModel structureModel = new StructureModel(i,0);
-//                                File exportTxt = new File(currentdir + Integer.toString(i) + "_S_I_Model.txt");
-//                                FileWriter writerExport = null;
-//                                try {
-//                                    writerExport = new FileWriter(exportTxt, true);
-//                                    writerExport.write(Integer.toString(i) + "\n");
-//                                    writerExport.write("Interplay\n");                                              // OpSuccessRate -> I / OpTime -> S
-//                                    writerExport.write("Structure Model\n");
-//                                    writerExport.write(structureModel.printGraphText());
-//                                    writerExport.write("Interplay Model\n");
-//                                    writerExport.write(interplayModel.printSequence());
-//                                } catch (IOException e) {
-//                                    System.out.println(e);
-//                                } finally {
-//                                    try {
-//                                        if (writerExport != null) writerExport.close();
-//                                    } catch (IOException e) {
-//                                        e.printStackTrace();
-//                                    }
-//                                }*/
-//                            } else {
-//                                PIMs.add(interplayModel);
-//                            }
-//                        }
-////                        for (int thshold2 : thresholds2){
-////                            result = verifier.verifyLog(txtdir, "operationTime", thshold2);
-//////                            smbfl.structureModelOverlapping(results, i, 0);
-////                            if (!result) {
-////                                InterplayModel interplayModel = new InterplayModel(i, 0);                       // TODO r_index = 0 로 설정해놓음
-////                                StructureModel structureModel = new StructureModel(i,0);
-//////                            clustering.addTrace(interplayModel, simlr_threshold);                                  // TODO Similarity Threshold = 75%
-////                                IMs.add(interplayModel);
-////
-////                                // Structure & Interplay model ".txt" file exporting part
-////                                File exportTxt = new File(currentdir + Integer.toString(i+1512) + "_S_I_Model.txt");
-////                                FileWriter writerExport = null;
-////                                try {
-////                                    writerExport = new FileWriter(exportTxt, true);
-////                                    writerExport.write(Integer.toString(i) + "\n");
-////                                    writerExport.write("Structure\n");                                              // OpSuccessRate -> I / OpTime -> S
-////                                    writerExport.write("Structure Model\n");
-////                                    writerExport.write(structureModel.printGraphText());
-////                                    writerExport.write("Interplay Model\n");
-////                                    writerExport.write(interplayModel.printSequence());
-////                                } catch (IOException e) {
-////                                    System.out.println(e);
-////                                } finally {
-////                                    try {
-////                                        if (writerExport != null) writerExport.close();
-////                                    } catch (IOException e) {
-////                                        e.printStackTrace();
-////                                    }
-////                                }
-////                            }
-////                        }
-//                    }
-//                } else {
-//                    System.out.println("There is no such directory");
-//                }
-//                System.out.println("There were " + matchingtxts + " platooning text files");
-//            }
-
-            // TODO Check the input parameter whether distance checker should be processed
-            if (DistanceChecker) {
-                if (f.exists()) {
-                    int numoffiles = f.listFiles().length;
-                    System.out.println("and it has " + numoffiles + " files.");
-                    for (int i = 0; i < numoffiles; i++) {
-                        String txtdir_pltConfig = currentdir + Integer.toString(i) + "_0plnConfig.txt";
-                        String txtdir_veh = currentdir + Integer.toString(i) + "_0vehicleData.txt";
-                        File temptxt = new File(txtdir_pltConfig);
-                        File temptxt2 = new File(txtdir_veh);
-                        if (temptxt.exists() && temptxt2.exists()) {
-                            for (int thshold : thresholds) {
-                                result = verifier.verifyLog(txtdir_pltConfig, txtdir_veh, "DistanceChecker", thshold); // TODO first txt file is for platoon data
-                            }
-                        }
-                    }
-                } else {
-                    System.out.println("There is no such directory [" + f.getAbsolutePath() + "]");
-                }
-            }
-
-            if (CollisionChecker) {
-                if (f.exists()) {
-                    int numoffiles = f.listFiles().length;
-                    System.out.println("and it has " + numoffiles + " files.");
-                    for (int i = 0; i < numoffiles; i++) {
-                        String txtdir_console = currentdir + Integer.toString(i) + "_0consoleLog.txt";
-                        String txtdir_vehData = currentdir + Integer.toString(i) + "_0vehicleData.txt";
-                        File temptxt = new File(txtdir_console);
-                        if (temptxt.exists()) {
-                            result = verifier.verifyLog(txtdir_console, txtdir_vehData, "collision");
-                        }
-                    }
-                }
-            }
-            if (isSMBFL) {                                                  // Structure Model-based Fault Localization
-                ArrayList<EdgeInfo> edgeInfos = smbfl.SMcalculateSuspiciousness();
-                StructureModel finalSM = new StructureModel();
-                finalSM.collaborationGraph = smbfl.overlappedG;
-//            finalSM.drawGraph();
-                System.out.println(edgeInfos.size());
-                File file2 = new File(System.getProperty("user.dir") + "/examples/platoon_SoS/results/SBFL_result.csv");
-                FileWriter writer2 = null;
-
-                for (EdgeInfo edgeInfo : edgeInfos) {
-                    System.out.println("name: " + edgeInfo.edge + ",    pass: " + edgeInfo.pass + ",    fail: " + edgeInfo.fail + ",    tarantula: " + edgeInfo.tarantulaM + ", ochiai: " + edgeInfo.ochiaiM + ", op2: " + edgeInfo.op2M + ",   barinel: " + edgeInfo.barinelM + ", dstar: " + edgeInfo.dstarM);
-                    try {
-                        writer2 = new FileWriter(file2, true);
-                        writer2.write(edgeInfo.edge + "," + edgeInfo.pass + "," + edgeInfo.fail + "," + edgeInfo.tarantulaM + "," + edgeInfo.ochiaiM + "," + edgeInfo.op2M + "," + edgeInfo.barinelM + "," + edgeInfo.dstarM + "\n");
-                        writer2.flush();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    } finally {
-                        try {
-                            if (writer2 != null) writer2.close();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }
-                for (NodeInfo nodeInfo : smbfl.nodeInfos) {
-                    System.out.println("name: " + nodeInfo.node + ",    pass: " + nodeInfo.pass + ",    fail: " + nodeInfo.fail);
-                    try {
-                        writer2 = new FileWriter(file2, true);
-                        writer2.write(nodeInfo.node + "," + nodeInfo.pass + "," + nodeInfo.fail + "\n");
-                        writer2.flush();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    } finally {
-                        try {
-                            if (writer2 != null) writer2.close();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }
-            }
-//
-//        if (isBMBFL) {
-//
-//        }
-//
-            if (isIMBFL) {                                                 // Interaction Model-based Fault Localization
-                imbfl.printSuspSequences();
-            }
-
             double simlr_threshold;
             double delay_threshold;
             int lcs_min_len_threshold;
@@ -554,11 +388,11 @@ public class Main {
 
             Clustering clustering = new Clustering();
             clustering.setId_patterns(id_patterns);
-            Collections.shuffle(IMs);
-            for (InterplayModel im : IMs) {
-                clustering.SingleCasePatternMining(im, 5.0, 15);
-            }
-            clustering.printMaxPattern();
+//            Collections.shuffle(IMs);
+//            for (InterplayModel im : IMs) {
+//                clustering.SingleCasePatternMining(im, 5.0, 15);
+//            }
+//            clustering.printMaxPattern();
 
             if (Localization) {
                 // Whole log running
@@ -724,29 +558,12 @@ public class Main {
                             }
                         } else {
                             // Multiple cases run
-
-                            // Generate folders for patterns
-//                    File folder1 = new File(base + "/SoS_Extension/results/patterns");
-//                    if (!folder1.exists()) {
-//                        try {
-//                            folder1.mkdir();
-//                        } catch (Exception e) {
-//                            System.out.println(e);
-//                        }
-//                    }
-//                Date date = new Date();
-//                SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy HH-mm");
-////              System.out.println(formatter.format(date));
-//                File folder2 = new File(base + "/SoS_Extension/results/patterns/" + formatter.format(date));
-//                folder2.mkdir();
                             if (!single_run) {
-                                File file2 = new File(base + "/SoS_Extension/results/" + "F1P - HyperparameterAnalysis_Base_" + k + ".csv");  // TODO Which Case? -> File Name Change
-//                    File file2 = new File(base + "/SoS_Extension/results/" + "F1P - Base HyperparameterAnalysis_withTime_03_19.csv");
+                                File file2 = new File(base + "/SoS_Extension/results/" + "F1P - HyperparameterAnalysis_MCI_Case6_" + k + ".csv");  // TODO Which Case? -> File Name Change
                                 try {
                                     FileWriter writer = new FileWriter(file2, true);
                                     String ret = "";
                                     // The code for Hyperparameter optimization of clustering algorithm
-//                                    Clustering clustering = new Clustering();
                                     for (int simlr_counter = 60; simlr_counter <= 90; simlr_counter++) {
                                         simlr_threshold = (double) simlr_counter / 100;
                                         for (int delay_counter = 50; delay_counter <= 150; delay_counter += 10) {
@@ -755,12 +572,11 @@ public class Main {
 
                                                 long startTime = System.currentTimeMillis();
 
-//                                    Collections.shuffle(IMs); // TODO Random Sort
                                                 for (InterplayModel im : IMs_batch) {
                                                     // 대조군 Clustering Algorithm
-                                                   clustering.addTraceBaseLCS(im, delay_threshold, lcs_min_len_threshold);
+//                                                   clustering.addTraceBaseLCS(im, delay_threshold, lcs_min_len_threshold);
 
-//                                                    clustering.addTraceCase6(im, simlr_threshold, delay_threshold, lcs_min_len_threshold);
+                                                    clustering.addTraceCase6(im, simlr_threshold, delay_threshold, lcs_min_len_threshold);
 
                                                     // For Merging&Finalizing Optimization
 //                                    clustering.addTraceCase6(im, c_simlr, c_delay, c_len);
@@ -781,7 +597,6 @@ public class Main {
                                                 number_of_clusters = clustering.clusterSize();
                                                 // Oracle-based Evaluation Score
                                                 f1p_ev_score = clustering.EvaluateF1P(oracle, oracleGenerator.getIndex()); // 0: F_C_O, 1: F_O_C, 2: Evaluation Score
-//                                evaluation_score = clustering.EvaluateClusteringResult(oracle, oracleGenerator.getIndex());
                                                 ArrayList<Double> pattern_identity_score = clustering.PatternIdentityChecker(delay_threshold, oracle);
 //                                                ArrayList<Double> pattern_identity_score_w = clustering.PatternIdentityCheckerWeight(delay_threshold, oracle);
                                                 String pattern_identity_score_w_print = String.valueOf(pattern_identity_score.get(pattern_identity_score.size() - 1));
@@ -815,7 +630,6 @@ public class Main {
                                 clustering.ClusterMerge(simlr_threshold, delay_threshold, lcs_min_len_threshold);
                                 clustering.ClusteringFinalize(simlr_threshold, delay_threshold, lcs_min_len_threshold);
                                 long endTime = System.currentTimeMillis();
-//                            clustering.printCluster();
                                 clustering.printMaxPattern();
                                 f1p_ev_score = clustering.EvaluateF1P(oracle, oracleGenerator.getIndex());
                                 number_of_clusters = clustering.clusterSize();
