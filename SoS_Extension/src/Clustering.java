@@ -1,9 +1,18 @@
 
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+
 import java.io.*;
 import java.sql.Array;
 import java.util.*;
 import java.io.File;
 import java.io.FileReader;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xssf.usermodel.XSSFCell;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 public class Clustering {
 
@@ -22,18 +31,24 @@ public class Clustering {
         originCluster = new ArrayList<>();
         originCentroidLCS = new ArrayList<>();
         id_patterns = new ArrayList<>();
-        startingTime.add((float) 25.00);
-        startingTime.add((float) 45.00);
-        startingTime.add((float) 65.00);
-        startingTime.add((float) 85.00);
+        startingTime.add((float) 00.00);
+        startingTime.add((float) 200.00);
+        startingTime.add((float) 400.00);
+        startingTime.add((float) 600.00);
+        startingTime.add((float) 800.00);
+
 
         // Get ideal patterns from txt
-        File folder = new File(System.getProperty("user.dir") + "/SoS_Extension/results/Ideal/");
-        File files[] = folder.listFiles();
-        for (File file : files) {
-            InterplayModel interplayModel = new InterplayModel(file);
-            id_patterns.add(interplayModel);
-        }
+//        File folder = new File(System.getProperty("user.dir") + "/SoS_Extension/results/Ideal_MCI/");
+//        File files[] = folder.listFiles();
+//        for (File file : files) {
+//            InterplayModel interplayModel = new InterplayModel(file);
+//            id_patterns.add(interplayModel);
+////        }
+    }
+
+    public void setId_patterns(ArrayList<InterplayModel> id_patterns) {
+        this.id_patterns = id_patterns;
     }
 
     public void addTraceCase1(InterplayModel im_trace, double simlr_threshold, double delay_threshold,
@@ -2200,13 +2215,14 @@ public class Clustering {
             generatedLCS.add(LCSExtractorWithDelay(IMSlicer(startingTime.get(j), im_trace.getMsgSequence()),                  // Starting time에 따라 given IM을 slicing 하여
                     centroidLCS.get(0), delay_threshold));                                                       // 중간에 중요 사건의 sequence가 시작하는 경우의 예외 처리 진행
             if (generatedLCS.get(j) != null) {
-                if(generatedLCS.get(j).size() >= 2 && (generatedLCS.get(j).get(0).time > generatedLCS.get(j).get(1).time))
-                    Collections.reverse(generatedLCS.get(j));
-                if (generatedLCS.get(j).size() >= 2 && (generatedLCS.get(j).get(0).time == generatedLCS.get(j).get(1).time)) {
-                    if(generatedLCS.get(j).size() >= 3 && (generatedLCS.get(j).get(1).time > generatedLCS.get(j).get(2).time)) {
-                        Collections.reverse(generatedLCS.get(j));
-                    }
-                }
+                Collections.reverse(generatedLCS.get(j));
+//                if(generatedLCS.get(j).size() >= 2 && (generatedLCS.get(j).get(0).time > generatedLCS.get(j).get(1).time))
+//                    Collections.reverse(generatedLCS.get(j));
+//                if (generatedLCS.get(j).size() >= 2 && (generatedLCS.get(j).get(0).time == generatedLCS.get(j).get(1).time)) {
+//                    if(generatedLCS.get(j).size() >= 3 && (generatedLCS.get(j).get(1).time > generatedLCS.get(j).get(2).time)) {
+//                        Collections.reverse(generatedLCS.get(j));
+//                    }
+//                }
             }
         }
 

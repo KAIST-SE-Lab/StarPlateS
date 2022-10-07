@@ -98,11 +98,15 @@ public class Main {
 
             ArrayList<InterplayModel> IMs = new ArrayList<>();
             ArrayList<InterplayModel> PIMs = new ArrayList<>(); // Passed IMs
+            ArrayList<ArrayList<String>> oracle = new ArrayList();
+            ArrayList<String> o_index = new ArrayList();
 
             File[] folders = f.listFiles();
             int file_id = 0;
             for (File folder : folders) {
+                ArrayList<String> temp_oracle = new ArrayList();
                 for (File target : folder.listFiles()) {
+                    if (target.toString().contains("$")) continue;
                     try(FileInputStream fis = new FileInputStream(target)) {
                         XSSFWorkbook workbook = new XSSFWorkbook(fis);
 
@@ -119,19 +123,19 @@ public class Main {
                             for (int index : msg_index_list) {
                                 Message msg = new Message();
                                 switch (index) {
-                                    case 1: // FF -> FF Broadcast
-                                        for (int i = 0; i < (int)row.getCell(index).getNumericCellValue(); i++) {
-                                            msg.time = time;
-                                            msg.vehID = "FF";
-                                            msg.commandSent = "MemorySharing";
-                                            msg.receiverId = "FF-Broadcast";
-                                            msg.senderPltId = "FF";
-                                            msg.receiverPltId = "FF-Broadcast";
-                                            msg.senderRole = "FF";
-                                            msg.receiverRole = "FF-Broadcast";
-                                            msgSequence.add(msg);
-                                        }
-                                        break;
+//                                    case 1: // FF -> FF Broadcast
+//                                        for (int i = 0; i < (int)row.getCell(index).getNumericCellValue(); i++) {
+//                                            msg.time = time;
+//                                            msg.vehID = "FF";
+//                                            msg.commandSent = "MemorySharing";
+//                                            msg.receiverId = "FF-Broadcast";
+//                                            msg.senderPltId = "FF";
+//                                            msg.receiverPltId = "FF-Broadcast";
+//                                            msg.senderRole = "FF";
+//                                            msg.receiverRole = "FF-Broadcast";
+//                                            msgSequence.add(msg);
+//                                        }
+//                                        break;
 
                                     case 4: // FF -> Org
                                         for (int i = 0; i < (int)row.getCell(index).getNumericCellValue(); i++) {
@@ -192,13 +196,13 @@ public class Main {
                                     case 16: // Brg -> Org
                                         for (int i = 0; i < (int)row.getCell(index).getNumericCellValue(); i++) {
                                             msg.time = time;
-                                            msg.vehID = "Bridge";
+                                            msg.vehID = "Brg";
                                             msg.commandSent = "Patient Arrived";
-                                            msg.receiverId = "Bridge";
-                                            msg.senderPltId = "Amb";
-                                            msg.receiverPltId = "Bridge";
-                                            msg.senderRole = "Amb";
-                                            msg.receiverRole = "Bridge";
+                                            msg.receiverId = "Org";
+                                            msg.senderPltId = "Brg";
+                                            msg.receiverPltId = "Org";
+                                            msg.senderRole = "Brg";
+                                            msg.receiverRole = "Org";
                                             msgSequence.add(msg);
                                         }
                                         break;
@@ -220,7 +224,10 @@ public class Main {
                             }
                         }
                         InterplayModel interplayModel = new InterplayModel(String.valueOf(file_id++), msgSequence);
-                        if (folder.getPath().contains("Coll")) {
+
+                        if (folder.getPath().contains("coll")) {
+                            temp_oracle.add(String.valueOf(file_id));
+                            o_index.add(String.valueOf(file_id));
                             IMs.add(interplayModel);
                         } else {
                             PIMs.add(interplayModel);
@@ -229,6 +236,135 @@ public class Main {
                         e.printStackTrace();
                         System.out.println(e);
                     }
+                }
+                if (temp_oracle.size() != 0) oracle.add(temp_oracle);
+            }
+            ArrayList<InterplayModel> id_patterns = new ArrayList();
+            File folder = new File(System.getProperty("user.dir") + "/SoS_Extension/results/Ideal_MCI/");
+            File files[] = folder.listFiles();
+            for (File file : files) {
+                if (file.toString().contains("$")) continue;
+                try(FileInputStream fis = new FileInputStream(file)) {
+                    XSSFWorkbook workbook = new XSSFWorkbook(fis);
+
+                    XSSFSheet communication_sheet = workbook.getSheetAt(1);
+                    int num_rows = communication_sheet.getLastRowNum() + 1;
+                    ArrayList<Message> msgSequence = new ArrayList();
+                    for (int id = 2; id <num_rows; id++) {
+                        Row row = communication_sheet.getRow(id);
+
+                        float time = (float)row.getCell(0).getNumericCellValue();
+
+//                            int[] msg_index_list = {1,2,4,5,7,8,10,11,13,14,16,17,19,20}; With Received
+                        int[] msg_index_list = {1,4,7,10,13,16,19}; // Without Received
+                        for (int index : msg_index_list) {
+                            Message msg = new Message();
+                            switch (index) {
+//                                    case 1: // FF -> FF Broadcast
+//                                        for (int i = 0; i < (int)row.getCell(index).getNumericCellValue(); i++) {
+//                                            msg.time = time;
+//                                            msg.vehID = "FF";
+//                                            msg.commandSent = "MemorySharing";
+//                                            msg.receiverId = "FF-Broadcast";
+//                                            msg.senderPltId = "FF";
+//                                            msg.receiverPltId = "FF-Broadcast";
+//                                            msg.senderRole = "FF";
+//                                            msg.receiverRole = "FF-Broadcast";
+//                                            msgSequence.add(msg);
+//                                        }
+//                                        break;
+
+                                case 4: // FF -> Org
+                                    for (int i = 0; i < (int)row.getCell(index).getNumericCellValue(); i++) {
+                                        msg.time = time;
+                                        msg.vehID = "FF";
+                                        msg.commandSent = "Nearest Hospital";
+                                        msg.receiverId = "Org";
+                                        msg.senderPltId = "FF";
+                                        msg.receiverPltId = "Org";
+                                        msg.senderRole = "FF";
+                                        msg.receiverRole = "Org";
+                                        msgSequence.add(msg);
+                                    }
+                                    break;
+
+                                case 7: // Org -> FF
+                                    for (int i = 0; i < (int)row.getCell(index).getNumericCellValue(); i++) {
+                                        msg.time = time;
+                                        msg.vehID = "Org";
+                                        msg.commandSent = "Nearest Hospital Info";
+                                        msg.receiverId = "FF";
+                                        msg.senderPltId = "Org";
+                                        msg.receiverPltId = "FF";
+                                        msg.senderRole = "Org";
+                                        msg.receiverRole = "FF";
+                                        msgSequence.add(msg);
+                                    }
+                                    break;
+
+                                case 10: // Amb -> Org
+                                    for (int i = 0; i < (int)row.getCell(index).getNumericCellValue(); i++) {
+                                        msg.time = time;
+                                        msg.vehID = "Amb";
+                                        msg.commandSent = "Free State Start";
+                                        msg.receiverId = "Org";
+                                        msg.senderPltId = "Amb";
+                                        msg.receiverPltId = "Org";
+                                        msg.senderRole = "Amb";
+                                        msg.receiverRole = "Org";
+                                        msgSequence.add(msg);
+                                    }
+                                    break;
+
+                                case 13: // Org -> Amb
+                                    for (int i = 0; i < (int)row.getCell(index).getNumericCellValue(); i++) {
+                                        msg.time = time;
+                                        msg.vehID = "Org";
+                                        msg.commandSent = "Move to Bridgehead";
+                                        msg.receiverId = "Amb";
+                                        msg.senderPltId = "Org";
+                                        msg.receiverPltId = "Amb";
+                                        msg.senderRole = "Org";
+                                        msg.receiverRole = "Amb";
+                                        msgSequence.add(msg);
+                                    }
+                                    break;
+
+                                case 16: // Brg -> Org
+                                    for (int i = 0; i < (int)row.getCell(index).getNumericCellValue(); i++) {
+                                        msg.time = time;
+                                        msg.vehID = "Brg";
+                                        msg.commandSent = "Patient Arrived";
+                                        msg.receiverId = "Org";
+                                        msg.senderPltId = "Brg";
+                                        msg.receiverPltId = "Org";
+                                        msg.senderRole = "Brg";
+                                        msg.receiverRole = "Org";
+                                        msgSequence.add(msg);
+                                    }
+                                    break;
+
+                                case 19: // Org -> Brg
+                                    for (int i = 0; i < (int)row.getCell(index).getNumericCellValue(); i++) {
+                                        msg.time = time;
+                                        msg.vehID = "Org";
+                                        msg.commandSent = "Not Defined";
+                                        msg.receiverId = "Brg";
+                                        msg.senderPltId = "Org";
+                                        msg.receiverPltId = "Brg";
+                                        msg.senderRole = "Org";
+                                        msg.receiverRole = "Brg";
+                                        msgSequence.add(msg);
+                                    }
+                                    break;
+                            }
+                        }
+                    }
+                    InterplayModel interplayModel = new InterplayModel(String.valueOf(file_id++), msgSequence);
+                    id_patterns.add(interplayModel);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    System.out.println(e);
                 }
             }
 
@@ -412,19 +548,29 @@ public class Main {
             double m_delay = 1;
             int m_len = 9;
 
-            boolean Localization = true;
+            boolean Localization = false;
+
+            OracleGenerator oracleGenerator = new OracleGenerator(oracle, o_index);
+
+            Clustering clustering = new Clustering();
+            clustering.setId_patterns(id_patterns);
+            Collections.shuffle(IMs);
+            for (InterplayModel im : IMs) {
+                clustering.SingleCasePatternMining(im, 5.0, 15);
+            }
+            clustering.printMaxPattern();
 
             if (Localization) {
                 // Whole log running
-                Clustering clustering = new Clustering();
+//                Clustering clustering = new Clustering();
 //                clustering.codeLocalizerSBFL(base, "/src/nodes/vehicle/05_PlatoonMg.cc", IMs, PIMs, 0, 0);
 
                 // Single case running
-                OracleGenerator oracleGenerator = new OracleGenerator();
-                oracleGenerator.oracleGeneration(IMs);
+//                OracleGenerator oracleGenerator = new OracleGenerator();
+//                oracleGenerator.oracleGeneration(IMs);
 //                oracleGenerator.printOracle();
 //                oracleGenerator.getOracleCSV();
-                ArrayList<ArrayList<String>> oracle = oracleGenerator.getOracle();
+//                ArrayList<ArrayList<String>> oracle = oracleGenerator.getOracle();
 
 //                for(int j = 1; j < 2; j++) {
 //                    for (int i = 0; i < oracle.size(); i++) {
@@ -458,12 +604,12 @@ public class Main {
                         System.out.println(e);
                     }
 
-                    OracleGenerator oracleGenerator = new OracleGenerator();
-                    oracleGenerator.oracleGeneration(IMs_batch);
+//                    OracleGenerator oracleGenerator = new OracleGenerator();
+//                    oracleGenerator.oracleGeneration(IMs_batch);
 //                oracleGenerator.oracleGeneration(IMs);
-                    oracleGenerator.printOracle();
-                    oracleGenerator.getOracleCSV();
-                    ArrayList<ArrayList<String>> oracle = oracleGenerator.getOracle();
+//                    oracleGenerator.printOracle();
+//                    oracleGenerator.getOracleCSV();
+//                    ArrayList<ArrayList<String>> oracle = oracleGenerator.getOracle();
 
                     boolean multiple_cases = true;
                     boolean single_run = false;
@@ -486,7 +632,7 @@ public class Main {
                                             FileWriter writer = new FileWriter(file2, true);
                                             String ret = "";
                                             // The code for Hyperparameter optimization of clustering algorithm
-                                            Clustering clustering = new Clustering();
+//                                            Clustering clustering = new Clustering();
                                             for (int delay_counter = 10; delay_counter <= 100; delay_counter += 10) {
                                                 delay_threshold = (double) delay_counter / 100;
                                                 for (lcs_min_len_threshold = 2; lcs_min_len_threshold <= 10; lcs_min_len_threshold++) {
@@ -543,18 +689,18 @@ public class Main {
                                     System.out.println(e);
                                 }
                             } else {
-                                Clustering clustering = new Clustering();
+//                                Clustering clustering = new Clustering();
                                 String writer_pattern = "";
-                                for (int i = 0; i < 12; i++) {
+//                                for (int i = 0; i < 12; i++) {
 //                                ArrayList<Double> pattern_identity_score_w = clustering.SPADEPatternIdentityCheckerWeight(0.1, oracle, "SPADE_" + i + "_0.75.txt");
-                                    double pattern_identity_score_w = clustering.LogLinerPatternIdentityCheckerWeight(0.1, oracle, "LogLiner_0_" + i + ".txt", i);
+//                                    double pattern_identity_score_w = clustering.LogLinerPatternIdentityCheckerWeight(0.1, oracle, "LogLiner_0_" + i + ".txt", i);
 //                                String pattern_identity_score_w_print = String.valueOf(pattern_identity_score_w.get(pattern_identity_score_w.size() - 1));
 //                                for (int l = 0; l < pattern_identity_score_w.size() - 1; l++) {
 //                                    pattern_identity_score_w_print += "," + pattern_identity_score_w.get(l);
 //                                }
 //                                System.out.println(pattern_identity_score_w_print);
-                                    System.out.println(pattern_identity_score_w);
-                                    writer_pattern += pattern_identity_score_w + ",";
+//                                    System.out.println(pattern_identity_score_w);
+//                                    writer_pattern += pattern_identity_score_w + ",";
 //                                File file2 = new File(base + "/SoS_Extension/results/" + "SPADE_PIT_PITW_0.csv");
 //                                try {
 //                                    FileWriter writer = new FileWriter(file2, true);
@@ -565,7 +711,7 @@ public class Main {
 //                                    System.out.println(e);
 //                                }
 //                                pattern_identity_score_w.clear();
-                                }
+//                                }
                                 File file2 = new File(base + "/SoS_Extension/results/" + "LogLiner_PIT_PITW_0.csv");
                                 try {
                                     FileWriter writer = new FileWriter(file2, true);
@@ -600,7 +746,7 @@ public class Main {
                                     FileWriter writer = new FileWriter(file2, true);
                                     String ret = "";
                                     // The code for Hyperparameter optimization of clustering algorithm
-                                    Clustering clustering = new Clustering();
+//                                    Clustering clustering = new Clustering();
                                     for (int simlr_counter = 60; simlr_counter <= 90; simlr_counter++) {
                                         simlr_threshold = (double) simlr_counter / 100;
                                         for (int delay_counter = 10; delay_counter <= 100; delay_counter += 10) {
@@ -656,7 +802,7 @@ public class Main {
                                 }
                             } // Single run with an optimized Hyperparameter setting
                             else {
-                                Clustering clustering = new Clustering();
+//                                Clustering clustering = new Clustering();
                                 simlr_threshold = 0.6;
                                 delay_threshold = 0.9;
                                 lcs_min_len_threshold = 3;

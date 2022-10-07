@@ -25,6 +25,11 @@ public class OracleGenerator {
         IM_index = new ArrayList<>();
     }
 
+    public OracleGenerator(ArrayList<ArrayList<String>> oracle, ArrayList<String> index) {
+        this.oracle = oracle;
+        this.IM_index = index;
+    }
+
     public void oracleGeneration(ArrayList<InterplayModel> IMs) {
         ArrayList<Message> Msgs = null;
         ArrayList<Integer> time_to_check = new ArrayList<>();
