@@ -426,17 +426,17 @@ public class Main {
                 for (int k = 0; k < 30; k++) {
                     ArrayList<InterplayModel> IMs_batch = new ArrayList<>();
 //
-                    File batch_im = new File(base + "/SoS_Extension/results/" + "F1P - HyperparameterAnalysis_Base_" + k + ".txt");
+//                    File batch_im = new File(base + "/SoS_Extension/results/" + "F1P - HyperparameterAnalysis_Base_" + k + ".txt");
                     try {
-                        FileWriter writer = new FileWriter(batch_im, true);
-                        String ret = "";
+//                        FileWriter writer = new FileWriter(batch_im, true);
+//                        String ret = "";
                         Collections.shuffle(IMs);
                         for (int i = 0; i < 1000; i++) {
                             IMs_batch.add(IMs.get(i));
-                            ret += IMs.get(i).getId() + "\n";
+//                            ret += IMs.get(i).getId() + "\n";
                         }
-                        writer.write(ret);
-                        writer.close();
+//                        writer.write(ret);
+//                        writer.close();
                     } catch (Exception e) {
                         System.out.println(e);
                     }
