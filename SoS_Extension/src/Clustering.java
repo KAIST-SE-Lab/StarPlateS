@@ -1978,7 +1978,8 @@ public class Clustering {
         }
     }
 
-    public double PatternIdentityChecker(double delay_threshold, ArrayList<ArrayList<String>> oracle) {
+    public ArrayList<Double> PatternIdentityChecker(double delay_threshold, ArrayList<ArrayList<String>> oracle) {
+        ArrayList<Double> retList = new ArrayList<>();
         double ret = 0;
 
         ArrayList<Integer> matched = new ArrayList<>();
@@ -1986,11 +1987,11 @@ public class Clustering {
         int matched_id = -1;
         for(int i = 0; i < centroidLCS.size(); i++) matched.add(-1);
 
-        int id_p_list[] = {9, 10, 11, 0, 1, 2, 3, 4, 5, 6, 7, 8};
-        int id_p_index = 0;
+//        int id_p_list[] = {9, 10, 11, 0, 1, 2, 3, 4, 5, 6, 7, 8};
+//        int id_p_index = 0;
 //        Collections.shuffle(id_patterns);
         for (InterplayModel id_pattern : id_patterns) {
-            if(oracle.get(id_p_list[id_p_index]).size() == 0) continue;
+//            if(oracle.get(id_p_list[id_p_index]).size() == 0) continue;
             max_len = -1;
             matched_id = -1;
             for(int i = 0; i < centroidLCS.size(); i++) {
@@ -2007,10 +2008,11 @@ public class Clustering {
             }
             if (matched_id != -1) matched.set(matched_id, 1);
             if (max_len != -1) ret += ((double)max_len / (double)id_pattern.getMsgSequence().size());
-            id_p_index++;
+//            id_p_index++;
+            retList.add(ret);
         }
 
-        return ret;
+        return retList;
     }
 
     public ArrayList<Double> PatternIdentityCheckerWeight(double delay_threshold, ArrayList<ArrayList<String>> oracle) {
@@ -2022,11 +2024,11 @@ public class Clustering {
         int matched_id = -1;
         ArrayList<Message> lcs = null;
         for(int i = 0; i < centroidLCS.size(); i++) matched.add(-1);
-        int id_p_list[] = {9, 10, 11, 0, 1, 2, 3, 4, 5, 6, 7, 8};
-        int id_p_index = 0;
+//        int id_p_list[] = {9, 10, 11, 0, 1, 2, 3, 4, 5, 6, 7, 8};
+//        int id_p_index = 0;
 //        Collections.shuffle(id_patterns);
         for (InterplayModel id_pattern : id_patterns) {
-            if(oracle.get(id_p_list[id_p_index]).size() == 0) continue;
+//            if(oracle.get(id_p_list[id_p_index]).size() == 0) continue;
             max_len = -1;
             matched_id = -1;
             for(int i = 0; i < centroidLCS.size(); i++) {
@@ -2051,7 +2053,7 @@ public class Clustering {
             } else {
                 retList.add(0.0);
             }
-            id_p_index++;
+//            id_p_index++;
         }
         retList.add(ret);
         return retList;
