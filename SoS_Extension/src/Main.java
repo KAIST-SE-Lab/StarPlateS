@@ -570,7 +570,7 @@ public class Main {
                                     FileWriter writer = new FileWriter(file2, true);
                                     String ret = "";
                                     // The code for Hyperparameter optimization of clustering algorithm
-                                    for (int simlr_counter = 70; simlr_counter <= 99; simlr_counter++) {
+                                    for (int simlr_counter = 65; simlr_counter <= 99; simlr_counter++) {
                                         simlr_threshold = (double) simlr_counter / 100;
                                         for (int delay_counter = 50; delay_counter <= 100; delay_counter += 10) {
                                             delay_threshold = (double) delay_counter / 10;
