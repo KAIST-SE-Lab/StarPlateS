@@ -486,13 +486,14 @@ public class Clustering {
                     generatedLCS.add(LCSExtractorWithoutDelay(centroidLCS.get(i), //cluster.get(i).get(0).getMsgSequence()
                             IMSlicer(startingTime.get(j), im_trace.getMsgSequence())));
                     if (generatedLCS.get(j) != null) {
-                        if(generatedLCS.get(j).size() >= 2 && (generatedLCS.get(j).get(0).time > generatedLCS.get(j).get(1).time))
-                            Collections.reverse(generatedLCS.get(j));
-                        if (generatedLCS.get(j).size() >= 2 && (generatedLCS.get(j).get(0).time == generatedLCS.get(j).get(1).time)) {
-                            if(generatedLCS.get(j).size() >= 3 && (generatedLCS.get(j).get(1).time > generatedLCS.get(j).get(2).time)) {
-                                Collections.reverse(generatedLCS.get(j));
-                            }
-                        }
+                        Collections.reverse(generatedLCS.get(j));
+//                        if(generatedLCS.get(j).size() >= 2 && (generatedLCS.get(j).get(0).time > generatedLCS.get(j).get(1).time))
+//                            Collections.reverse(generatedLCS.get(j));
+//                        if (generatedLCS.get(j).size() >= 2 && (generatedLCS.get(j).get(0).time == generatedLCS.get(j).get(1).time)) {
+//                            if(generatedLCS.get(j).size() >= 3 && (generatedLCS.get(j).get(1).time > generatedLCS.get(j).get(2).time)) {
+//                                Collections.reverse(generatedLCS.get(j));
+//                            }
+//                        }
                     }
                 }
 
@@ -541,13 +542,14 @@ public class Clustering {
                     generatedLCS.add(LCSExtractorWithDelay(IMSlicer(startingTime.get(j), im_trace.getMsgSequence()),                  // Starting time에 따라 given IM을 slicing 하여
                             centroidLCS.get(i), delay_threshold));                                                       // 중간에 중요 사건의 sequence가 시작하는 경우의 예외 처리 진행
                     if (generatedLCS.get(j) != null) {
-                        if(generatedLCS.get(j).size() >= 2 && (generatedLCS.get(j).get(0).time > generatedLCS.get(j).get(1).time))
-                            Collections.reverse(generatedLCS.get(j));
-                        else if (generatedLCS.get(j).size() >= 2 && (generatedLCS.get(j).get(0).time == generatedLCS.get(j).get(1).time)) {
-                            if(generatedLCS.get(j).size() >= 3 && (generatedLCS.get(j).get(1).time > generatedLCS.get(j).get(2).time)) {
-                                Collections.reverse(generatedLCS.get(j));
-                            }
-                        }
+                        Collections.reverse(generatedLCS.get(j));
+//                        if(generatedLCS.get(j).size() >= 2 && (generatedLCS.get(j).get(0).time > generatedLCS.get(j).get(1).time))
+//                            Collections.reverse(generatedLCS.get(j));
+//                        if (generatedLCS.get(j).size() >= 2 && (generatedLCS.get(j).get(0).time == generatedLCS.get(j).get(1).time)) {
+//                            if(generatedLCS.get(j).size() >= 3 && (generatedLCS.get(j).get(1).time > generatedLCS.get(j).get(2).time)) {
+//                                Collections.reverse(generatedLCS.get(j));
+//                            }
+//                        }
                     }
                 }
 
@@ -1095,15 +1097,8 @@ public class Clustering {
 
                 }
             }
-            // To remove commonly happened events in the beginning of the simulations
-            // E.g. Split operation of platoons with size larger than the opt_size
-            float time_i = -1;
-            float time_j = -1;
             for (int i = ret_i.size() - 1, j = ret_j.size() - 1; i >= 0 && j >= 0; i--, j--) {
-                time_i = Float.valueOf(ret_i.get(i).time);
-                time_j = Float.valueOf(ret_j.get(j).time);
-                if (time_i < 25.0 || time_j < 25.0) continue;
-                else ret.add(ret_i.get(i));
+                ret.add(ret_i.get(i));
             }
             return ret;
         } else { // No shorter LCS exists
@@ -1152,15 +1147,8 @@ public class Clustering {
 
                 }
             }
-            // To remove commonly happened events in the beginning of the simulations
-            // E.g. Split operation of platoons with size larger than the opt_size
-            float time_i = -1;
-            float time_j = -1;
             for (int i = ret_i.size() - 1, j = ret_j.size() - 1; i >= 0 && j >= 0; i--, j--) {
-                if (ret_i.get(i).time != null) time_i = Float.valueOf(ret_i.get(i).time);
-                if (ret_j.get(j).time != null) time_j = Float.valueOf(ret_j.get(j).time);
-                if ((time_i != -1 && time_i < 25.0) || (time_j != -1 && time_j < 25.0)) continue;
-                else ret.add(ret_i.get(i));
+                ret.add(ret_i.get(i));
             }
             return ret;
         } else { // No shorter LCS exists
@@ -1209,15 +1197,8 @@ public class Clustering {
 
                 }
             }
-            // To remove commonly happened events in the beginning of the simulations
-            // E.g. Split operation of platoons with size larger than the opt_size
-            float time_i = -1;
-            float time_j = -1;
             for (int i = ret_i.size() - 1, j = ret_j.size() - 1; i >= 0 && j >= 0; i--, j--) {
-                if (ret_i.get(i).time != null) time_i = Float.valueOf(ret_i.get(i).time);
-                if (ret_j.get(j).time != null) time_j = Float.valueOf(ret_j.get(j).time);
-                if ((time_i != -1 && time_i < 25.0) || (time_j != -1 && time_j < 25.0)) continue;
-                else ret.add(ret_i.get(i));
+                ret.add(ret_i.get(i));
             }
             return ret;
         } else { // No shorter LCS exists
@@ -1228,7 +1209,7 @@ public class Clustering {
 
     private boolean compareMessage(Message m_a, Message m_b) {
 
-        if ((m_a.time != null && m_a.time < 25.00) || (m_b.time != null && m_b.time < 25.00)) return false;
+//        if ((m_a.time != null && m_a.time < 25.00) || (m_b.time != null && m_b.time < 25.00)) return false;
         if (m_a.commandSent.equals(m_b.commandSent) && m_a.senderRole.equals(m_b.senderRole)
                 && m_a.receiverRole.equals(m_b.receiverRole)) return true;
 
@@ -1981,11 +1962,7 @@ public class Clustering {
     public ArrayList<Double> PatternIdentityChecker(double delay_threshold, ArrayList<ArrayList<String>> oracle) {
         ArrayList<Double> retList = new ArrayList<>();
         double ret = 0;
-
-        ArrayList<Integer> matched = new ArrayList<>();
         int max_len = -1;
-        int matched_id = -1;
-        for(int i = 0; i < centroidLCS.size(); i++) matched.add(-1);
 
 //        int id_p_list[] = {9, 10, 11, 0, 1, 2, 3, 4, 5, 6, 7, 8};
 //        int id_p_index = 0;
@@ -1993,20 +1970,15 @@ public class Clustering {
         for (InterplayModel id_pattern : id_patterns) {
 //            if(oracle.get(id_p_list[id_p_index]).size() == 0) continue;
             max_len = -1;
-            matched_id = -1;
             for(int i = 0; i < centroidLCS.size(); i++) {
-                if (matched.get(i) != 1) {
 //                  ArrayList<Message> lcs = LCSExtractorWithDelay(id_pattern.getMsgSequence(), centroidLCS.get(i), delay_threshold);
                     ArrayList<Message> lcs = LCSExtractorWithoutDelay(id_pattern.getMsgSequence(), centroidLCS.get(i));
                     if (lcs == null) continue;
                     if (max_len < lcs.size()) {
-                        matched_id = i;
                         max_len = lcs.size();
                     }
                     lcs.clear();
-                }
             }
-            if (matched_id != -1) matched.set(matched_id, 1);
             if (max_len != -1) ret += ((double)max_len / (double)id_pattern.getMsgSequence().size());
 //            id_p_index++;
             retList.add(ret);

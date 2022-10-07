@@ -223,7 +223,7 @@ public class Main {
                                 }
                             }
                         }
-                        InterplayModel interplayModel = new InterplayModel(String.valueOf(file_id++), msgSequence);
+                        InterplayModel interplayModel = new InterplayModel(String.valueOf(file_id), msgSequence);
 
                         if (folder.getPath().contains("coll")) {
                             temp_oracle.add(String.valueOf(file_id));
@@ -232,6 +232,7 @@ public class Main {
                         } else {
                             PIMs.add(interplayModel);
                         }
+                        file_id++;
                     } catch (IOException e) {
                         e.printStackTrace();
                         System.out.println(e);
@@ -239,6 +240,8 @@ public class Main {
                 }
                 if (temp_oracle.size() != 0) oracle.add(temp_oracle);
             }
+
+            file_id = 0;
             ArrayList<InterplayModel> id_patterns = new ArrayList();
             File folder = new File(System.getProperty("user.dir") + "/SoS_Extension/results/Ideal_MCI/");
             File files[] = folder.listFiles();
@@ -583,11 +586,11 @@ public class Main {
                                                 }
 
                                                 // Clustering Merge Optimization
-                                                clustering.ClusterMerge(simlr_threshold, delay_threshold, lcs_min_len_threshold);
+//                                                clustering.ClusterMerge(simlr_threshold, delay_threshold, lcs_min_len_threshold);
 
                                                 // Clustering Finalize Optimization
 //                                clustering.ClusterMerge(m_simlr, m_delay, m_len);
-                                                clustering.ClusteringFinalize(simlr_threshold, delay_threshold, lcs_min_len_threshold);
+//                                                clustering.ClusteringFinalize(simlr_threshold, delay_threshold, lcs_min_len_threshold);
 
                                                 // Pattern Logging
 //                                    File folder3 = new File(base + "/SoS_Extension/results/patterns/" + formatter.format(date) + "/" + simlr_threshold*100 + "_" + delay_threshold*100 + "_" + lcs_min_len_threshold);
@@ -603,7 +606,7 @@ public class Main {
                                                 for (int l = 0; l < pattern_identity_score.size() - 1; l++) {
                                                     pattern_identity_score_w_print += "," + pattern_identity_score.get(l);
                                                 }
-                                                System.out.println(simlr_threshold + ", " + delay_threshold + ", " + lcs_min_len_threshold + "," + " Clustering Evaluation Score: " + f1p_ev_score.get(2) + ", F_C_O: " + f1p_ev_score.get(0) + ", F_O_C: " + f1p_ev_score.get(1) + ", Cluster Size: " + number_of_clusters + ", PIT value: " + pattern_identity_score + ", PITW value: " + pattern_identity_score_w_print + ", Time(ms): " + (endTime - startTime));
+                                                System.out.println(simlr_threshold + ", " + delay_threshold + ", " + lcs_min_len_threshold + "," + " Clustering Evaluation Score: " + f1p_ev_score.get(2) + ", F_C_O: " + f1p_ev_score.get(0) + ", F_O_C: " + f1p_ev_score.get(1) + ", Cluster Size: " + number_of_clusters + ", PIT value: " + pattern_identity_score_w_print + ", Time(ms): " + (endTime - startTime));
                                                 ret += simlr_threshold + "," + delay_threshold + "," + lcs_min_len_threshold + "," + f1p_ev_score.get(2) + "," + f1p_ev_score.get(0) + "," + f1p_ev_score.get(1) + "," + number_of_clusters + "," + pattern_identity_score + "," + pattern_identity_score_w_print + "," + (endTime - startTime) + "\n";
 
                                                 clustering.clusterClear();
@@ -639,7 +642,7 @@ public class Main {
                                 for (int l = 0; l < pattern_identity_score.size() - 1; l++) {
                                     pattern_identity_score_w_print += "," + pattern_identity_score.get(l);
                                 }
-                                System.out.println(simlr_threshold + ", " + delay_threshold + ", " + lcs_min_len_threshold + "," + " Clustering Evaluation Score: " + f1p_ev_score.get(2) + ", F_C_O: " + f1p_ev_score.get(0) + ", F_O_C: " + f1p_ev_score.get(1) + ", Cluster Size: " + number_of_clusters + ", PIT value: " + pattern_identity_score + ", PITW value: " + pattern_identity_score_w_print + ", Time(ms): " + (endTime - startTime));
+                                System.out.println(simlr_threshold + ", " + delay_threshold + ", " + lcs_min_len_threshold + "," + " Clustering Evaluation Score: " + f1p_ev_score.get(2) + ", F_C_O: " + f1p_ev_score.get(0) + ", F_O_C: " + f1p_ev_score.get(1) + ", Cluster Size: " + number_of_clusters + ", PIT value: " + pattern_identity_score_w_print + ", Time(ms): " + (endTime - startTime));
 
 //                    ArrayList<Double> simWithPassed;
 //                    simWithPassed = clustering.patternSimilarityChecker(PIMs, delay_threshold);
