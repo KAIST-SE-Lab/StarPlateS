@@ -968,13 +968,14 @@ public class Clustering {
                         generatedLCS.add(LCSExtractorWithDelay(centroidLCS.get(j),
                                 IMSlicer(startingTime.get(k), IM.getMsgSequence()), delay_threshold));
                         if (generatedLCS.get(k) != null) {
-                            if(generatedLCS.get(k).size() >= 2 && (generatedLCS.get(k).get(0).time > generatedLCS.get(k).get(1).time))
-                                Collections.reverse(generatedLCS.get(k));
-                            if (generatedLCS.get(k).size() >= 2 && (generatedLCS.get(k).get(0).time == generatedLCS.get(k).get(1).time)) {
-                                if(generatedLCS.get(k).size() >= 3 && (generatedLCS.get(k).get(1).time > generatedLCS.get(k).get(2).time)) {
-                                    Collections.reverse(generatedLCS.get(k));
-                                }
-                            }
+                            Collections.reverse(generatedLCS.get(k));
+//                            if(generatedLCS.get(k).size() >= 2 && (generatedLCS.get(k).get(0).time > generatedLCS.get(k).get(1).time))
+//                                Collections.reverse(generatedLCS.get(k));
+//                            if (generatedLCS.get(k).size() >= 2 && (generatedLCS.get(k).get(0).time == generatedLCS.get(k).get(1).time)) {
+//                                if(generatedLCS.get(k).size() >= 3 && (generatedLCS.get(k).get(1).time > generatedLCS.get(k).get(2).time)) {
+//                                    Collections.reverse(generatedLCS.get(k));
+//                                }
+//                            }
                         }
                     }
 
@@ -1980,7 +1981,7 @@ public class Clustering {
                     }
                     lcs.clear();
             }
-            if (max_len != -1) ret += ((double)max_len / (double)id_pattern.getMsgSequence().size());
+            if (max_len != -1) ret = ((double)max_len / (double)id_pattern.getMsgSequence().size());
 //            id_p_index++;
             retList.add(ret);
         }

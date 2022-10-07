@@ -166,7 +166,10 @@ public class Main {
                                         break;
 
                                     case 10: // Amb -> Org
-                                        for (int i = 0; i < (int)row.getCell(index).getNumericCellValue(); i++) {
+                                        if (folder.getPath().contains("coll1") || folder.getPath().contains("coll2") || folder.getPath().contains("coll3")) {
+                                            if ((int)row.getCell(index).getNumericCellValue() > 5) break;
+                                        }
+                                            for (int i = 0; i < (int)row.getCell(index).getNumericCellValue(); i++) {
                                             msg.time = time;
                                             msg.vehID = "Amb";
                                             msg.commandSent = "Free State Start";
@@ -499,7 +502,7 @@ public class Main {
                                                     if (max_PITW < pattern_identity_score_w)
                                                         max_PITW = pattern_identity_score_w;
                                                     System.out.println(delay_threshold + ", " + lcs_min_len_threshold + "," + " Clustering Evaluation Score: " + f1p_ev_score.get(2) + ", F_C_O: " + f1p_ev_score.get(0) + ", F_O_C: " + f1p_ev_score.get(1) + ", Cluster Size: " + number_of_clusters + ", PIT value: " + pattern_identity_score + ", PITW value: " + pattern_identity_score_w + ", Time(ms): " + (endTime - startTime));
-                                                    ret += delay_threshold + "," + lcs_min_len_threshold + "," + f1p_ev_score.get(2) + "," + f1p_ev_score.get(0) + "," + f1p_ev_score.get(1) + "," + number_of_clusters + "," + pattern_identity_score + "," + pattern_identity_score_w + ", Time(ms): ," + (endTime - startTime) + "\n";
+                                                    ret += delay_threshold + "," + lcs_min_len_threshold + "," + f1p_ev_score.get(2) + "," + f1p_ev_score.get(0) + "," + f1p_ev_score.get(1) + "," + number_of_clusters + "," + pattern_identity_score_w + ", Time(ms): ," + (endTime - startTime) + "\n";
 
                                                     clustering.clusterClear();
                                                 }
@@ -567,11 +570,11 @@ public class Main {
                                     FileWriter writer = new FileWriter(file2, true);
                                     String ret = "";
                                     // The code for Hyperparameter optimization of clustering algorithm
-                                    for (int simlr_counter = 75; simlr_counter <= 90; simlr_counter++) {
+                                    for (int simlr_counter = 80; simlr_counter <= 99; simlr_counter++) {
                                         simlr_threshold = (double) simlr_counter / 100;
                                         for (int delay_counter = 50; delay_counter <= 100; delay_counter += 10) {
                                             delay_threshold = (double) delay_counter / 10;
-                                            for (lcs_min_len_threshold = 5; lcs_min_len_threshold <= 15; lcs_min_len_threshold++) {
+                                            for (lcs_min_len_threshold = 10; lcs_min_len_threshold <= 15; lcs_min_len_threshold++) {
 
                                                 long startTime = System.currentTimeMillis();
 
@@ -586,7 +589,7 @@ public class Main {
                                                 }
 
                                                 // Clustering Merge Optimization
-                                                clustering.ClusterMerge(simlr_threshold, delay_threshold, lcs_min_len_threshold);
+//                                                clustering.ClusterMerge(simlr_threshold, delay_threshold, lcs_min_len_threshold);
 
                                                 // Clustering Finalize Optimization
 //                                clustering.ClusterMerge(m_simlr, m_delay, m_len);
@@ -607,7 +610,7 @@ public class Main {
                                                     pattern_identity_score_w_print += "," + pattern_identity_score.get(l);
                                                 }
                                                 System.out.println(simlr_threshold + ", " + delay_threshold + ", " + lcs_min_len_threshold + "," + " Clustering Evaluation Score: " + f1p_ev_score.get(2) + ", F_C_O: " + f1p_ev_score.get(0) + ", F_O_C: " + f1p_ev_score.get(1) + ", Cluster Size: " + number_of_clusters + ", PIT value: " + pattern_identity_score_w_print + ", Time(ms): " + (endTime - startTime));
-                                                ret += simlr_threshold + "," + delay_threshold + "," + lcs_min_len_threshold + "," + f1p_ev_score.get(2) + "," + f1p_ev_score.get(0) + "," + f1p_ev_score.get(1) + "," + number_of_clusters + "," + pattern_identity_score + "," + pattern_identity_score_w_print + "," + (endTime - startTime) + "\n";
+                                                ret += simlr_threshold + "," + delay_threshold + "," + lcs_min_len_threshold + "," + f1p_ev_score.get(2) + "," + f1p_ev_score.get(0) + "," + f1p_ev_score.get(1) + "," + number_of_clusters + "," + pattern_identity_score_w_print + "," + (endTime - startTime) + "\n";
 
                                                 clustering.clusterClear();
                                             }
