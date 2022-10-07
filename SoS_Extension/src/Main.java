@@ -570,7 +570,7 @@ public class Main {
                                     FileWriter writer = new FileWriter(file2, true);
                                     String ret = "";
                                     // The code for Hyperparameter optimization of clustering algorithm
-                                    for (int simlr_counter = 80; simlr_counter <= 99; simlr_counter++) {
+                                    for (int simlr_counter = 70; simlr_counter <= 99; simlr_counter++) {
                                         simlr_threshold = (double) simlr_counter / 100;
                                         for (int delay_counter = 50; delay_counter <= 100; delay_counter += 10) {
                                             delay_threshold = (double) delay_counter / 10;
@@ -593,7 +593,7 @@ public class Main {
 
                                                 // Clustering Finalize Optimization
 //                                clustering.ClusterMerge(m_simlr, m_delay, m_len);
-                                                clustering.ClusteringFinalize(simlr_threshold, delay_threshold, lcs_min_len_threshold);
+//                                                clustering.ClusteringFinalize(simlr_threshold, delay_threshold, lcs_min_len_threshold);
 
                                                 // Pattern Logging
 //                                    File folder3 = new File(base + "/SoS_Extension/results/patterns/" + formatter.format(date) + "/" + simlr_threshold*100 + "_" + delay_threshold*100 + "_" + lcs_min_len_threshold);
@@ -606,9 +606,12 @@ public class Main {
                                                 ArrayList<Double> pattern_identity_score = clustering.PatternIdentityChecker(delay_threshold, oracle);
 //                                                ArrayList<Double> pattern_identity_score_w = clustering.PatternIdentityCheckerWeight(delay_threshold, oracle);
                                                 String pattern_identity_score_w_print = String.valueOf(pattern_identity_score.get(pattern_identity_score.size() - 1));
+                                                double temp_val = 0;
                                                 for (int l = 0; l < pattern_identity_score.size() - 1; l++) {
                                                     pattern_identity_score_w_print += "," + pattern_identity_score.get(l);
+                                                    temp_val += pattern_identity_score.get(l);
                                                 }
+                                                pattern_identity_score_w_print += "," + String.valueOf(temp_val /pattern_identity_score.size());
                                                 System.out.println(simlr_threshold + ", " + delay_threshold + ", " + lcs_min_len_threshold + "," + " Clustering Evaluation Score: " + f1p_ev_score.get(2) + ", F_C_O: " + f1p_ev_score.get(0) + ", F_O_C: " + f1p_ev_score.get(1) + ", Cluster Size: " + number_of_clusters + ", PIT value: " + pattern_identity_score_w_print + ", Time(ms): " + (endTime - startTime));
                                                 ret += simlr_threshold + "," + delay_threshold + "," + lcs_min_len_threshold + "," + f1p_ev_score.get(2) + "," + f1p_ev_score.get(0) + "," + f1p_ev_score.get(1) + "," + number_of_clusters + "," + pattern_identity_score_w_print + "," + (endTime - startTime) + "\n";
 
