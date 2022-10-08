@@ -601,15 +601,15 @@ public class Clustering {
 
         for (int i = 0; i < cluster.size(); i++) {
             generatedLCS = LCSExtractorWithoutDelayBase(centroidLCS.get(i), im_trace.getMsgSequence());      // Cluster에 1개의 IM만 존재할때는 해당 IM 과의 LCS가 존재하는지
-            if (generatedLCS != null) {
-                if(generatedLCS.size() >= 2 && (generatedLCS.get(0).time > generatedLCS.get(1).time))
-                    Collections.reverse(generatedLCS);
-                if (generatedLCS.size() >= 2 && (generatedLCS.get(0).time == generatedLCS.get(1).time)) {
-                    if(generatedLCS.size() >= 3 && (generatedLCS.get(1).time > generatedLCS.get(2).time)) {
-                        Collections.reverse(generatedLCS);
-                    }
-                }
-            }
+//            if (generatedLCS != null) {
+//                if(generatedLCS.size() >= 2 && (generatedLCS.get(0).time > generatedLCS.get(1).time))
+//                    Collections.reverse(generatedLCS);
+//                if (generatedLCS.size() >= 2 && (generatedLCS.get(0).time == generatedLCS.get(1).time)) {
+//                    if(generatedLCS.size() >= 3 && (generatedLCS.get(1).time > generatedLCS.get(2).time)) {
+//                        Collections.reverse(generatedLCS);
+//                    }
+//                }
+//            }
             if (generatedLCS != null && generatedLCS.size() > lcs_min_len_threshold) {                               // 여부를 이용하여 해당 Cluster에 포함가능한지를 확인함
                 cluster.get(i).add(im_trace);
                 Collections.reverse(generatedLCS);
@@ -623,12 +623,13 @@ public class Clustering {
             cluster.add(new ArrayList<>());
             centroidLCS.add(new ArrayList<>());
             cluster.get(cluster.size() - 1).add(im_trace);
+            centroidLCS.set(centroidLCS.size()-1, im_trace.getMsgSequence());
             return;
         }
 
-        for (int i = 0; i < cluster.size(); i++) {
-            LCSRedundancyAnalyzer(i, 5); // TODO Threshold: the number of repetition of the same sync messages threshold
-        }
+//        for (int i = 0; i < cluster.size(); i++) {
+//            LCSRedundancyAnalyzer(i, 5); // TODO Threshold: the number of repetition of the same sync messages threshold
+//        }
     }
 
     public void addTraceClusterNoise(InterplayModel im_trace, double delay_threshold, int lcs_min_len_threshold) {
@@ -1222,7 +1223,7 @@ public class Clustering {
 
     private boolean compareMessageBase(Message m_a, Message m_b) {
 
-        if ((m_a.time != null && m_a.time < 25.00) || (m_b.time != null && m_b.time < 25.00)) return false;
+//        if ((m_a.time != null && m_a.time < 25.00) || (m_b.time != null && m_b.time < 25.00)) return false;
 //        if(m_a.commandSent.equals(m_b.commandSent) && m_a.senderRole.equals(m_b.senderRole)
 //                && m_a.receiverRole.equals(m_b.receiverRole)) return true;
 

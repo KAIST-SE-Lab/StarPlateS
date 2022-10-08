@@ -565,7 +565,7 @@ public class Main {
                         } else {
                             // Multiple cases run
                             if (!single_run) {
-                                File file2 = new File(base + "/SoS_Extension/results/" + "F1P - HyperparameterAnalysis_MCI_Case6_" + k + ".csv");  // TODO Which Case? -> File Name Change
+                                File file2 = new File(base + "/SoS_Extension/results/" + "F1P - HyperparameterAnalysis_MCI_Base_" + k + ".csv");  // TODO Which Case? -> File Name Change
                                 try {
                                     FileWriter writer = new FileWriter(file2, true);
                                     String ret = "";
@@ -580,9 +580,9 @@ public class Main {
 
                                                 for (InterplayModel im : IMs_batch) {
                                                     // 대조군 Clustering Algorithm
-//                                                   clustering.addTraceBaseLCS(im, delay_threshold, lcs_min_len_threshold);
+                                                   clustering.addTraceBaseLCS(im, delay_threshold, lcs_min_len_threshold);
 
-                                                    clustering.addTraceCase6(im, simlr_threshold, delay_threshold, lcs_min_len_threshold);
+//                                                    clustering.addTraceCase6(im, simlr_threshold, delay_threshold, lcs_min_len_threshold);
 
                                                     // For Merging&Finalizing Optimization
 //                                    clustering.addTraceCase6(im, c_simlr, c_delay, c_len);
@@ -593,7 +593,7 @@ public class Main {
 
                                                 // Clustering Finalize Optimization
 //                                clustering.ClusterMerge(m_simlr, m_delay, m_len);
-                                                clustering.ClusteringFinalize(simlr_threshold, delay_threshold, lcs_min_len_threshold);
+//                                                clustering.ClusteringFinalize(simlr_threshold, delay_threshold, lcs_min_len_threshold);
 
                                                 // Pattern Logging
 //                                    File folder3 = new File(base + "/SoS_Extension/results/patterns/" + formatter.format(date) + "/" + simlr_threshold*100 + "_" + delay_threshold*100 + "_" + lcs_min_len_threshold);
