@@ -451,7 +451,7 @@ public class Main {
 //                    oracleGenerator.getOracleCSV();
 //                    ArrayList<ArrayList<String>> oracle = oracleGenerator.getOracle();
 
-                    boolean multiple_cases = true;
+                    boolean multiple_cases = false;
                     boolean single_run = false;
 
                     if (isClustering) {
@@ -467,15 +467,15 @@ public class Main {
                                     for (int i = 0; i < oracle.size(); i++) {
                                         double max_PIT = 0;
                                         double max_PITW = 0;
-                                        File file2 = new File(base + "/SoS_Extension/results/" + "Single Case Hyperparameter_" + j + "_" + i + ".csv");
+                                        File file2 = new File(base + "/SoS_Extension/results/" + "Single Case Hyperparameter_" + i + "_" + j + ".csv");
                                         try {
                                             FileWriter writer = new FileWriter(file2, true);
                                             String ret = "";
                                             // The code for Hyperparameter optimization of clustering algorithm
 //                                            Clustering clustering = new Clustering();
-                                            for (int delay_counter = 10; delay_counter <= 100; delay_counter += 10) {
-                                                delay_threshold = (double) delay_counter / 100;
-                                                for (lcs_min_len_threshold = 2; lcs_min_len_threshold <= 10; lcs_min_len_threshold++) {
+                                            for (int delay_counter = 50; delay_counter <= 100; delay_counter += 10) {
+                                                delay_threshold = (double) delay_counter / 10;
+                                                for (lcs_min_len_threshold = 5; lcs_min_len_threshold <= 15; lcs_min_len_threshold++) {
 
                                                     long startTime = System.currentTimeMillis();
 
@@ -495,14 +495,14 @@ public class Main {
                                                     // Oracle-based Evaluation Score
                                                     f1p_ev_score = clustering.EvaluateF1P(oracle, oracleGenerator.getIndex()); // 0: F_C_O, 1: F_O_C, 2: Evaluation Score
 //                                evaluation_score = clustering.EvaluateClusteringResult(oracle, oracleGenerator.getIndex());
-                                                    double pattern_identity_score = clustering.PatternIdentityCheckerSingleCase(delay_threshold, oracle, i);
-                                                    double pattern_identity_score_w = clustering.PatternIdentityCheckerWeightSingleCase(delay_threshold, oracle, i);
+                                                    double pattern_identity_score = clustering.PatternIdentityCheckerSingleCase(delay_threshold, i);
+//                                                    double pattern_identity_score_w = clustering.PatternIdentityCheckerWeightSingleCase(delay_threshold, oracle, i);
                                                     if (max_PIT < pattern_identity_score)
                                                         max_PIT = pattern_identity_score;
-                                                    if (max_PITW < pattern_identity_score_w)
-                                                        max_PITW = pattern_identity_score_w;
-                                                    System.out.println(delay_threshold + ", " + lcs_min_len_threshold + "," + " Clustering Evaluation Score: " + f1p_ev_score.get(2) + ", F_C_O: " + f1p_ev_score.get(0) + ", F_O_C: " + f1p_ev_score.get(1) + ", Cluster Size: " + number_of_clusters + ", PIT value: " + pattern_identity_score + ", PITW value: " + pattern_identity_score_w + ", Time(ms): " + (endTime - startTime));
-                                                    ret += delay_threshold + "," + lcs_min_len_threshold + "," + f1p_ev_score.get(2) + "," + f1p_ev_score.get(0) + "," + f1p_ev_score.get(1) + "," + number_of_clusters + "," + pattern_identity_score_w + ", Time(ms): ," + (endTime - startTime) + "\n";
+//                                                    if (max_PITW < pattern_identity_score_w)
+//                                                        max_PITW = pattern_identity_score_w;
+                                                    System.out.println(delay_threshold + ", " + lcs_min_len_threshold + "," + " Clustering Evaluation Score: " + f1p_ev_score.get(2) + ", F_C_O: " + f1p_ev_score.get(0) + ", F_O_C: " + f1p_ev_score.get(1) + ", Cluster Size: " + number_of_clusters + ", PIT value: " + pattern_identity_score + ", Time(ms): " + (endTime - startTime));
+                                                    ret += delay_threshold + "," + lcs_min_len_threshold + "," + f1p_ev_score.get(2) + "," + f1p_ev_score.get(0) + "," + f1p_ev_score.get(1) + "," + number_of_clusters + "," + pattern_identity_score + ", Time(ms): ," + (endTime - startTime) + "\n";
 
                                                     clustering.clusterClear();
                                                 }
