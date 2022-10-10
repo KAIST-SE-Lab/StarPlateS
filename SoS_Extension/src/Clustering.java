@@ -2191,8 +2191,8 @@ public class Clustering {
 //                }
                                 // Cluster에 1개의 IM만 존재할때는 해당 IM 과의 LCS가 존재하는지 여부를 이용하여 해당 Cluster에 포함가능한지를 확인함
         for (int j = 0; j < startingTime.size(); j++) {
-            generatedLCS.add(LCSExtractorWithDelay(IMSlicer(startingTime.get(j), im_trace.getMsgSequence()),                  // Starting time에 따라 given IM을 slicing 하여
-                    centroidLCS.get(0), delay_threshold));                                                       // 중간에 중요 사건의 sequence가 시작하는 경우의 예외 처리 진행
+            generatedLCS.add(LCSExtractorWithoutDelay(IMSlicer(startingTime.get(j), im_trace.getMsgSequence()),                  // Starting time에 따라 given IM을 slicing 하여
+                    centroidLCS.get(0)));                                                       // 중간에 중요 사건의 sequence가 시작하는 경우의 예외 처리 진행
             if (generatedLCS.get(j) != null) {
                 Collections.reverse(generatedLCS.get(j));
 //                if(generatedLCS.get(j).size() >= 2 && (generatedLCS.get(j).get(0).time > generatedLCS.get(j).get(1).time))
@@ -2228,27 +2228,29 @@ public class Clustering {
         }
     }
 
-    public double PatternIdentityCheckerSingleCase(double delay_threshold, ArrayList<ArrayList<String>> oracle, int oracle_index) {
+    public double PatternIdentityCheckerSingleCase(double delay_threshold, int oracle_index) {
         double ret = 0;
+//        ArrayList<Double> retList = new ArrayList();
 
-        ArrayList<Integer> matched = new ArrayList<>();
-        int max_len = -1;
-        int matched_id = -1;
+//        ArrayList<Integer> matched = new ArrayList<>();
+//        int max_len = -1;
+//        int matched_id = -1;
 
-        int id_p_list[] = {9, 10, 11, 0, 1, 2, 3, 4, 5, 6, 7, 8};
-        int id_p_index = 0;
+//        int id_p_list[] = {9, 10, 11, 0, 1, 2, 3, 4, 5, 6, 7, 8};
+//        int id_p_index = 0;
 //        Collections.shuffle(id_patterns);
-        for (InterplayModel id_pattern : id_patterns) {
-            if(id_p_list[id_p_index] != oracle_index) {
-                id_p_index++;
-                continue;
-            }
-            ArrayList<Message> lcs = LCSExtractorWithDelay(id_pattern.getMsgSequence(), centroidLCS.get(0), delay_threshold);
+//        for (InterplayModel id_pattern : id_patterns) {
+//            if(id_p_list[id_p_index] != oracle_index) {
+//                id_p_index++;
+//                continue;
+//            }
+        InterplayModel id_pattern = id_patterns.get(oracle_index);
+        ArrayList<Message> lcs = LCSExtractorWithoutDelay(id_pattern.getMsgSequence(), centroidLCS.get(0));
 //            ArrayList<Message> lcs = LCSExtractorWithoutDelayBase(id_pattern.getMsgSequence(), centroidLCS.get(0));
-            if (lcs == null) return 0;
-            ret += ((double)lcs.size() / (double)id_pattern.getMsgSequence().size());
-            id_p_index++;
-        }
+        if (lcs == null) return 0;
+        ret = ((double)lcs.size() / (double)id_pattern.getMsgSequence().size());
+//            id_p_index++;
+//        }
 
         return ret;
     }
