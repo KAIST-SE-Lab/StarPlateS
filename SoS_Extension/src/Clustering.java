@@ -627,9 +627,9 @@ public class Clustering {
             return;
         }
 
-//        for (int i = 0; i < cluster.size(); i++) {
-//            LCSRedundancyAnalyzer(i, 5); // TODO Threshold: the number of repetition of the same sync messages threshold
-//        }
+        for (int i = 0; i < cluster.size(); i++) {
+            LCSRedundancyAnalyzer(i, 5); // TODO Threshold: the number of repetition of the same sync messages threshold
+        }
     }
 
     public void addTraceClusterNoise(InterplayModel im_trace, double delay_threshold, int lcs_min_len_threshold) {
@@ -2076,16 +2076,17 @@ public class Clustering {
         int matched_id = -1;
         ArrayList<Message> lcs = null;
         for(int i = 0; i < SPADE_lcs.size(); i++) matched.add(-1);
-        int id_p_list[] = {9, 10, 11, 0, 1, 2, 3, 4, 5, 6, 7, 8};
-        int id_p_index = 0;
+//        int id_p_list[] = {9, 10, 11, 0, 1, 2, 3, 4, 5, 6, 7, 8};
+//        int id_p_index = 0;
 //        Collections.shuffle(id_patterns);
         for (InterplayModel id_pattern : id_patterns) {
-            if(oracle.get(id_p_list[id_p_index]).size() == 0) continue;
+//            if(oracle.get(id_p_list[id_p_index]).size() == 0) continue;
             max_len = -1;
             matched_id = -1;
             for(int i = 0; i < SPADE_lcs.size(); i++) {
                 if (matched.get(i) != 1) {
                     lcs = LCSExtractorWithoutDelayBase(id_pattern.getMsgSequence(), SPADE_lcs.get(i));
+//                    lcs = LCSExtractorWithDelay(id_pattern.getMsgSequence(), SPADE_lcs.get(i), delay_threshold);
                     if (lcs == null) continue;
                     if (max_len < lcs.size()) {
                         matched_id = i;
@@ -2104,9 +2105,9 @@ public class Clustering {
             } else {
                 retList.add((double)-1);
             }
-            id_p_index++;
+//            id_p_index++;
         }
-        retList.add(ret);
+        retList.add(ret/(double)id_patterns.size());
         return retList;
     }
 
@@ -2135,19 +2136,20 @@ public class Clustering {
             System.out.println(e);
         }
         ArrayList<Message> lcs = null;
-        int id_p_list[] = {9, 10, 11, 0, 1, 2, 3, 4, 5, 6, 7, 8};
-        int id_p_index = 0;
+//        int id_p_list[] = {9, 10, 11, 0, 1, 2, 3, 4, 5, 6, 7, 8};
+//        int id_p_index = 0;
 //        Collections.shuffle(id_patterns);
-        for (InterplayModel id_pattern : id_patterns) {
-            if(id_p_list[id_p_index] != oracle_index) {
-                id_p_index++;
-                continue;
-            }
-            lcs = LCSExtractorWithoutDelayBase(id_pattern.getMsgSequence(), LL_lcs);
-            if (lcs == null) return 0;
-            ret += ((double)lcs.size() / (double)id_pattern.getMsgSequence().size());
-            id_p_index++;
-        }
+//        for (InterplayModel id_pattern : id_patterns) {
+//            if(id_p_list[id_p_index] != oracle_index) {
+//                id_p_index++;
+//                continue;
+//            }
+        InterplayModel id_pattern = id_patterns.get(oracle_index);
+        lcs = LCSExtractorWithoutDelayBase(id_pattern.getMsgSequence(), LL_lcs);
+        if (lcs == null) return 0;
+        ret += ((double)lcs.size() / (double)id_pattern.getMsgSequence().size());
+//            id_p_index++;
+//        }
         return ret;
     }
 
