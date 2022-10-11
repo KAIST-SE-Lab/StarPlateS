@@ -1930,6 +1930,170 @@ public class Clustering {
         return Math.pow((double)Failed,2) / ((double)Passed + (double)totalFailed - (double)Failed);
     }
 
+    public void codeLocalizerMCISeqOverlap(String base, String coverageBasePath, String patternPath) {
+        HashMap<String, ArrayList<String>> coverageBase = new HashMap<>();
+        ArrayList<String> coverage = new ArrayList();
+        String key = "";
+
+        // Generate CodeCoverage base for each message-related operation
+        File file = new File(coverageBasePath);
+        try(FileInputStream fis = new FileInputStream(file)) {
+            XSSFWorkbook workbook = new XSSFWorkbook(fis);
+
+            XSSFSheet coverage_sheet = workbook.getSheetAt(0);
+
+            for (int i = 0; i < coverage_sheet.getLastRowNum() + 1; i++) {
+                Row row = coverage_sheet.getRow(i);
+
+                if(row.getLastCellNum() == 1) {
+                    if (i != 0) {
+                        coverageBase.put(key, (ArrayList)coverage.clone());
+                    }
+                    coverage = new ArrayList();
+                    key = row.getCell(i).getStringCellValue();
+                } else {
+                    String coverage_file = row.getCell(0).getStringCellValue();
+                    for(int j = 1; j < row.getLastCellNum(); j+= 2) {
+                        int start = (int)row.getCell(j).getNumericCellValue();
+                        int end = (int)row.getCell(j+1).getNumericCellValue();
+
+                        if (start == end) {
+                            coverage.add(coverage_file + "_" + start);
+                        }
+                        else {
+                            for (int k = start; k < end + 1; k++) {
+                                coverage.add(coverage_file + "_" + k);
+                            }
+                        }
+                    }
+                }
+            }
+            coverageBase.put(key, (ArrayList)coverage.clone());
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+
+        int pattern_id = 0;
+        // For each pattern
+        File folder = new File(patternPath);
+        File files[] = folder.listFiles();
+        for (File pattern : files) {
+            ArrayList<Integer> maxSeqNum = new ArrayList(Collections.nCopies(5, 0));
+            ArrayList<Integer> seqNum = new ArrayList(Collections.nCopies(5,0));
+            if (file.toString().contains("$")) continue;
+            try (FileInputStream fis = new FileInputStream(pattern)) {
+                XSSFWorkbook workbook = new XSSFWorkbook(fis);
+
+                XSSFSheet communication_sheet = workbook.getSheetAt(1);
+                int num_rows = communication_sheet.getLastRowNum() + 1;
+                for (int id = 2; id < num_rows; id++) {
+                    Row row = communication_sheet.getRow(id);
+
+                    float time = (float) row.getCell(0).getNumericCellValue();
+
+//                    int[] msg_index_list = {1,2,4,5,7,8,10,11,13,14,16,17,19,20}; With Received
+                    int[] msg_index_list = {1, 4, 7, 10, 13, 16, 19}; // Without Received
+                    for (int index : msg_index_list) {
+                        Message msg = new Message();
+                        switch (index) {
+//                                    case 1: // FF -> FF Broadcast
+//                                        for (int i = 0; i < (int)row.getCell(index).getNumericCellValue(); i++) {
+//                                            msg.time = time;
+//                                            msg.vehID = "FF";
+//                                            msg.commandSent = "MemorySharing";
+//                                            msg.receiverId = "FF-Broadcast";
+//                                            msg.senderPltId = "FF";
+//                                            msg.receiverPltId = "FF-Broadcast";
+//                                            msg.senderRole = "FF";
+//                                            msg.receiverRole = "FF-Broadcast";
+//                                            msgSequence.add(msg);
+//                                        }
+//                                        break;
+
+                            case 4: // FF -> Org
+                                if (row.getCell(index).getNumericCellValue() >= 1) { // Cell value: more than 1
+                                    seqNum.set(0, seqNum.get(0) + (int)row.getCell(index).getNumericCellValue());
+                                } else { // Cell value: 0 -> Not sequential
+                                    if (maxSeqNum.get(0) < seqNum.get(0)) {
+                                        maxSeqNum.set(0, seqNum.get(0));
+                                        seqNum.set(0, 0);
+                                    }
+                                }
+                                break;
+
+                            case 7: // Org -> FF
+                                if (row.getCell(index).getNumericCellValue() >= 1) { // Cell value: more than 1
+                                    seqNum.set(1, seqNum.get(1) + (int)row.getCell(index).getNumericCellValue());
+                                } else { // Cell value: 0 -> Not sequential
+                                    if (maxSeqNum.get(1) < seqNum.get(1)) {
+                                        maxSeqNum.set(1, seqNum.get(1));
+                                        seqNum.set(1, 0);
+                                    }
+                                }
+                                break;
+
+                            case 10: // Amb -> Org
+                                if (row.getCell(index).getNumericCellValue() >= 1) { // Cell value: more than 1
+                                    seqNum.set(2, seqNum.get(2) + (int)row.getCell(index).getNumericCellValue());
+                                } else { // Cell value: 0 -> Not sequential
+                                    if (maxSeqNum.get(2) < seqNum.get(2)) {
+                                        maxSeqNum.set(2, seqNum.get(2));
+                                        seqNum.set(2, 0);
+                                    }
+                                }
+                                break;
+
+                            case 13: // Org -> Amb
+                                if (row.getCell(index).getNumericCellValue() >= 1) { // Cell value: more than 1
+                                    seqNum.set(3, seqNum.get(3) + (int)row.getCell(index).getNumericCellValue());
+                                } else { // Cell value: 0 -> Not sequential
+                                    if (maxSeqNum.get(3) < seqNum.get(3)) {
+                                        maxSeqNum.set(3, seqNum.get(3));
+                                        seqNum.set(3, 0);
+                                    }
+                                }
+                                break;
+
+                            case 16: // Brg -> Org
+                                if (row.getCell(index).getNumericCellValue() >= 1) { // Cell value: more than 1
+                                    seqNum.set(4, seqNum.get(4) + (int)row.getCell(index).getNumericCellValue());
+                                } else { // Cell value: 0 -> Not sequential
+                                    if (maxSeqNum.get(4) < seqNum.get(4)) {
+                                        maxSeqNum.set(4, seqNum.get(4));
+                                        seqNum.set(4, 0);
+                                    }
+                                }
+                                break;
+                        }
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            File SeqResult = new File(base + "/SoS_Extension/results/MCISeqResult_" + pattern_id + ".csv");
+            try {
+                FileWriter writer2 = new FileWriter(SeqResult);
+                String log = "";
+                // TODO Suspicious Calculation Methods
+                for (int k = 0; k < maxSeqNum.size(); k++) {
+                    coverage = coverageBase.get(String.valueOf(k));
+
+                    for (String line : coverage) {
+                        log += line + "," + maxSeqNum.get(k) + "\n";
+                    }
+                }
+                writer2.write(log);
+                writer2.close();
+            } catch(Exception e) {
+                System.out.println(e);
+            }
+            // calculate the SeqOverlap of each code line based on the coverage base
+            pattern_id++;
+        }
+
+
+    }
+
     private ArrayList<Integer> setCodeInspectionScope(ArrayList<String> source, String command, HashMap<Integer, Integer> tempMap, int flag) {
         ArrayList<Integer> ranges = new ArrayList<>(); // Starting line, Finishing line, Starting line, Finishing line, ...
         if(command.equals("MERGE_REQ")) {
