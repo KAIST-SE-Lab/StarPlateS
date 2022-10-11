@@ -24,6 +24,7 @@ public class Clustering {
     private ArrayList<ArrayList<Message>> originCentroidLCS;
     private ArrayList<InterplayModel> id_patterns;
 
+    private HashMap<String, Integer> fileNumLog;
     public Clustering() {
         cluster = new ArrayList<>();
         centroidLCS = new ArrayList<>();
@@ -45,6 +46,19 @@ public class Clustering {
 //            InterplayModel interplayModel = new InterplayModel(file);
 //            id_patterns.add(interplayModel);
 ////        }
+
+        fileNumLog = new HashMap<String, Integer>() {{
+            put("coll1", 201);
+            put("coll2", 201);
+            put("coll3", 201);
+            put("coll4", 201);
+            put("coll5", 201);
+            put("pass1", 202);
+            put("pass2", 205);
+            put("pass3", 220);
+            put("pass4", 200);
+            put("pass5", 202);
+        }};
     }
 
     public void setId_patterns(ArrayList<InterplayModel> id_patterns) {
@@ -1649,6 +1663,8 @@ public class Clustering {
         return ret;
     }
 
+
+
     public void codeLocalizer(String base, String filepath) {
         File pltSource = new File(base + filepath);
         BufferedReader reader = null;
@@ -1703,6 +1719,100 @@ public class Clustering {
 //            writer.close();
         } catch(Exception e) {
             System.out.println(e);
+        }
+    }
+
+    public void codeLocalizerMCISBFL(String folderpath, String base) {
+        // Read the code scope of the files
+        File folder = new File(folderpath);
+        File files[] = folder.listFiles();
+        HashMap<String, ArrayList<String>> coverages = new HashMap();
+        HashMap<String, ArrayList<Integer>> SBFLTable = new HashMap(); // (Line number, ArrayList [passed, failed])
+        ArrayList<String> filesF = new ArrayList();
+        ArrayList<String> filesTotal = new ArrayList();
+
+        int file_id = 0;
+        for (File file : files) {
+            String[] temp = file.toString().replace("\\", "/").split("/");
+            String[] temp2 = temp[temp.length-1].split("\\.");
+            filesTotal.add(temp2[0]);
+            if (file.getAbsolutePath().contains("coll")) {
+                filesF.add(temp2[0]);
+            }
+            ArrayList<String> coverage = new ArrayList();
+            try(FileInputStream fis = new FileInputStream(file)) {
+                XSSFWorkbook workbook = new XSSFWorkbook(fis);
+
+                XSSFSheet coverage_sheet = workbook.getSheetAt(0);
+
+                for (int i = 0 ; i < coverage_sheet.getLastRowNum() + 1; i++) {
+                    Row row = coverage_sheet.getRow(i);
+
+                    String coverage_file = row.getCell(0).getStringCellValue();
+
+                    for(int j = 1; j < row.getLastCellNum(); j+= 2) {
+                        int start = (int)row.getCell(j).getNumericCellValue();
+                        int end = (int)row.getCell(j+1).getNumericCellValue();
+
+                        if (start == end) {
+                            coverage.add(coverage_file + "_" + start);
+                        }
+                        else {
+                            for (int k = start; k < end + 1; k++) {
+                                coverage.add(coverage_file + "_" + k);
+                            }
+                        }
+                    }
+                }
+            } catch(Exception e) {
+                e.printStackTrace();
+            }
+            coverages.put(filesTotal.get(file_id++), coverage);
+        }
+
+        // For each folder & suspiciousness methods, calculate the suspiciousness
+        for (String target : filesF) {
+            for (File file : files) {
+                if (file.getAbsolutePath().contains(target) || file.getAbsolutePath().contains("pass")) {
+                    String[] temp = file.toString().replace("\\", "/").split("/");
+                    String[] temp2 = temp[temp.length-1].split("\\.");
+                    ArrayList<String> temp_coverage = coverages.get(temp2[0]);
+
+                    for (String covered_line : temp_coverage) {
+                        ArrayList<Integer> temp_p_f;
+                        if (SBFLTable.keySet().contains(covered_line)) {
+                            temp_p_f = SBFLTable.get(covered_line);
+                        } else {
+                            temp_p_f = new ArrayList<Integer>(Collections.nCopies(2, 0));
+                        }
+
+                        if (file.getAbsolutePath().contains("coll")) {
+                            temp_p_f.set(1, temp_p_f.get(1) + fileNumLog.get(temp2[0]));
+                        } else {
+                            temp_p_f.set(0, temp_p_f.get(0) + fileNumLog.get(temp2[0]));
+                        }
+                        SBFLTable.put(covered_line, (ArrayList)temp_p_f.clone());
+                    }
+                }
+            }
+            File SBFLresult = new File(base + "/SoS_Extension/results/SBFLresults_" + target + "_.csv");
+            try {
+                FileWriter writer2 = new FileWriter(SBFLresult);
+                // TODO Suspicious Calculation Methods
+                String log = "Line, Tarantula, Ochiai, OP2, Barinel, DStar\n";
+                for (String line : SBFLTable.keySet()) {
+                    log += line + "," + Tarantula(1029, fileNumLog.get(target), SBFLTable.get(line).get(0), SBFLTable.get(line).get(1)) + ","
+                            + Ochiai(1029, fileNumLog.get(target), SBFLTable.get(line).get(0), SBFLTable.get(line).get(1)) + ","
+                            + OP2(1029, fileNumLog.get(target), SBFLTable.get(line).get(0), SBFLTable.get(line).get(1)) + ","
+                            + Barinel(1029, fileNumLog.get(target), SBFLTable.get(line).get(0), SBFLTable.get(line).get(1)) + ","
+                            + DStar(1029, fileNumLog.get(target), SBFLTable.get(line).get(0), SBFLTable.get(line).get(1)) + "\n";
+                }
+                writer2.write(log);
+                writer2.close();
+            } catch(Exception e) {
+                System.out.println(e);
+            }
+            SBFLTable.clear();
         }
     }
 

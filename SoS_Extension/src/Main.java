@@ -91,7 +91,7 @@ public class Main {
             int[] thresholds2 = {4};                                        // TODO Threshold value for the VP2
             String base = System.getProperty("user.dir");
             System.out.println(System.getProperty("user.dir"));
-            String currentdir = base + "/SoS_Extension/logs_full/MCI Sample/";
+            String currentdir = base + "/SoS_Extension/logs_full/MCI/";
             System.out.print("Current Working Directory : " + currentdir + "\n");
             File f = new File(currentdir);
             Boolean result;
@@ -388,7 +388,7 @@ public class Main {
             double m_delay = 1;
             int m_len = 9;
 
-            boolean Localization = false;
+            boolean Localization = true;
 
             OracleGenerator oracleGenerator = new OracleGenerator(oracle, o_index);
 
@@ -424,7 +424,8 @@ public class Main {
 //                }
 
                 // Sequential Overlap-based Localization
-                clustering.codeLocalizer(base, "/src/nodes/vehicle/05_PlatoonMg.cc");
+//                clustering.codeLocalizer(base, "/src/nodes/vehicle/05_PlatoonMg.cc");
+                clustering.codeLocalizerMCISBFL(base + "/SoS_Extension/logs_full/LocalizationMCI/", base);
             } else {
                 for (int k = 0; k < 30; k++) {
                     ArrayList<InterplayModel> IMs_batch = new ArrayList<>();
