@@ -425,7 +425,8 @@ public class Main {
 
                 // Sequential Overlap-based Localization
 //                clustering.codeLocalizer(base, "/src/nodes/vehicle/05_PlatoonMg.cc");
-                clustering.codeLocalizerMCISBFL(base + "/SoS_Extension/logs_full/LocalizationMCI/", base);
+//                clustering.codeLocalizerMCISBFL(base + "/SoS_Extension/logs_full/LocalizationMCI/", base);
+                clustering.codeLocalizerMCISeqOverlap(base, base + "/SoS_Extension/logs_full/LocalizationMCISeqOverlap/CodeCoverageBase.xlsx", base + "/SoS_Extension/results/MCI_Pattern/");
             } else {
                 for (int k = 0; k < 30; k++) {
                     ArrayList<InterplayModel> IMs_batch = new ArrayList<>();

@@ -1361,7 +1361,6 @@ public class Clustering {
             F_C_O += mat;
         }
         F_C_O /= bestMatches_cl.size();
-        F_C_O *= (1 / 0.7); // TODO # categories
         ret.add(F_C_O);
 //        System.out.println(F_C_O);
 
@@ -1388,7 +1387,6 @@ public class Clustering {
             F_O_C += mat;
         }
         F_O_C /= bestMatches_or.size();
-        F_O_C *= (1 / 0.7); // TODO # of categories
         ret.add(F_O_C);
 //        System.out.println(F_O_C);
 
@@ -1950,7 +1948,7 @@ public class Clustering {
                         coverageBase.put(key, (ArrayList)coverage.clone());
                     }
                     coverage = new ArrayList();
-                    key = row.getCell(i).getStringCellValue();
+                    key = String.valueOf(row.getCell(0).getNumericCellValue());
                 } else {
                     String coverage_file = row.getCell(0).getStringCellValue();
                     for(int j = 1; j < row.getLastCellNum(); j+= 2) {
@@ -2016,8 +2014,8 @@ public class Clustering {
                                 } else { // Cell value: 0 -> Not sequential
                                     if (maxSeqNum.get(0) < seqNum.get(0)) {
                                         maxSeqNum.set(0, seqNum.get(0));
-                                        seqNum.set(0, 0);
                                     }
+                                    seqNum.set(0, 0);
                                 }
                                 break;
 
@@ -2027,8 +2025,8 @@ public class Clustering {
                                 } else { // Cell value: 0 -> Not sequential
                                     if (maxSeqNum.get(1) < seqNum.get(1)) {
                                         maxSeqNum.set(1, seqNum.get(1));
-                                        seqNum.set(1, 0);
                                     }
+                                    seqNum.set(1, 0);
                                 }
                                 break;
 
@@ -2038,8 +2036,8 @@ public class Clustering {
                                 } else { // Cell value: 0 -> Not sequential
                                     if (maxSeqNum.get(2) < seqNum.get(2)) {
                                         maxSeqNum.set(2, seqNum.get(2));
-                                        seqNum.set(2, 0);
                                     }
+                                    seqNum.set(2, 0);
                                 }
                                 break;
 
@@ -2049,8 +2047,8 @@ public class Clustering {
                                 } else { // Cell value: 0 -> Not sequential
                                     if (maxSeqNum.get(3) < seqNum.get(3)) {
                                         maxSeqNum.set(3, seqNum.get(3));
-                                        seqNum.set(3, 0);
                                     }
+                                    seqNum.set(3, 0);
                                 }
                                 break;
 
@@ -2060,8 +2058,8 @@ public class Clustering {
                                 } else { // Cell value: 0 -> Not sequential
                                     if (maxSeqNum.get(4) < seqNum.get(4)) {
                                         maxSeqNum.set(4, seqNum.get(4));
-                                        seqNum.set(4, 0);
                                     }
+                                    seqNum.set(4, 0);
                                 }
                                 break;
                         }
@@ -2070,13 +2068,18 @@ public class Clustering {
             } catch (Exception e) {
                 e.printStackTrace();
             }
+            for (int k = 0; k < maxSeqNum.size(); k++) {
+                if (maxSeqNum.get(k) < seqNum.get(k)) {
+                    maxSeqNum.set(k, seqNum.get(k));
+                }
+            }
             File SeqResult = new File(base + "/SoS_Extension/results/MCISeqResult_" + pattern_id + ".csv");
             try {
                 FileWriter writer2 = new FileWriter(SeqResult);
                 String log = "";
                 // TODO Suspicious Calculation Methods
                 for (int k = 0; k < maxSeqNum.size(); k++) {
-                    coverage = coverageBase.get(String.valueOf(k));
+                    coverage = coverageBase.get(String.valueOf(k)+".0");
 
                     for (String line : coverage) {
                         log += line + "," + maxSeqNum.get(k) + "\n";
